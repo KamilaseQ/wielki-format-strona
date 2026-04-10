@@ -6,7 +6,6 @@ export function Footer() {
     <footer className="bg-surface border-t border-border">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-          {/* Brand */}
           <div className="lg:col-span-1">
             <Link to="/" className="flex items-center gap-2 mb-4">
               <div className="w-8 h-8 rounded bg-gradient-brand flex items-center justify-center">
@@ -24,30 +23,14 @@ export function Footer() {
             </p>
           </div>
 
-          {/* Navigation */}
           <div>
             <h4 className="font-heading font-semibold text-sm text-foreground mb-4">Nawigacja</h4>
             <ul className="space-y-2">
               {[
                 { to: "/o-nas", label: "O nas" },
-                { to: "/nosniki", label: "Nośniki reklamowe" },
-                { to: "/wynajem", label: "Wynajem i rezerwacja" },
+                { to: "/nosniki", label: "Nośniki i mapa" },
+                { to: "/wynajem", label: "Wynajem" },
                 { to: "/obsluga-kampanii", label: "Obsługa kampanii" },
-              ].map((l) => (
-                <li key={l.to}>
-                  <Link to={l.to} className="text-sm text-muted-foreground hover:text-primary transition-colors">{l.label}</Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* More */}
-          <div>
-            <h4 className="font-heading font-semibold text-sm text-foreground mb-4">Więcej</h4>
-            <ul className="space-y-2">
-              {[
-                { to: "/mapa", label: "Mapa nośników" },
-                { to: "/realizacje", label: "Realizacje" },
                 { to: "/kontakt", label: "Kontakt" },
               ].map((l) => (
                 <li key={l.to}>
@@ -57,7 +40,6 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
           <div>
             <h4 className="font-heading font-semibold text-sm text-foreground mb-4">Kontakt</h4>
             <ul className="space-y-3">
@@ -74,6 +56,13 @@ export function Footer() {
                 <a href="mailto:biuro@wielkiformat.pl" className="hover:text-foreground transition-colors">biuro@wielkiformat.pl</a>
               </li>
             </ul>
+          </div>
+
+          <div>
+            <h4 className="font-heading font-semibold text-sm text-foreground mb-4">Informacje</h4>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Ponad 25 lat na rynku reklamy zewnętrznej. Około 2500 kampanii rocznie na terenie całej Polski.
+            </p>
           </div>
         </div>
 

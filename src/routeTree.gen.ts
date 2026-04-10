@@ -10,22 +10,15 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WynajemRouteImport } from './routes/wynajem'
-import { Route as RealizacjeRouteImport } from './routes/realizacje'
 import { Route as ObslugaKampaniiRouteImport } from './routes/obsluga-kampanii'
 import { Route as ONasRouteImport } from './routes/o-nas'
 import { Route as NosnikiRouteImport } from './routes/nosniki'
-import { Route as MapaRouteImport } from './routes/mapa'
 import { Route as KontaktRouteImport } from './routes/kontakt'
 import { Route as IndexRouteImport } from './routes/index'
 
 const WynajemRoute = WynajemRouteImport.update({
   id: '/wynajem',
   path: '/wynajem',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RealizacjeRoute = RealizacjeRouteImport.update({
-  id: '/realizacje',
-  path: '/realizacje',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ObslugaKampaniiRoute = ObslugaKampaniiRouteImport.update({
@@ -43,11 +36,6 @@ const NosnikiRoute = NosnikiRouteImport.update({
   path: '/nosniki',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MapaRoute = MapaRouteImport.update({
-  id: '/mapa',
-  path: '/mapa',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const KontaktRoute = KontaktRouteImport.update({
   id: '/kontakt',
   path: '/kontakt',
@@ -62,32 +50,26 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/kontakt': typeof KontaktRoute
-  '/mapa': typeof MapaRoute
   '/nosniki': typeof NosnikiRoute
   '/o-nas': typeof ONasRoute
   '/obsluga-kampanii': typeof ObslugaKampaniiRoute
-  '/realizacje': typeof RealizacjeRoute
   '/wynajem': typeof WynajemRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/kontakt': typeof KontaktRoute
-  '/mapa': typeof MapaRoute
   '/nosniki': typeof NosnikiRoute
   '/o-nas': typeof ONasRoute
   '/obsluga-kampanii': typeof ObslugaKampaniiRoute
-  '/realizacje': typeof RealizacjeRoute
   '/wynajem': typeof WynajemRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/kontakt': typeof KontaktRoute
-  '/mapa': typeof MapaRoute
   '/nosniki': typeof NosnikiRoute
   '/o-nas': typeof ONasRoute
   '/obsluga-kampanii': typeof ObslugaKampaniiRoute
-  '/realizacje': typeof RealizacjeRoute
   '/wynajem': typeof WynajemRoute
 }
 export interface FileRouteTypes {
@@ -95,42 +77,34 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/kontakt'
-    | '/mapa'
     | '/nosniki'
     | '/o-nas'
     | '/obsluga-kampanii'
-    | '/realizacje'
     | '/wynajem'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/kontakt'
-    | '/mapa'
     | '/nosniki'
     | '/o-nas'
     | '/obsluga-kampanii'
-    | '/realizacje'
     | '/wynajem'
   id:
     | '__root__'
     | '/'
     | '/kontakt'
-    | '/mapa'
     | '/nosniki'
     | '/o-nas'
     | '/obsluga-kampanii'
-    | '/realizacje'
     | '/wynajem'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   KontaktRoute: typeof KontaktRoute
-  MapaRoute: typeof MapaRoute
   NosnikiRoute: typeof NosnikiRoute
   ONasRoute: typeof ONasRoute
   ObslugaKampaniiRoute: typeof ObslugaKampaniiRoute
-  RealizacjeRoute: typeof RealizacjeRoute
   WynajemRoute: typeof WynajemRoute
 }
 
@@ -141,13 +115,6 @@ declare module '@tanstack/react-router' {
       path: '/wynajem'
       fullPath: '/wynajem'
       preLoaderRoute: typeof WynajemRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/realizacje': {
-      id: '/realizacje'
-      path: '/realizacje'
-      fullPath: '/realizacje'
-      preLoaderRoute: typeof RealizacjeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/obsluga-kampanii': {
@@ -171,13 +138,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NosnikiRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/mapa': {
-      id: '/mapa'
-      path: '/mapa'
-      fullPath: '/mapa'
-      preLoaderRoute: typeof MapaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/kontakt': {
       id: '/kontakt'
       path: '/kontakt'
@@ -198,11 +158,9 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   KontaktRoute: KontaktRoute,
-  MapaRoute: MapaRoute,
   NosnikiRoute: NosnikiRoute,
   ONasRoute: ONasRoute,
   ObslugaKampaniiRoute: ObslugaKampaniiRoute,
-  RealizacjeRoute: RealizacjeRoute,
   WynajemRoute: WynajemRoute,
 }
 export const routeTree = rootRouteImport
