@@ -1,8 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { LeadForm } from "@/components/LeadForm";
+
 import { SectionHeading } from "@/components/SectionHeading";
 import StickyScrollGallery from "@/components/ui/sticky-scroll";
+import {
+  ContainerScroll,
+  ContainerSticky,
+  ContainerStagger,
+  ContainerAnimated,
+  GalleryContainer,
+  GalleryCol,
+} from "@/components/ui/animated-gallery";
 import { ArrowRight, Eye, Zap, Shield, MapPin, CheckCircle, ChevronRight, TrendingUp, Award, Clock } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -33,26 +41,51 @@ function HomePage() {
   );
 }
 
-/* ───────── HERO ───────── */
+/* ───────── HERO with animated gallery ───────── */
+const GALLERY_1 = [
+  "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=900&auto=format&fit=crop&q=60",
+  "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=900&auto=format&fit=crop&q=60",
+  "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=900&auto=format&fit=crop&q=60",
+  "https://images.unsplash.com/photo-1514565131-fce0801e5785?w=900&auto=format&fit=crop&q=60",
+];
+const GALLERY_2 = [
+  "https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=900&auto=format&fit=crop&q=60",
+  "https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=900&auto=format&fit=crop&q=60",
+  "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=900&auto=format&fit=crop&q=60",
+  "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=900&auto=format&fit=crop&q=60",
+];
+const GALLERY_3 = [
+  "https://images.unsplash.com/photo-1497366216548-37526070297c?w=900&auto=format&fit=crop&q=60",
+  "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&auto=format&fit=crop&q=60",
+  "https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=900&auto=format&fit=crop&q=60",
+  "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=900&auto=format&fit=crop&q=60",
+];
+
 function HeroSection() {
   return (
-    <section className="relative overflow-hidden section-padding bg-noise">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          <div>
+    <ContainerScroll>
+      <ContainerSticky className="flex-col bg-noise">
+        {/* Hero content */}
+        <ContainerStagger className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-24 pb-8 text-center">
+          <ContainerAnimated>
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold tracking-wide mb-6">
               <Eye className="w-3.5 h-3.5" />
               REKLAMA, KTÓRA SIĘ WYRÓŻNIA
             </span>
+          </ContainerAnimated>
+          <ContainerAnimated>
             <h1 className="font-heading font-bold text-4xl sm:text-5xl lg:text-6xl xl:text-7xl text-foreground leading-[1.05] mb-6">
               Twoja marka{" "}
               <span className="text-gradient-brand">na wielkim formacie</span>
             </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed mb-8 max-w-lg">
+          </ContainerAnimated>
+          <ContainerAnimated>
+            <p className="text-lg text-muted-foreground leading-relaxed mb-8 max-w-2xl mx-auto">
               Billboardy, banery i kampanie outdoorowe w całej Polsce. Sprawdź dostępność nośników i&nbsp;zacznij być widoczny tam, gdzie liczy się skala.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
+          </ContainerAnimated>
+          <ContainerAnimated>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/kontakt">
                 <Button variant="hero" size="xl">
                   Zapytaj o dostępność
@@ -66,13 +99,29 @@ function HeroSection() {
                 </Button>
               </Link>
             </div>
-          </div>
-          <div className="lg:pl-8">
-            <LeadForm />
-          </div>
-        </div>
-      </div>
-    </section>
+          </ContainerAnimated>
+        </ContainerStagger>
+
+        {/* Gallery that rotates in */}
+        <GalleryContainer className="flex-1 items-start pt-4">
+          <GalleryCol yRange={["0%", "-10%"]}>
+            {GALLERY_1.map((url, i) => (
+              <img key={i} className="aspect-video w-full rounded-md object-cover shadow grayscale" src={url} alt="Realizacja kampanii" />
+            ))}
+          </GalleryCol>
+          <GalleryCol className="mt-[-50%]" yRange={["15%", "5%"]}>
+            {GALLERY_2.map((url, i) => (
+              <img key={i} className="aspect-video w-full rounded-md object-cover shadow grayscale" src={url} alt="Realizacja kampanii" />
+            ))}
+          </GalleryCol>
+          <GalleryCol yRange={["-10%", "2%"]} className="-mt-2">
+            {GALLERY_3.map((url, i) => (
+              <img key={i} className="aspect-video w-full rounded-md object-cover shadow grayscale" src={url} alt="Realizacja kampanii" />
+            ))}
+          </GalleryCol>
+        </GalleryContainer>
+      </ContainerSticky>
+    </ContainerScroll>
   );
 }
 
