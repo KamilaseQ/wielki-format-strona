@@ -3,6 +3,14 @@ import { Button } from "@/components/ui/button";
 import { LeadForm } from "@/components/LeadForm";
 import { SectionHeading } from "@/components/SectionHeading";
 import StickyScrollGallery from "@/components/ui/sticky-scroll";
+import {
+  ContainerScroll,
+  ContainerSticky,
+  ContainerStagger,
+  ContainerAnimated,
+  GalleryContainer,
+  GalleryCol,
+} from "@/components/ui/animated-gallery";
 import { ArrowRight, Eye, Zap, Shield, MapPin, CheckCircle, ChevronRight, TrendingUp, Award, Clock } from "lucide-react";
 
 export const Route = createFileRoute("/")({
