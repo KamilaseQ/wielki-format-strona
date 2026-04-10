@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { LeadForm } from "@/components/LeadForm";
+
 import { SectionHeading } from "@/components/SectionHeading";
 import StickyScrollGallery from "@/components/ui/sticky-scroll";
 import {
