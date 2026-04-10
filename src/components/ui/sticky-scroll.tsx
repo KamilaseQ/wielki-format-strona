@@ -55,7 +55,7 @@ const projects: Project[] = [
 
 export default function StickyScrollGallery() {
   return (
-    <ReactLenis root>
+    <>
       <div className="w-full">
         {projects.map((project, idx) => (
           <div
@@ -114,6 +114,6 @@ export default function StickyScrollGallery() {
           </div>
         ))}
       </div>
-    </ReactLenis>
+    </>
   );
 }
