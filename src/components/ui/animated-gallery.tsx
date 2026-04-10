@@ -56,6 +56,31 @@ export const ContainerScroll = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => {
   const scrollRef = React.useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  return mounted ? (
+    <ContainerScrollInner scrollRef={scrollRef} className={className} style={style} {...props}>
+      {children}
+    </ContainerScrollInner>
+  ) : (
+    <div ref={scrollRef} className={cn("relative h-[300vh]", className)} style={style} {...props}>
+      {children}
+    </div>
+  );
+};
+ContainerScroll.displayName = "ContainerScroll";
+
+const ContainerScrollInner = ({
+  children,
+  scrollRef,
+  className,
+  style,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement> & { scrollRef: React.RefObject<HTMLDivElement | null> }) => {
   const { scrollYProgress } = useScroll({
     target: scrollRef,
   });
@@ -72,7 +97,6 @@ export const ContainerScroll = ({
     </ContainerScrollContext.Provider>
   );
 };
-ContainerScroll.displayName = "ContainerScroll";
 
 export const ContainerSticky = ({
   className,
