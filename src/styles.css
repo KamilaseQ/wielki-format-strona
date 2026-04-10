@@ -155,3 +155,15 @@
     }
   }
 }
+
+@keyframes scroll-x {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-scroll-x {
+  animation: scroll-x 30s linear infinite;
+}
+
+.bg-gradient-to-r.from-surface { --tw-gradient-from: var(--surface); }
+.bg-gradient-to-l.from-surface { --tw-gradient-from: var(--surface); }
