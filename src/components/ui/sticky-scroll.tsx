@@ -1,5 +1,4 @@
 import React from "react";
-import { ReactLenis } from "lenis/react";
 
 interface Project {
   client: string;
