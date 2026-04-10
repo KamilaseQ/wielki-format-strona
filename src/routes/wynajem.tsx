@@ -47,9 +47,9 @@ function RentalPage() {
               </div>
 
               <div className="flex gap-4">
-                <Link to="/mapa">
+                <Link to="/nosniki">
                   <Button variant="outline" size="lg">
-                    <MapPin className="w-4 h-4" /> Sprawdź na mapie
+                    <MapPin className="w-4 h-4" /> Sprawdź nośniki
                   </Button>
                 </Link>
               </div>
