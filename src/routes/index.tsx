@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { LeadForm } from "@/components/LeadForm";
 import { SectionHeading } from "@/components/SectionHeading";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
+import StickyScrollGallery from "@/components/ui/sticky-scroll";
 import { ArrowRight, Eye, Zap, Shield, MapPin, CheckCircle, ChevronRight, TrendingUp, Award, Clock } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -22,9 +23,9 @@ function HomePage() {
     <>
       <HeroSection />
       <BrandCarousel />
-      <ScrollShowcase />
       <TrustSection />
       <WhatWeDoSection />
+      <ScrollShowcase />
       <CarrierTypesSection />
       <ProcessSection />
       <BenefitsSection />
