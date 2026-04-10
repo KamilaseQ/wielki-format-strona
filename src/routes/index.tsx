@@ -108,6 +108,34 @@ function BrandCarousel() {
   );
 }
 
+/* ───────── SCROLL SHOWCASE ───────── */
+function ScrollShowcase() {
+  return (
+    <div className="flex flex-col overflow-hidden">
+      <ContainerScroll
+        titleComponent={
+          <div className="flex flex-col items-center">
+            <h2 className="font-heading text-3xl md:text-5xl font-bold text-foreground mb-4">
+              Kampanie, które{" "}
+              <span className="text-gradient-brand">widać z daleka</span>
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-2xl">
+              Twoja reklama na największych nośnikach w Polsce
+            </p>
+          </div>
+        }
+      >
+        <img
+          src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&h=800&fit=crop"
+          alt="Kampania billboardowa wielkiformat.pl"
+          className="mx-auto rounded-2xl object-cover h-full w-full object-left-top"
+          draggable={false}
+        />
+      </ContainerScroll>
+    </div>
+  );
+}
+
 /* ───────── TRUST ───────── */
 function TrustSection() {
   const stats = [
