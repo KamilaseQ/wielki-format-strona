@@ -23,6 +23,7 @@ function HomePage() {
       <HeroSection />
       <BrandCarousel />
       <ScrollShowcase />
+      <TrustSection />
       <WhatWeDoSection />
       <CarrierTypesSection />
       <ProcessSection />
