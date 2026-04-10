@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { LeadForm } from "@/components/LeadForm";
 import { SectionHeading } from "@/components/SectionHeading";
+import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import { ArrowRight, Eye, Zap, Shield, MapPin, CheckCircle, ChevronRight, TrendingUp, Award, Clock } from "lucide-react";
 
 export const Route = createFileRoute("/")({
