@@ -124,7 +124,6 @@ function HeroSection() {
     </ContainerScroll>
   );
 }
-}
 
 /* ───────── BRAND CAROUSEL ───────── */
 const brandNames = [
