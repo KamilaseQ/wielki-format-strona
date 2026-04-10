@@ -2,7 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { LeadForm } from "@/components/LeadForm";
 import { SectionHeading } from "@/components/SectionHeading";
-import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import StickyScrollGallery from "@/components/ui/sticky-scroll";
 import { ArrowRight, Eye, Zap, Shield, MapPin, CheckCircle, ChevronRight, TrendingUp, Award, Clock } from "lucide-react";
 
@@ -113,21 +112,15 @@ function BrandCarousel() {
 /* ───────── SCROLL SHOWCASE ───────── */
 function ScrollShowcase() {
   return (
-    <section className="section-padding bg-noise">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section className="bg-noise">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16 md:pt-24">
         <SectionHeading
-          eyebrow="Realizacje"
-          title="Nasze projekty"
-          description="Zobacz wybrane kampanie zrealizowane na nośnikach wielkiformat.pl w całej Polsce."
+          eyebrow="Efekty"
+          title="Kampanie, które przynoszą wyniki"
+          description="Nasi klienci wracają, bo widzą efekty. Sprawdź, jak działamy w praktyce."
         />
       </div>
-      <div className="flex flex-col overflow-hidden">
-        <ContainerScroll
-          titleComponent={<></>}
-        >
-          <StickyScrollGallery />
-        </ContainerScroll>
-      </div>
+      <StickyScrollGallery />
     </section>
   );
 }
