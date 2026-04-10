@@ -9,8 +9,50 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WynajemRouteImport } from './routes/wynajem'
+import { Route as RealizacjeRouteImport } from './routes/realizacje'
+import { Route as ObslugaKampaniiRouteImport } from './routes/obsluga-kampanii'
+import { Route as ONasRouteImport } from './routes/o-nas'
+import { Route as NosnikiRouteImport } from './routes/nosniki'
+import { Route as MapaRouteImport } from './routes/mapa'
+import { Route as KontaktRouteImport } from './routes/kontakt'
 import { Route as IndexRouteImport } from './routes/index'
 
+const WynajemRoute = WynajemRouteImport.update({
+  id: '/wynajem',
+  path: '/wynajem',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RealizacjeRoute = RealizacjeRouteImport.update({
+  id: '/realizacje',
+  path: '/realizacje',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ObslugaKampaniiRoute = ObslugaKampaniiRouteImport.update({
+  id: '/obsluga-kampanii',
+  path: '/obsluga-kampanii',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ONasRoute = ONasRouteImport.update({
+  id: '/o-nas',
+  path: '/o-nas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NosnikiRoute = NosnikiRouteImport.update({
+  id: '/nosniki',
+  path: '/nosniki',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MapaRoute = MapaRouteImport.update({
+  id: '/mapa',
+  path: '/mapa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KontaktRoute = KontaktRouteImport.update({
+  id: '/kontakt',
+  path: '/kontakt',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +61,130 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/kontakt': typeof KontaktRoute
+  '/mapa': typeof MapaRoute
+  '/nosniki': typeof NosnikiRoute
+  '/o-nas': typeof ONasRoute
+  '/obsluga-kampanii': typeof ObslugaKampaniiRoute
+  '/realizacje': typeof RealizacjeRoute
+  '/wynajem': typeof WynajemRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/kontakt': typeof KontaktRoute
+  '/mapa': typeof MapaRoute
+  '/nosniki': typeof NosnikiRoute
+  '/o-nas': typeof ONasRoute
+  '/obsluga-kampanii': typeof ObslugaKampaniiRoute
+  '/realizacje': typeof RealizacjeRoute
+  '/wynajem': typeof WynajemRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/kontakt': typeof KontaktRoute
+  '/mapa': typeof MapaRoute
+  '/nosniki': typeof NosnikiRoute
+  '/o-nas': typeof ONasRoute
+  '/obsluga-kampanii': typeof ObslugaKampaniiRoute
+  '/realizacje': typeof RealizacjeRoute
+  '/wynajem': typeof WynajemRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/kontakt'
+    | '/mapa'
+    | '/nosniki'
+    | '/o-nas'
+    | '/obsluga-kampanii'
+    | '/realizacje'
+    | '/wynajem'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/kontakt'
+    | '/mapa'
+    | '/nosniki'
+    | '/o-nas'
+    | '/obsluga-kampanii'
+    | '/realizacje'
+    | '/wynajem'
+  id:
+    | '__root__'
+    | '/'
+    | '/kontakt'
+    | '/mapa'
+    | '/nosniki'
+    | '/o-nas'
+    | '/obsluga-kampanii'
+    | '/realizacje'
+    | '/wynajem'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  KontaktRoute: typeof KontaktRoute
+  MapaRoute: typeof MapaRoute
+  NosnikiRoute: typeof NosnikiRoute
+  ONasRoute: typeof ONasRoute
+  ObslugaKampaniiRoute: typeof ObslugaKampaniiRoute
+  RealizacjeRoute: typeof RealizacjeRoute
+  WynajemRoute: typeof WynajemRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/wynajem': {
+      id: '/wynajem'
+      path: '/wynajem'
+      fullPath: '/wynajem'
+      preLoaderRoute: typeof WynajemRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/realizacje': {
+      id: '/realizacje'
+      path: '/realizacje'
+      fullPath: '/realizacje'
+      preLoaderRoute: typeof RealizacjeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/obsluga-kampanii': {
+      id: '/obsluga-kampanii'
+      path: '/obsluga-kampanii'
+      fullPath: '/obsluga-kampanii'
+      preLoaderRoute: typeof ObslugaKampaniiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/o-nas': {
+      id: '/o-nas'
+      path: '/o-nas'
+      fullPath: '/o-nas'
+      preLoaderRoute: typeof ONasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nosniki': {
+      id: '/nosniki'
+      path: '/nosniki'
+      fullPath: '/nosniki'
+      preLoaderRoute: typeof NosnikiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mapa': {
+      id: '/mapa'
+      path: '/mapa'
+      fullPath: '/mapa'
+      preLoaderRoute: typeof MapaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kontakt': {
+      id: '/kontakt'
+      path: '/kontakt'
+      fullPath: '/kontakt'
+      preLoaderRoute: typeof KontaktRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +197,13 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  KontaktRoute: KontaktRoute,
+  MapaRoute: MapaRoute,
+  NosnikiRoute: NosnikiRoute,
+  ONasRoute: ONasRoute,
+  ObslugaKampaniiRoute: ObslugaKampaniiRoute,
+  RealizacjeRoute: RealizacjeRoute,
+  WynajemRoute: WynajemRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
