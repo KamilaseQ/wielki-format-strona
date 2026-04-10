@@ -6,11 +6,9 @@ import { Button } from "@/components/ui/button";
 const navLinks = [
   { to: "/", label: "Strona główna" },
   { to: "/o-nas", label: "O nas" },
-  { to: "/nosniki", label: "Nośniki" },
+  { to: "/nosniki", label: "Nośniki i mapa" },
   { to: "/wynajem", label: "Wynajem" },
   { to: "/obsluga-kampanii", label: "Obsługa kampanii" },
-  { to: "/mapa", label: "Mapa nośników" },
-  { to: "/realizacje", label: "Realizacje" },
   { to: "/kontakt", label: "Kontakt" },
 ] as const;
 
@@ -22,7 +20,6 @@ export function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between lg:h-20">
-          {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
             <div className="w-8 h-8 rounded bg-gradient-brand flex items-center justify-center">
               <span className="text-primary-foreground font-heading font-bold text-sm">W</span>
@@ -32,7 +29,6 @@ export function Header() {
             </span>
           </Link>
 
-          {/* Desktop nav */}
           <nav className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
               <Link
@@ -47,7 +43,6 @@ export function Header() {
             ))}
           </nav>
 
-          {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-3">
             <a href="tel:+48123456789" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
               <Phone className="w-4 h-4" />
@@ -58,7 +53,6 @@ export function Header() {
             </Link>
           </div>
 
-          {/* Mobile toggle */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="lg:hidden p-2 text-foreground"
@@ -68,7 +62,6 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {mobileOpen && (
         <div className="lg:hidden bg-background/95 backdrop-blur-xl border-b border-border">
           <nav className="mx-auto max-w-7xl px-4 py-4 flex flex-col gap-1">

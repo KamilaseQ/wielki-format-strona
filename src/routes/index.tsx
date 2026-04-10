@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { LeadForm } from "@/components/LeadForm";
 import { SectionHeading } from "@/components/SectionHeading";
-import { ArrowRight, Eye, Zap, Shield, MapPin, CheckCircle, ChevronRight, TrendingUp, Users, Award, Clock } from "lucide-react";
+import { ArrowRight, Eye, Zap, Shield, MapPin, CheckCircle, ChevronRight, TrendingUp, Award, Clock } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -20,12 +20,12 @@ function HomePage() {
   return (
     <>
       <HeroSection />
+      <BrandCarousel />
       <TrustSection />
       <WhatWeDoSection />
       <CarrierTypesSection />
       <ProcessSection />
       <BenefitsSection />
-      <RealizationsPreview />
       <CTASection />
     </>
   );
@@ -35,9 +35,7 @@ function HomePage() {
 function HeroSection() {
   return (
     <section className="relative overflow-hidden section-padding bg-noise">
-      {/* Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
-      
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div>
@@ -59,19 +57,50 @@ function HeroSection() {
                   <ArrowRight className="w-5 h-5" />
                 </Button>
               </Link>
-              <Link to="/mapa">
+              <Link to="/nosniki">
                 <Button variant="heroOutline" size="xl">
                   <MapPin className="w-5 h-5" />
-                  Sprawdź mapę nośników
+                  Sprawdź nośniki
                 </Button>
               </Link>
             </div>
           </div>
-
-          {/* Lead form */}
           <div className="lg:pl-8">
             <LeadForm />
           </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ───────── BRAND CAROUSEL ───────── */
+const brandNames = [
+  "Media Expert", "Żabka", "PKN Orlen", "Kaufland", "Lidl",
+  "Biedronka", "Play", "T-Mobile", "Allegro", "InPost",
+  "Pepco", "CCC", "Reserved", "Leroy Merlin", "OBI",
+];
+
+function BrandCarousel() {
+  return (
+    <section className="py-8 bg-surface border-y border-border/50 overflow-hidden">
+      <p className="text-center text-xs font-semibold tracking-widest uppercase text-muted-foreground/60 mb-6">
+        Zaufali nam m.in.
+      </p>
+      <div className="relative">
+        {/* Gradient masks */}
+        <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-surface to-transparent z-10 pointer-events-none" />
+        <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-surface to-transparent z-10 pointer-events-none" />
+
+        <div className="flex animate-scroll-x gap-12 items-center">
+          {[...brandNames, ...brandNames].map((name, i) => (
+            <span
+              key={`${name}-${i}`}
+              className="shrink-0 text-sm font-heading font-semibold tracking-wide text-muted-foreground/30 uppercase whitespace-nowrap select-none"
+            >
+              {name}
+            </span>
+          ))}
         </div>
       </div>
     </section>
@@ -88,7 +117,7 @@ function TrustSection() {
   ];
 
   return (
-    <section className="section-padding bg-surface border-y border-border/50">
+    <section className="section-padding bg-noise">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
           {stats.map((stat) => (
@@ -116,7 +145,7 @@ function WhatWeDoSection() {
   ];
 
   return (
-    <section className="section-padding bg-noise">
+    <section className="section-padding bg-surface border-y border-border/50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="Usługi"
@@ -141,7 +170,7 @@ function WhatWeDoSection() {
 
 /* ───────── CARRIER TYPES ───────── */
 function CarrierTypesSection() {
-  const carriers = [
+  const carriersList = [
     { name: "Super 12", size: "4 × 3 m", desc: "Klasyczny format billboardu miejskiego. Doskonała widoczność w centrach miast." },
     { name: "Super 18", size: "6 × 3 m", desc: "Większy format dla zwiększonego zasięgu. Idealny przy głównych arteriach." },
     { name: "Super 36", size: "12 × 3 m", desc: "Podwójny billboard o maksymalnym impakcie. Dominuje w przestrzeni miejskiej." },
@@ -149,7 +178,7 @@ function CarrierTypesSection() {
   ];
 
   return (
-    <section className="section-padding bg-surface border-y border-border/50">
+    <section className="section-padding bg-noise">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="Formaty"
@@ -157,7 +186,7 @@ function CarrierTypesSection() {
           description="Dopasuj format do swoich potrzeb — od standardowych billboardów po wielkoformatowe konstrukcje."
         />
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {carriers.map((c) => (
+          {carriersList.map((c) => (
             <div key={c.name} className="group rounded-xl border border-border bg-card p-6 hover:border-primary/30 transition-all duration-300 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-20 h-20 bg-primary/5 rounded-bl-[40px] group-hover:bg-primary/10 transition-colors" />
               <span className="text-xs font-semibold tracking-wider text-primary uppercase">{c.size}</span>
@@ -184,7 +213,7 @@ function ProcessSection() {
   ];
 
   return (
-    <section className="section-padding bg-noise">
+    <section className="section-padding bg-surface border-y border-border/50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="Proces"
@@ -222,7 +251,7 @@ function BenefitsSection() {
   ];
 
   return (
-    <section className="section-padding bg-surface border-y border-border/50">
+    <section className="section-padding bg-noise">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
@@ -262,50 +291,6 @@ function BenefitsSection() {
   );
 }
 
-/* ───────── REALIZATIONS PREVIEW ───────── */
-function RealizationsPreview() {
-  const items = [
-    { title: "Kampania ogólnopolska — sieć handlowa", location: "12 miast, 48 nośników" },
-    { title: "Billboardy autostradowe — deweloper", location: "A2, A4 — 16 nośników" },
-    { title: "Kampania miejska — marka FMCG", location: "Warszawa, Kraków, Wrocław" },
-  ];
-
-  return (
-    <section className="section-padding bg-noise">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading
-          eyebrow="Realizacje"
-          title="Wybrane kampanie"
-          description="Zobacz, jak pomagamy markom być widocznymi w całej Polsce."
-        />
-        <div className="grid md:grid-cols-3 gap-6">
-          {items.map((item) => (
-            <div key={item.title} className="group rounded-xl bg-card border border-border overflow-hidden hover:border-primary/30 transition-all duration-300">
-              <div className="aspect-[16/10] bg-secondary flex items-center justify-center">
-                <Eye className="w-10 h-10 text-muted-foreground/30" />
-              </div>
-              <div className="p-5">
-                <h3 className="font-heading font-semibold text-foreground mb-1">{item.title}</h3>
-                <p className="text-sm text-muted-foreground flex items-center gap-1">
-                  <MapPin className="w-3.5 h-3.5" /> {item.location}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="mt-10 text-center">
-          <Link to="/realizacje">
-            <Button variant="outline" size="lg">
-              Zobacz wszystkie realizacje
-              <ArrowRight className="w-4 h-4" />
-            </Button>
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* ───────── CTA ───────── */
 function CTASection() {
   return (
@@ -325,10 +310,10 @@ function CTASection() {
               <ArrowRight className="w-5 h-5" />
             </Button>
           </Link>
-          <Link to="/mapa">
+          <Link to="/nosniki">
             <Button variant="heroOutline" size="xl">
               <MapPin className="w-5 h-5" />
-              Sprawdź mapę nośników
+              Sprawdź nośniki
             </Button>
           </Link>
         </div>
