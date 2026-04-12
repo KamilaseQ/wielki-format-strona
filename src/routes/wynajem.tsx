@@ -1,8 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { SectionHeading } from "@/components/SectionHeading";
 import { Button } from "@/components/ui/button";
 import { LeadForm } from "@/components/LeadForm";
-import { ArrowRight, Calendar, CheckCircle, MapPin } from "lucide-react";
+import { PricingCalculator } from "@/components/PricingCalculator";
+import { motion } from "motion/react";
+import { ArrowRight, Calendar, CheckCircle, MapPin, Maximize2, Star, Shield, Clock, Layers, Zap, ChevronDown } from "lucide-react";
+import { useState } from "react";
+
+import { TiltCard } from "@/components/TiltCard";
 
 export const Route = createFileRoute("/wynajem")({
   head: () => ({
@@ -16,72 +20,274 @@ export const Route = createFileRoute("/wynajem")({
   component: RentalPage,
 });
 
+const ease = [0.25, 0.46, 0.45, 0.94] as const;
+
+function Reveal({ children, className = "", delay = 0, from = "bottom" }: {
+  children: React.ReactNode; className?: string; delay?: number;
+  from?: "bottom" | "left" | "right" | "scale";
+}) {
+  const variants: Record<string, object> = {
+    bottom: { opacity: 0, y: 24 },
+    left: { opacity: 0, x: -30 },
+    right: { opacity: 0, x: 30 },
+    scale: { opacity: 0, scale: 0.95 },
+  };
+  return (
+    <motion.div initial={variants[from]} whileInView={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+      viewport={{ once: true, amount: 0.12 }} transition={{ duration: 0.6, delay, ease }} className={className}>
+      {children}
+    </motion.div>
+  );
+}
+
 function RentalPage() {
   return (
     <>
-      <section className="section-padding bg-noise">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      {/* Hero */}
+      <section className="relative py-20 md:py-28 overflow-hidden">
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1920&auto=format&fit=crop&q=60"
+            alt="Billboard w centrum miasta — wynajem reklamy wielkoformatowej"
+            className="w-full h-full object-cover opacity-12"
+            loading="eager" width={1920} height={1080}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/80 to-background" />
+        </div>
+        <div className="absolute inset-0 bg-noise" />
+
+
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             <div>
-              <span className="inline-block text-xs font-semibold tracking-widest uppercase text-primary mb-3">Wynajem</span>
-              <h1 className="font-heading font-bold text-4xl md:text-5xl text-foreground leading-tight mb-6">
-                Zarezerwuj <span className="text-gradient-brand">billboard</span>
-              </h1>
-              <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                Sprawdź dostępność nośników w interesującym Cię regionie. Wystarczy jedno zapytanie — resztą zajmiemy się my.
-              </p>
+              <Reveal>
+                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-primary text-[11px] font-semibold tracking-[0.2em] uppercase mb-6">
+                  Wynajem
+                </span>
+              </Reveal>
+              <Reveal delay={0.08}>
+                <h1 className="font-heading font-black text-4xl md:text-5xl text-foreground leading-tight mb-6">
+                  Zarezerwuj <span className="text-gradient-brand-bright text-glow-red">billboard</span>
+                </h1>
+              </Reveal>
+              <Reveal delay={0.16}>
+                <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+                  Sprawdź dostępność nośników w interesującym Cię regionie. Wystarczy jedno zapytanie — resztą zajmiemy się my.
+                </p>
+              </Reveal>
 
-              <div className="space-y-4 mb-8">
+              <div className="space-y-3 mb-8">
                 {[
                   "Wynajem na dowolny okres — od 2 tygodni wzwyż",
                   "Elastyczne warunki i rabaty przy dłuższych kampaniach",
                   "Możliwość rezerwacji wielu nośników jednocześnie",
                   "Dostępność w największych miastach i przy trasach",
                   "Szybka oferta cenowa — odpowiedź w 24h",
-                ].map((item) => (
-                  <div key={item} className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-primary mt-0.5 shrink-0" />
-                    <span className="text-muted-foreground">{item}</span>
-                  </div>
+                ].map((item, i) => (
+                  <Reveal key={item} delay={i * 0.05} from="left">
+                    <div className="flex items-start gap-3 group">
+                      <CheckCircle className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                      <span className="text-muted-foreground group-hover:text-foreground transition-colors">{item}</span>
+                    </div>
+                  </Reveal>
                 ))}
               </div>
 
-              <div className="flex gap-4">
+              <Reveal delay={0.3}>
                 <Link to="/nosniki">
-                  <Button variant="outline" size="lg">
-                    <MapPin className="w-4 h-4" /> Sprawdź nośniki
+                  <Button variant="outline" size="lg" className="border-glow-hover group">
+                    <MapPin className="w-4 h-4" /> Sprawdź nośniki na mapie
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
-              </div>
+              </Reveal>
             </div>
 
-            <LeadForm />
+            <Reveal from="right" delay={0.1}>
+              <LeadForm />
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* Format comparison table */}
+      <section className="py-16 md:py-24 bg-surface border-y border-border/30 relative overflow-hidden">
+        <div className="absolute inset-0 bg-noise" />
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
+          <Reveal>
+            <span className="text-xs font-semibold tracking-[0.25em] uppercase text-primary/70 font-heading block mb-3 text-center">Formaty</span>
+            <h2 className="font-heading font-black text-3xl md:text-4xl text-foreground text-center mb-4 leading-tight">Porównaj formaty nośników</h2>
+            <p className="text-center text-muted-foreground mb-14 max-w-lg mx-auto">Wybierz format dopasowany do Twoich celów i budżetu.</p>
+          </Reveal>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { name: "Super 12", size: "4 × 3 m", area: "12 m²", best: "Lokalne kampanie", icon: Maximize2, highlight: false },
+              { name: "Super 18", size: "6 × 3 m", area: "18 m²", best: "Kampanie miejskie", icon: Maximize2, highlight: true },
+              { name: "Super 36", size: "12 × 3 m", area: "36 m²", best: "Trasy krajowe", icon: Layers, highlight: false },
+              { name: "Monster XXL", size: "18 × 4 m", area: "72 m²", best: "Maksymalny impact", icon: Zap, highlight: false },
+            ].map((f, i) => (
+              <Reveal key={f.name} delay={i * 0.08}>
+                <TiltCard
+                  className={`rounded-2xl p-6 border h-full cursor-default transition-all duration-500 group relative overflow-hidden ${
+                    f.highlight
+                      ? "glass-card border-primary/20"
+                      : "bg-card/30 border-border/30 hover:border-primary/15"
+                  }`}
+                  intensity={4}
+                >
+                  <div className="relative z-20">
+                    {f.highlight && (
+                      <span className="absolute top-0 right-0 px-2 py-0.5 rounded text-[9px] font-heading font-bold text-primary bg-primary/10 border border-primary/20 uppercase tracking-wider" style={{ transform: "translateZ(20px)" }}>
+                        Popularny
+                      </span>
+                    )}
+                    <div className="w-11 h-11 rounded-xl bg-primary/6 border border-primary/15 flex items-center justify-center mb-5" style={{ transform: "translateZ(12px)" }}>
+                      <f.icon className="w-5 h-5 text-primary/60" />
+                    </div>
+                    <h3 className="font-heading font-bold text-lg text-foreground mb-1">{f.name}</h3>
+                    <div className="text-3xl font-heading font-black text-gradient-brand-bright mb-1" style={{ transform: "translateZ(10px)" }}>{f.area}</div>
+                    <div className="text-xs text-muted-foreground/50 mb-4">{f.size}</div>
+                    <div className="text-sm text-muted-foreground">{f.best}</div>
+                  </div>
+                </TiltCard>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Pricing info */}
-      <section className="section-padding bg-surface border-t border-border/50">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            eyebrow="Cennik"
-            title="Transparentne warunki"
-            description="Cena wynajmu zależy od formatu, lokalizacji i okresu kampanii. Każdą wycenę przygotowujemy indywidualnie."
-          />
-          <div className="grid sm:grid-cols-3 gap-6">
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        <div className="absolute inset-0 bg-noise" />
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
+          <Reveal>
+            <span className="text-xs font-semibold tracking-[0.25em] uppercase text-primary/70 font-heading block mb-3 text-center">Cennik</span>
+            <h2 className="font-heading font-black text-3xl md:text-4xl text-foreground text-center mb-14 leading-tight">Transparentne warunki</h2>
+          </Reveal>
+          <div className="grid sm:grid-cols-3 gap-5">
             {[
               { icon: Calendar, title: "Okres wynajmu", desc: "Minimalny okres to 2 tygodnie. Dłuższe kampanie = lepsze stawki." },
               { icon: MapPin, title: "Lokalizacja", desc: "Cena zależy od miasta i konkretnej lokalizacji nośnika." },
-              { title: "Format nośnika", desc: "Im większy format, tym silniejszy wpływ — i nieco wyższa stawka." },
-            ].map((item) => (
-              <div key={item.title} className="rounded-xl bg-card border border-border p-6">
-                <h3 className="font-heading font-semibold text-foreground mb-2">{item.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
-              </div>
+              { icon: Maximize2, title: "Format nośnika", desc: "Im większy format, tym silniejszy wpływ — i nieco wyższa stawka." },
+            ].map((item, i) => (
+              <Reveal key={item.title} delay={i * 0.08}>
+                <motion.div
+                  className="rounded-xl bg-card/30 border border-border/30 p-6 hover:border-primary/15 transition-all duration-500 group cursor-default"
+                  whileHover={{ y: -4 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                >
+                  <div className="w-10 h-10 rounded-lg bg-primary/6 border border-primary/12 flex items-center justify-center mb-4">
+                    <item.icon className="w-5 h-5 text-primary/60" />
+                  </div>
+                  <h3 className="font-heading font-bold text-foreground mb-2">{item.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+                </motion.div>
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
+
+      {/* Interactive Calculator */}
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        <div className="absolute inset-0 bg-noise" />
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 relative">
+          <Reveal>
+            <span className="text-xs font-semibold tracking-[0.25em] uppercase text-primary/70 font-heading block mb-3 text-center">Kalkulator</span>
+            <h2 className="font-heading font-black text-3xl md:text-4xl text-foreground text-center mb-4 leading-tight">Oszacuj budżet kampanii</h2>
+            <p className="text-center text-muted-foreground mb-10 max-w-md mx-auto">Dobierz format, miasto i okres — otrzymasz orientacyjną cenę w kilka sekund.</p>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <PricingCalculator />
+          </Reveal>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-16 md:py-24 bg-surface border-y border-border/30 relative overflow-hidden">
+        <div className="absolute inset-0 bg-noise" />
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 relative">
+          <Reveal>
+            <span className="text-xs font-semibold tracking-[0.25em] uppercase text-primary/70 font-heading block mb-3 text-center">FAQ</span>
+            <h2 className="font-heading font-black text-3xl md:text-4xl text-foreground text-center mb-12 leading-tight">Najczęstsze pytania</h2>
+          </Reveal>
+          <div className="space-y-3">
+            {[
+              { q: "Jaki jest minimalny okres wynajmu billboardu?", a: "Minimalny okres wynajmu to 2 tygodnie. Oferujemy korzystniejsze stawki przy dłuższych kampaniach — od 1 miesiąca wzwyż." },
+              { q: "Czy mogę wynająć billboard w dowolnym mieście?", a: "Tak, dysponujemy nośnikami w 16 województwach. Największa koncentracja nośników to Warszawa, Kraków, Wrocław, Poznań, Gdańsk i Katowice." },
+              { q: "Co obejmuje cena wynajmu?", a: "Cena wynajmu obejmuje ekspozycję na nośniku. Druk, montaż, demontaż i dokumentację fotograficzną wyceniamy w ramach kompleksowej oferty — często w pakiecie." },
+              { q: "Jak szybko mogę uruchomić kampanię?", a: "Od momentu akceptacji oferty do montażu potrzebujemy zazwyczaj 5-7 dni roboczych. W trybie ekspresowym — nawet 3 dni." },
+              { q: "Czy otrzymam potwierdzenie montażu?", a: "Tak. Po zamontowaniu plakatu wysyłamy dokumentację fotograficzną każdego nośnika — to nasz standard przy każdej kampanii." },
+            ].map((item, i) => (
+              <Reveal key={i} delay={i * 0.06}>
+                <FAQItem question={item.q} answer={item.a} />
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="relative py-20 md:py-28 overflow-hidden">
+        <div className="absolute inset-0 bg-noise" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[250px] bg-primary/6 rounded-full blur-[150px] animate-glow-pulse" />
+        <div className="relative mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
+          <Reveal>
+            <h2 className="font-heading font-black text-3xl md:text-4xl lg:text-5xl text-foreground mb-6 leading-tight">
+              Gotowy do <span className="text-gradient-brand-bright text-glow-red">rezerwacji?</span>
+            </h2>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <div className="flex items-center justify-center gap-6 mb-8 text-sm text-muted-foreground/60">
+              <span className="flex items-center gap-1.5"><Shield className="w-4 h-4 text-primary/40" /> Bez zobowiązań</span>
+              <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-primary/40" /> Wycena w 24h</span>
+              <span className="flex items-center gap-1.5"><Star className="w-4 h-4 text-amber-400/60" /> 4.9/5</span>
+            </div>
+          </Reveal>
+          <Reveal delay={0.2}>
+            <Link to="/kontakt">
+              <Button variant="hero" size="xl" className="group glow-red relative overflow-hidden">
+                <span className="relative z-10 flex items-center gap-2">
+                  Chcę otrzymać wycenę
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                </span>
+              </Button>
+            </Link>
+          </Reveal>
+        </div>
+      </section>
     </>
+  );
+}
+
+function FAQItem({ question, answer }: { question: string; answer: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <motion.div
+      className={`rounded-xl border transition-all duration-300 overflow-hidden ${
+        open ? "bg-card/50 border-primary/15" : "bg-card/20 border-border/30 hover:border-border/50"
+      }`}
+      layout
+    >
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between gap-4 p-5 text-left cursor-pointer"
+        aria-expanded={open}
+      >
+        <span className="font-heading font-semibold text-sm text-foreground">{question}</span>
+        <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.3 }} className="shrink-0">
+          <ChevronDown className="w-4 h-4 text-muted-foreground/50" />
+        </motion.div>
+      </button>
+      <motion.div
+        initial={false}
+        animate={{ height: open ? "auto" : 0, opacity: open ? 1 : 0 }}
+        transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+        className="overflow-hidden"
+      >
+        <p className="px-5 pb-5 text-sm text-muted-foreground leading-relaxed">{answer}</p>
+      </motion.div>
+    </motion.div>
   );
 }

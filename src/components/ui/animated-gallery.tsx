@@ -5,6 +5,7 @@ import {
   type MotionValue,
   type Variants,
   motion,
+  motionValue,
   useScroll,
   useTransform,
 } from "motion/react";
@@ -62,14 +63,18 @@ export const ContainerScroll = ({
     setMounted(true);
   }, []);
 
+  const dummyProgress = React.useMemo(() => motionValue(0), []);
+
   return mounted ? (
     <ContainerScrollInner scrollRef={scrollRef} className={className} style={style} {...props}>
       {children}
     </ContainerScrollInner>
   ) : (
-    <div ref={scrollRef} className={cn("relative h-[300vh]", className)} style={style} {...props}>
-      {children}
-    </div>
+    <ContainerScrollContext.Provider value={{ scrollYProgress: dummyProgress }}>
+      <div ref={scrollRef} className={cn("relative h-[300vh]", className)} style={style} {...props}>
+        {children}
+      </div>
+    </ContainerScrollContext.Provider>
   );
 };
 ContainerScroll.displayName = "ContainerScroll";

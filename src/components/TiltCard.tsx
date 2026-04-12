@@ -1,0 +1,35 @@
+import { useRef, useState } from "react";
+import { motion, useMotionValue, useSpring } from "motion/react";
+
+interface TiltCardProps {
+  children: React.ReactNode;
+  className?: string;
+  intensity?: number;
+}
+
+/**
+ * 3D tilt card with perspective transform and mouse-follow radial glow.
+ * Uses spring physics for smooth return to flat state.
+ */
+export function TiltCard({ children, className = "", intensity = 7 }: TiltCardProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [mp, setMp] = useState({ x: 50, y: 50 });
+  const rx = useMotionValue(0), ry = useMotionValue(0);
+  const srx = useSpring(rx, { stiffness: 150, damping: 20 });
+  const sry = useSpring(ry, { stiffness: 150, damping: 20 });
+  return (
+    <motion.div ref={ref} style={{ rotateX: srx, rotateY: sry, transformPerspective: 800, transformStyle: "preserve-3d", willChange: "transform" }}
+      onMouseMove={(e) => {
+        const r = ref.current?.getBoundingClientRect(); if (!r) return;
+        const px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+        rx.set((py - 0.5) * -intensity); ry.set((px - 0.5) * intensity);
+        setMp({ x: px * 100, y: py * 100 });
+      }}
+      onMouseLeave={() => { rx.set(0); ry.set(0); }}
+      className={className}>
+      <div className="pointer-events-none absolute inset-0 z-10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        style={{ background: `radial-gradient(400px circle at ${mp.x}% ${mp.y}%, oklch(0.58 0.24 25 / 14%), transparent 55%)` }} />
+      {children}
+    </motion.div>
+  );
+}
