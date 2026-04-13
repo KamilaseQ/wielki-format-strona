@@ -1,6 +1,7 @@
 "use client";
 
-import { createFileRoute, Link } from "@tanstack/react-router";
+import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { LeadForm } from "@/components/LeadForm";
 import { PricingCalculator } from "@/components/PricingCalculator";
@@ -9,55 +10,24 @@ import { ArrowRight, Calendar, CheckCircle, MapPin, Maximize2, Star, Shield, Clo
 import { useState } from "react";
 
 import { TiltCard } from "@/components/TiltCard";
-
-export const Route = createFileRoute("/wynajem")({
-  head: () => ({
-    meta: [
-      { title: "Wynajem billboardów — wielkiformat.pl" },
-      { name: "description", content: "Wynajmij billboard w dowolnym mieście w Polsce. Sprawdź dostępność nośników i zarezerwuj termin kampanii." },
-      { property: "og:title", content: "Wynajem billboardów — wielkiformat.pl" },
-      { property: "og:description", content: "Wynajmij billboard w dowolnym mieście w Polsce." },
-    ],
-  }),
-  component: RentalPage,
-});
-
-const ease = [0.25, 0.46, 0.45, 0.94] as const;
-
-function Reveal({ children, className = "", delay = 0, from = "bottom" }: {
-  children: React.ReactNode; className?: string; delay?: number;
-  from?: "bottom" | "left" | "right" | "scale";
-}) {
-  const variants: Record<string, any> = {
-    bottom: { opacity: 0, y: 24 },
-    left: { opacity: 0, x: -30 },
-    right: { opacity: 0, x: 30 },
-    scale: { opacity: 0, scale: 0.95 },
-  };
-  return (
-    <motion.div initial={variants[from]} whileInView={{ opacity: 1, x: 0, y: 0, scale: 1 }}
-      viewport={{ once: true, amount: 0.12 }} transition={{ duration: 0.6, delay, ease }} className={className}>
-      {children}
-    </motion.div>
-  );
-}
+import { Reveal } from "@/components/Reveal";
 
 export default function RentalPage() {
   return (
     <>
-      {/* Hero */}
       <section className="relative py-20 md:py-28 overflow-hidden">
         <div className="absolute inset-0">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1920&auto=format&fit=crop&q=60"
             alt="Billboard w centrum miasta — wynajem reklamy wielkoformatowej"
-            className="w-full h-full object-cover opacity-12"
-            loading="eager" width={1920} height={1080}
+            fill
+            sizes="100vw"
+            priority
+            className="object-cover opacity-12"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/80 to-background" />
         </div>
         <div className="absolute inset-0 bg-noise" />
-
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-start">
@@ -96,8 +66,8 @@ export default function RentalPage() {
               </div>
 
               <Reveal delay={0.3}>
-                <Link to="/nosniki">
-                  <Button variant="outline" size="lg" className="border-glow-hover group">
+                <Link href="/nosniki">
+                  <Button variant="outline" size="lg" className="border-glow-hover group min-h-[44px]">
                     <MapPin className="w-4 h-4" /> Sprawdź nośniki na mapie
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Button>
@@ -112,7 +82,7 @@ export default function RentalPage() {
         </div>
       </section>
 
-      {/* Format comparison table */}
+      {/* Format comparison */}
       <section className="py-16 md:py-24 bg-surface border-y border-border/30 relative overflow-hidden">
         <div className="absolute inset-0 bg-noise" />
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
@@ -248,8 +218,8 @@ export default function RentalPage() {
             </div>
           </Reveal>
           <Reveal delay={0.2}>
-            <Link to="/kontakt">
-              <Button variant="hero" size="xl" className="group glow-red relative overflow-hidden">
+            <Link href="/kontakt">
+              <Button variant="hero" size="xl" className="group glow-red relative overflow-hidden min-h-[44px]">
                 <span className="relative z-10 flex items-center gap-2">
                   Chcę otrzymać wycenę
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
@@ -274,7 +244,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
     >
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between gap-4 p-5 text-left cursor-pointer"
+        className="w-full flex items-center justify-between gap-4 p-5 text-left cursor-pointer min-h-[44px]"
         aria-expanded={open}
       >
         <span className="font-heading font-semibold text-sm text-foreground">{question}</span>

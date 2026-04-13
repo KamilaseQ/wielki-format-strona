@@ -2,9 +2,12 @@ import type { Metadata } from "next";
 import CampaignServicePage from "@/routes/obsluga-kampanii";
 
 export const metadata: Metadata = {
-  title: "Kompleksowa obsluga kampanii",
+  title: "Kompleksowa obsługa kampanii",
   description:
-    "Pelna obsluga kampanii billboardowej: projekt, druk, montaz, demontaz i dokumentacja fotograficzna.",
+    "Pełna obsługa kampanii billboardowej: projekt, druk, montaż, demontaż i dokumentacja fotograficzna.",
+  alternates: {
+    canonical: "https://wielkiformat.pl/obsluga-kampanii",
+  },
 };
 
 export default function Page() {

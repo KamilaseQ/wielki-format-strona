@@ -13,14 +13,14 @@ export default function NotFound() {
           Strona nie znaleziona
         </h1>
         <p className="mb-8 text-sm leading-relaxed text-muted-foreground">
-          Wybrana podstrona nie istnieje albo zostala przeniesiona. Wroc na
-          strone glowna i przejdz do interesujacej sekcji.
+          Wybrana podstrona nie istnieje albo została przeniesiona. Wróć na
+          stronę główną i przejdź do interesującej sekcji.
         </p>
         <Link
           href="/"
           className="inline-flex items-center justify-center rounded-lg bg-gradient-brand px-6 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:scale-[1.02] hover:shadow-xl hover:shadow-primary/30"
         >
-          Wroc na strone glowna
+          Wróć na stronę główną
         </Link>
       </div>
     </main>

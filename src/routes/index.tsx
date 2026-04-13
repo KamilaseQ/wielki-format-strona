@@ -1,10 +1,12 @@
 "use client";
 
-import { createFileRoute, Link } from "@tanstack/react-router";
+import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { MagneticButton } from "@/components/MagneticButton";
 import { TiltCard } from "@/components/TiltCard";
-import { motion, useScroll, useTransform, useSpring, useMotionValue, useInView, animate } from "motion/react";
+import { Reveal } from "@/components/Reveal";
+import { motion, useScroll, useTransform, useInView, animate, useReducedMotion } from "motion/react";
 import { useRef, useEffect, useState } from "react";
 import {
   ArrowRight, Zap, MapPin, CheckCircle,
@@ -13,36 +15,8 @@ import {
   Star, Quote, Shield,
 } from "lucide-react";
 
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "wielkiformat.pl — Billboardy i reklama wielkoformatowa w Polsce" },
-      { name: "description", content: "Billboardy i reklama wielkoformatowa na terenie całej Polski. Ponad 25 lat doświadczenia, 2500+ kampanii rocznie." },
-    ],
-  }),
-  component: HomePage,
-});
-
 /* ═══════ CORE UTILS ═══════ */
 const ease = [0.25, 0.46, 0.45, 0.94] as const;
-
-function Reveal({ children, className = "", delay = 0, from = "bottom" }: {
-  children: React.ReactNode; className?: string; delay?: number;
-  from?: "bottom" | "left" | "right" | "scale";
-}) {
-  const variants: Record<string, any> = {
-    bottom: { opacity: 0, y: 24 },
-    left: { opacity: 0, x: -30 },
-    right: { opacity: 0, x: 30 },
-    scale: { opacity: 0, scale: 0.95 },
-  };
-  return (
-    <motion.div initial={variants[from]} whileInView={{ opacity: 1, x: 0, y: 0, scale: 1 }}
-      viewport={{ once: true, amount: 0.12 }} transition={{ duration: 0.6, delay, ease }} className={className}>
-      {children}
-    </motion.div>
-  );
-}
 
 function useCountUp(target: number, dur = 2) {
   const [count, setCount] = useState(0);
@@ -55,8 +29,6 @@ function useCountUp(target: number, dur = 2) {
   }, [inView, target, dur]);
   return { count, ref };
 }
-
-// TiltCard imported from shared component
 
 function LightDivider() {
   return <div className="light-leak-divider" />;
@@ -123,7 +95,7 @@ function HeroSection() {
 
   return (
     <section ref={ref} className="relative min-h-[100vh] flex items-center overflow-hidden -mt-16 lg:-mt-20">
-      <motion.div className="absolute inset-0" style={{ y: bgY, willChange: "transform" }}>
+      <motion.div className="absolute inset-0" style={{ y: bgY }}>
         <motion.img
           src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1920&auto=format&fit=crop&q=80"
           alt="Panorama miasta nocą z oświetlonymi billboardami reklamowymi"
@@ -166,7 +138,8 @@ function HeroSection() {
           <Reveal delay={0.24}>
             <div className="flex flex-col sm:flex-row gap-4">
               <MagneticButton>
-                <Link to="/kontakt">
+                {/* Point 41: CTA leads to /nosniki (map) — matches "Sprawdź dostępność" */}
+                <Link href="/nosniki">
                   <Button variant="hero" size="xl" className="group glow-red relative overflow-hidden">
                     <span className="relative z-10 flex items-center gap-2">
                       Sprawdź dostępność nośników
@@ -177,10 +150,10 @@ function HeroSection() {
                 </Link>
               </MagneticButton>
               <MagneticButton>
-                <Link to="/nosniki">
+                <Link href="/kontakt">
                   <Button variant="heroOutline" size="xl" className="group">
-                    <MapPin className="w-5 h-5" />
-                    Mapa nośników
+                    <Phone className="w-5 h-5" />
+                    Wyślij zapytanie
                   </Button>
                 </Link>
               </MagneticButton>
@@ -201,7 +174,7 @@ function HeroSection() {
               ))}
             </div>
           </Reveal>
-          {/* FOMO counter */}
+          {/* Point 42: Urgency trigger */}
           <Reveal delay={0.36}>
             <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-xs">
               <span className="relative w-2 h-2">
@@ -246,7 +219,7 @@ function HeroSection() {
 const brands = ["Media Expert", "Żabka", "PKN Orlen", "Kaufland", "Lidl", "Biedronka", "Play", "T-Mobile", "Allegro", "InPost", "Pepco", "CCC", "Reserved", "Leroy Merlin", "OBI"];
 function BrandTicker() {
   return (
-    <section className="py-6 relative overflow-hidden" style={{ contentVisibility: "auto" }} aria-label="Zaufali nam">
+    <section className="py-6 relative overflow-hidden" aria-label="Zaufali nam">
       <div className="absolute inset-0 bg-noise" />
       <div className="flex items-center gap-3 mb-3 justify-center relative">
         <div className="h-px w-10 bg-gradient-to-r from-transparent to-primary/20" />
@@ -256,7 +229,11 @@ function BrandTicker() {
       <div className="relative">
         <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
         <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
-        <div className="flex animate-ticker gap-16 items-center" role="marquee" aria-label="Lista klientów">
+        {/* Point 32: accessible hidden brand list for screen readers */}
+        <ul className="sr-only" aria-label="Lista klientów">
+          {brands.map((n) => <li key={n}>{n}</li>)}
+        </ul>
+        <div className="flex animate-ticker gap-16 items-center" aria-hidden="true">
           {[...brands, ...brands].map((n, i) => (
             <span key={`${n}-${i}`} className="shrink-0 text-base md:text-lg font-heading font-bold tracking-[0.12em] text-muted-foreground/30 uppercase whitespace-nowrap select-none hover:text-muted-foreground/60 transition-colors duration-500 cursor-default">{n}</span>
           ))}
@@ -281,7 +258,7 @@ function EditorialStats() {
   const clipRight = useTransform(maskScroll, [0, 1], [100, 0]);
 
   return (
-    <section ref={statsRef} className="py-16 md:py-24 relative overflow-hidden" style={{ contentVisibility: "auto" }} aria-label="Statystyki firmy">
+    <section ref={statsRef} className="py-16 md:py-24 relative overflow-hidden" aria-label="Statystyki firmy">
       <div className="absolute inset-0 bg-noise" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-6 items-end">
@@ -298,7 +275,7 @@ function EditorialStats() {
               </div>
             </Reveal>
           </div>
-          <motion.div className="lg:col-span-3 lg:col-start-8 will-change-transform" style={{ y: rightColY }}>
+          <motion.div className="lg:col-span-3 lg:col-start-8" style={{ y: rightColY }}>
             <Reveal delay={0.1}>
               <div ref={c2.ref} className="mb-10 lg:mb-12">
                 <div className="font-heading font-black text-5xl md:text-6xl text-foreground tabular-nums">{c2.count}+</div>
@@ -315,13 +292,13 @@ function EditorialStats() {
           <div className="lg:col-span-3 lg:col-start-11 hidden lg:block">
             <Reveal delay={0.15} from="right">
               <div className="relative rounded-2xl overflow-hidden aspect-[3/4] border-glow">
-                <img
+                <Image
                   src="https://images.unsplash.com/photo-1517292987719-0369a794ec0f?w=400&auto=format&fit=crop&q=70"
                   alt="Nocne miasto z oświetlonymi ulicami i reklamami"
-                  className="w-full h-full object-cover opacity-50"
-                  loading="lazy"
                   width={400}
                   height={533}
+                  className="w-full h-full object-cover opacity-50"
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
               </div>
@@ -336,7 +313,7 @@ function EditorialStats() {
 /* ═══════ WHY OUTDOOR ═══════ */
 function WhyOutdoor() {
   return (
-    <section className="py-16 md:py-24 relative overflow-hidden bg-problem-dark" style={{ contentVisibility: "auto" }} aria-label="Dlaczego reklama outdoorowa">
+    <section className="py-16 md:py-24 relative overflow-hidden bg-problem-dark" aria-label="Dlaczego reklama outdoorowa">
       <div className="absolute inset-0 bg-noise" />
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/15 to-transparent" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
@@ -383,12 +360,12 @@ function WhyOutdoor() {
 /* ═══════ SERVICES — Alternating magazine rows ═══════ */
 function ServicesSection() {
   const services = [
-    { icon: Maximize2, title: "Billboardy\nreklamowe", desc: "Nośniki od 12 do 54+ m² w precyzyjnie dobranych lokalizacjach. Arterie komunikacyjne, centra miast, drogi krajowe.", tag: "12–54+ m²", img: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=700&auto=format&fit=crop&q=70" },
-    { icon: Layers, title: "Druk\nwielkoformatowy", desc: "Druk UV i solwentowy na materiałach odpornych na warunki pogodowe. Kolory wierne projektowi przez cały okres ekspozycji.", tag: "pełna gama", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=700&auto=format&fit=crop&q=70" },
-    { icon: Truck, title: "Montaż\ni serwis", desc: "Własne ekipy w 16 województwach. Montaż, demontaż, zaklejenie po kampanii. Dokumentacja fotograficzna w standardzie.", tag: "cała Polska", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=700&auto=format&fit=crop&q=70" },
+    { icon: Maximize2, title: "Billboardy\nreklamowe", hoverAnim: "group-hover:rotate-12 group-hover:scale-110 transition-transform duration-500 ease-out", desc: "Nośniki od 12 do 54+ m² w precyzyjnie dobranych lokalizacjach. Arterie komunikacyjne, centra miast, drogi krajowe.", tag: "12–54+ m²", img: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=700&auto=format&fit=crop&q=70" },
+    { icon: Layers, title: "Druk\nwielkoformatowy", hoverAnim: "group-hover:scale-y-[1.3] group-hover:scale-x-[1.1] transition-transform duration-500 ease-out", desc: "Druk UV i solwentowy na materiałach odpornych na warunki pogodowe. Kolory wierne projektowi przez cały okres ekspozycji.", tag: "pełna gama", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=700&auto=format&fit=crop&q=70" },
+    { icon: Truck, title: "Montaż\ni serwis", hoverAnim: "group-hover:-translate-y-1 group-hover:scale-[1.20] group-hover:-rotate-6 transition-transform duration-500 ease-out", desc: "Własne ekipy w 16 województwach. Montaż, demontaż, zaklejenie po kampanii. Dokumentacja fotograficzna w standardzie.", tag: "cała Polska", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=700&auto=format&fit=crop&q=70" },
   ];
   return (
-    <section className="py-16 md:py-24 relative overflow-hidden" style={{ contentVisibility: "auto" }} aria-label="Nasze usługi">
+    <section className="py-16 md:py-24 relative overflow-hidden" aria-label="Nasze usługi">
       <div className="absolute inset-0 bg-noise" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
         <Reveal>
@@ -402,35 +379,40 @@ function ServicesSection() {
               <div key={s.title} className="grid md:grid-cols-12 gap-6 md:gap-8 items-center">
                 <Reveal from={rev ? "right" : "left"} delay={0.05}
                   className={`md:col-span-7 ${rev ? "md:col-start-6 md:order-2" : ""}`}>
-                  <div className="relative rounded-2xl overflow-hidden aspect-[16/10] group">
-                    <img
+                  <motion.div 
+                    className="relative rounded-2xl overflow-hidden aspect-[16/10] group cursor-pointer"
+                    whileHover={{ scale: 1.015, y: -2 }}
+                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <Image
                       src={s.img}
                       alt={`Usługa: ${s.title.replace('\n', ' ')} — reklama wielkoformatowa`}
-                      className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
-                      loading="lazy"
                       width={700}
                       height={438}
+                      className="w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03]"
+                      loading="lazy"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-r from-background/40 via-transparent to-transparent" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-background/40 via-transparent to-transparent pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent pointer-events-none" />
                     <div className="absolute top-4 left-4 px-3 py-1.5 rounded-lg glass text-[11px] font-heading font-bold text-primary uppercase tracking-wider">{s.tag}</div>
-                    <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-primary/12 rounded-full blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                  </div>
+                  </motion.div>
                 </Reveal>
                 <Reveal from={rev ? "left" : "right"} delay={0.15}
                   className={`md:col-span-5 ${rev ? "md:col-start-1 md:order-1 md:row-start-1" : ""}`}>
-                  <TiltCard className="group rounded-2xl glass-card p-5 cursor-default relative" intensity={4}>
-                    <div className="relative z-20">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="w-11 h-11 rounded-xl bg-primary/6 border border-primary/15 flex items-center justify-center" style={{ transform: "translateZ(12px)" }}>
-                          <s.icon className="w-5 h-5 text-primary icon-spin-hover" />
+                  <motion.div whileHover={{ scale: 1.015 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
+                    <TiltCard className="group rounded-2xl glass-card p-5 cursor-default relative" intensity={4}>
+                      <div className="relative z-20">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-11 h-11 rounded-xl bg-primary/6 border border-primary/15 flex items-center justify-center" style={{ transform: "translateZ(12px)" }}>
+                            <s.icon className={`w-5 h-5 text-primary ${s.hoverAnim || "icon-spin-hover"}`} />
+                          </div>
+                          <span className="font-heading font-black text-4xl text-primary/8" style={{ transform: "translateZ(8px)" }}>0{i + 1}</span>
                         </div>
-                        <span className="font-heading font-black text-4xl text-primary/8" style={{ transform: "translateZ(8px)" }}>0{i + 1}</span>
+                        <h3 className="font-heading font-black text-2xl md:text-3xl text-foreground mb-3 whitespace-pre-line leading-tight">{s.title}</h3>
+                        <p className="text-muted-foreground leading-relaxed">{s.desc}</p>
                       </div>
-                      <h3 className="font-heading font-black text-2xl md:text-3xl text-foreground mb-3 whitespace-pre-line leading-tight">{s.title}</h3>
-                      <p className="text-muted-foreground leading-relaxed">{s.desc}</p>
-                    </div>
-                  </TiltCard>
+                    </TiltCard>
+                  </motion.div>
                 </Reveal>
               </div>
             );
@@ -449,7 +431,7 @@ function TestimonialParallaxCard({ children, offset }: { children: React.ReactNo
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [offset, -offset]);
   return (
-    <motion.div ref={ref} style={{ y }} className="will-change-transform">
+    <motion.div ref={ref} style={{ y }}>
       {children}
     </motion.div>
   );
@@ -480,10 +462,10 @@ function TestimonialsSection() {
     },
   ];
 
-  const parallaxOffsets = [-15, 0, 15]; // First up, second normal, third down
+  const parallaxOffsets = [-15, 0, 15];
 
   return (
-    <section className="py-16 md:py-24 relative overflow-hidden bg-problem-dark" style={{ contentVisibility: "auto" }} aria-label="Opinie klientów">
+    <section className="py-16 md:py-24 relative overflow-hidden bg-problem-dark" aria-label="Opinie klientów">
       <div className="absolute inset-0 bg-noise" />
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/15 to-transparent" />
       <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/15 to-transparent" />
@@ -521,22 +503,15 @@ function TestimonialsSection() {
               <Reveal delay={i * 0.1} from="bottom">
                 <TiltCard className="group relative rounded-2xl glass-card p-6 md:p-7 cursor-default h-full" intensity={3}>
                   <div className="relative z-20">
-                    {/* Quote icon */}
                     <div className="w-9 h-9 rounded-lg bg-primary/6 border border-primary/12 flex items-center justify-center mb-5">
                       <Quote className="w-4 h-4 text-primary/50" />
                     </div>
-
-                    {/* Stars */}
                     <div className="flex items-center gap-0.5 mb-4">
                       {Array.from({ length: t.rating }).map((_, j) => (
                         <Star key={j} className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
                       ))}
                     </div>
-
-                    {/* Text */}
                     <p className="text-sm text-muted-foreground/80 leading-relaxed mb-6">„{t.text}"</p>
-
-                    {/* Author */}
                     <div className="flex items-center gap-3 pt-4 border-t border-border/15">
                       <div className="w-10 h-10 rounded-full bg-primary/8 border border-primary/15 flex items-center justify-center shrink-0">
                         <span className="text-sm font-heading font-bold text-primary/60">
@@ -573,14 +548,12 @@ function ClientShowcase() {
 
   const sectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end end"] });
-  // Horizontal carousel movement
   const x = useTransform(scrollYProgress, [0.05, 0.95], ["0%", "-62%"]);
-  // Slow vertical drift — section content moves up slowly as you scroll, creating parallax
   const sectionY = useTransform(scrollYProgress, [0, 1], [0, -300]);
 
   return (
     <>
-      {/* Mobile: Standard cards grid — NOT inside the sticky section */}
+      {/* Mobile: Standard cards grid */}
       <section className="lg:hidden relative overflow-hidden py-16 md:py-24" aria-label="Realizacje dla klientów">
         <div className="absolute inset-0 bg-surface/20" />
         <div className="absolute inset-0 bg-noise" />
@@ -597,7 +570,7 @@ function ClientShowcase() {
               <Reveal key={c.name} delay={i * 0.08}>
                 <motion.div className="group relative rounded-2xl overflow-hidden aspect-[4/3] cursor-pointer"
                   whileHover={{ scale: 1.008 }} transition={{ type: "spring", stiffness: 300, damping: 25 }}>
-                  <img src={c.img} alt={`Realizacja kampanii: ${c.name} — ${c.scope}`} className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105" loading="lazy" width={600} height={450} />
+                  <Image src={c.img} alt={`Realizacja kampanii: ${c.name} — ${c.scope}`} width={600} height={450} className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105" loading="lazy" />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
                   <div className="absolute bottom-3 left-3">
                     <span className="px-2 py-0.5 rounded glass text-[9px] font-heading font-bold text-primary uppercase tracking-wider mb-1 inline-block">{c.category}</span>
@@ -609,8 +582,8 @@ function ClientShowcase() {
           </div>
           <Reveal delay={0.2}>
             <div className="mt-10 text-center">
-              <Link to="/kontakt">
-                <Button variant="outline" size="lg" className="border-glow-hover group">
+              <Link href="/kontakt">
+                <Button variant="outline" size="lg" className="border-glow-hover group min-h-[44px]">
                   Porozmawiajmy o Twojej kampanii <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
@@ -622,14 +595,10 @@ function ClientShowcase() {
       {/* Desktop: Horizontal scroll with slow vertical drift */}
       <div ref={sectionRef} className="hidden lg:block relative" style={{ height: "400vh" }} aria-label="Realizacje dla klientów">
         <div className="sticky top-0 h-screen overflow-hidden">
-          {/* Background fills the entire sticky viewport */}
           <div className="absolute inset-0 bg-background" />
           <div className="absolute inset-0 bg-surface/20" />
           <div className="absolute inset-0 bg-noise" />
-
-          {/* Content drifts upward slowly — parallax scroll effect */}
-          <motion.div className="relative z-10 will-change-transform" style={{ y: sectionY }}>
-            {/* Header */}
+          <motion.div className="relative z-10" style={{ y: sectionY }}>
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16">
               <div className="grid grid-cols-12 gap-6 mb-10">
                 <div className="col-span-7">
@@ -650,22 +619,23 @@ function ClientShowcase() {
                 </div>
               </div>
             </div>
-
             {/* Scrolling cards row */}
             <div className="flex items-center" style={{ height: "calc(100vh - 200px)" }}>
-              <motion.div className="flex gap-6 pl-[5vw] will-change-transform" style={{ x }}>
-                {clients.map((c, i) => (
+              <motion.div className="flex gap-6 pl-[5vw]" style={{ x }}>
+                {clients.map((c) => (
                   <motion.div
                     key={c.name}
                     className="group relative rounded-2xl overflow-hidden cursor-pointer shrink-0 w-[480px] aspect-[4/3]"
                     whileHover={{ scale: 1.02 }}
                     transition={{ type: "spring", stiffness: 300, damping: 25 }}
                   >
-                    <img
+                    <Image
                       src={c.img}
                       alt={`Realizacja kampanii: ${c.name} — ${c.scope}`}
+                      width={600}
+                      height={450}
                       className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 group-hover:brightness-110"
-                      loading="lazy" width={600} height={450}
+                      loading="lazy"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
                     <div className="absolute -bottom-6 -left-6 w-40 h-40 bg-primary/15 rounded-full blur-[50px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -683,13 +653,12 @@ function ClientShowcase() {
                   </div>
                   <h3 className="font-heading font-bold text-xl text-foreground mb-2">Twoja kampania?</h3>
                   <p className="text-sm text-muted-foreground mb-6">Porozmawiajmy o Twoich celach.</p>
-                  <Link to="/kontakt">
-                    <Button variant="cta" className="group">
+                  <Link href="/kontakt">
+                    <Button variant="cta" className="group min-h-[44px]">
                       Wyślij zapytanie <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </Link>
                 </div>
-                {/* Spacer */}
                 <div className="shrink-0 w-[5vw]" />
               </motion.div>
             </div>
@@ -700,120 +669,68 @@ function ClientShowcase() {
   );
 }
 
-/* ═══════════════════════════════════════════════
-   PROCESS TIMELINE — scroll-driven dot scale
-   ═══════════════════════════════════════════════ */
-function TimelineDot({ index, total }: { index: number; total: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.85", "start 0.55"] });
-  const scale = useTransform(scrollYProgress, [0, 1], [0, 1]);
-  const springScale = useSpring(scale, { stiffness: 200, damping: 20 });
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
+/* ═══════ PROCESS TIMELINE ═══════ */
+function MobileTimelineDot({ index }: { index: number }) {
   return (
-    <div ref={ref} className="relative mb-6 flex justify-start pl-1">
-      <motion.div className="w-4 h-4 rounded-full bg-background border-2 border-primary/60 relative z-10"
-        style={{ scale: springScale, opacity }}>
-        <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping-slow opacity-0 hover:opacity-100" />
-        <div className="absolute inset-[-3px] rounded-full bg-primary/15 blur-[4px]" />
+    <div className="absolute left-0 -translate-x-[calc(50%+7px)] top-3">
+      <motion.div className="w-6 h-6 rounded-full border-2 border-primary/25 bg-background flex items-center justify-center"
+        initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
+        transition={{ delay: index * 0.1 + 0.2, type: "spring", stiffness: 300 }}>
+        <CheckCircle className="w-3 h-3 text-primary" />
       </motion.div>
     </div>
   );
 }
 
-function MobileTimelineDot({ index }: { index: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.9", "start 0.65"] });
-  const scale = useTransform(scrollYProgress, [0, 1], [0, 1]);
-  const springScale = useSpring(scale, { stiffness: 200, damping: 20 });
-  return (
-    <motion.div ref={ref} className="absolute -left-8 top-1 w-3 h-3 rounded-full bg-background border-2 border-primary/50 z-10"
-      style={{ scale: springScale }}>
-      <div className="absolute -inset-1 rounded-full bg-primary/10 blur-[4px]" />
-    </motion.div>
-  );
-}
-
 function ProcessTimeline() {
   const steps = [
-    { num: "01", title: "Zapytanie", desc: "Formularz, telefon, mail. Odpowiadamy w 24h — konkretnie i na temat.", icon: Phone, accent: "Bezpłatnie" },
-    { num: "02", title: "Dobór nośników", desc: "Lokalizacje dobrane pod Twój cel i budżet. Na podstawie danych, nie domysłów.", icon: MapPin, accent: "Dobieramy" },
-    { num: "03", title: "Oferta i start", desc: "Czytelna oferta bez ukrytych kosztów. Po akceptacji — rezerwacja i start produkcji.", icon: BarChart3, accent: "Transparentnie" },
-    { num: "04", title: "Gotowa kampania", desc: "Druk, montaż, dokumentacja fotograficzna. Dostajesz gotowy rezultat.", icon: CheckCircle, accent: "Na czas" },
+    { num: "01", title: "Briefing & analiza", desc: "Poznajemy cele kampanii, grupę docelową i budżet. Proponujemy optymalne lokalizacje i formaty.", icon: Target },
+    { num: "02", title: "Wybór lokalizacji", desc: "Interaktywna mapa z dostępnymi nośnikami. Rekomendacje oparte na danych o ruchu i demografii.", icon: MapPin },
+    { num: "03", title: "Projekt & druk", desc: "Własne studio graficzne i drukarnia wielkoformatowa. Materiały odporne na warunki atmosferyczne.", icon: BarChart3 },
+    { num: "04", title: "Montaż & kampania", desc: "Profesjonalny montaż przez nasze ekipy w całej Polsce. Dokumentacja fotograficzna w standardzie.", icon: CheckCircle },
   ];
 
   return (
-    <section className="py-16 md:py-24 relative overflow-hidden" style={{ contentVisibility: "auto" }} aria-label="Proces współpracy">
+    <section className="py-16 md:py-24 relative overflow-hidden" aria-label="Proces współpracy">
       <div className="absolute inset-0 bg-noise" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
         <Reveal>
-          <span className="text-xs font-semibold tracking-[0.25em] uppercase text-primary/70 font-heading block mb-3 text-center">Proces</span>
-          <h2 className="font-heading font-black text-3xl md:text-4xl lg:text-5xl text-foreground text-center mb-6 leading-tight">Jak to działa</h2>
-          <p className="text-center text-muted-foreground max-w-md mx-auto mb-16">Od pierwszego kontaktu do gotowej kampanii — 4 proste kroki.</p>
+          <span className="text-xs font-semibold tracking-[0.25em] uppercase text-primary/70 font-heading block text-center mb-3">Jak działamy</span>
+          <h2 className="font-heading font-black text-3xl md:text-4xl lg:text-5xl text-foreground text-center mb-16 leading-tight">
+            4 kroki do<br /><span className="text-gradient-brand-bright text-glow-red">skutecznej kampanii</span>
+          </h2>
         </Reveal>
 
-        {/* Desktop: Glass cards with connecting arrows */}
-        <div className="hidden lg:block">
-          <div className="grid grid-cols-4 gap-5">
+        {/* Desktop: Horizontal timeline */}
+        <div className="hidden lg:block relative pb-10">
+          
+          <div className="grid grid-cols-4 gap-6 relative z-10 mb-8">
             {steps.map((s, i) => (
-              <Reveal key={s.num} delay={i * 0.12}>
-                {/* Wrapper for card + arrow — arrow lives outside overflow-hidden card */}
-                <div className="relative h-full">
-                  <motion.div
-                    className="group relative rounded-2xl glass-card p-6 pb-7 cursor-default h-full overflow-hidden"
-                    whileHover={{ y: -6 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  >
-                    {/* Watermark number */}
-                    <div className="absolute -top-4 -right-2 font-heading font-black text-[100px] leading-none text-primary/[0.04] select-none pointer-events-none group-hover:text-primary/[0.08] transition-colors duration-700">{s.num}</div>
-
-                    {/* Accent label */}
-                    <span className="text-[10px] font-heading font-semibold tracking-[0.15em] uppercase text-primary/50 mb-4 block">{s.accent}</span>
-
-                    {/* Icon */}
-                    <div className="w-12 h-12 rounded-xl bg-primary/8 border border-primary/15 flex items-center justify-center mb-5 group-hover:border-primary/30 group-hover:shadow-[0_0_25px_oklch(0.58_0.24_25/15%)] transition-all duration-500 relative">
+              <Reveal key={s.num} delay={i * 0.1}>
+                {/* Content glass card */}
+                <TiltCard 
+                  className="rounded-2xl glass-card p-6 h-full flex flex-col relative group hover:border-primary/30 transition-colors duration-500 cursor-default bg-surface/80 backdrop-blur-md overflow-hidden block"
+                  intensity={6}
+                >
+                  <div className="absolute top-4 right-5 font-heading font-black text-6xl text-primary/[0.04] select-none pointer-events-none transition-all duration-500 group-hover:text-primary/[0.08] group-hover:translate-x-1 group-hover:-translate-y-1">{s.num}</div>
+                  <div className="flex flex-col mb-4 relative z-10">
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 mb-4 group-hover:shadow-[0_0_20px_oklch(0.58_0.24_25/15%)] group-hover:scale-105 transition-all duration-300" style={{ transform: "translateZ(12px)" }}>
                       <s.icon className="w-5 h-5 text-primary" />
-                      <div className="absolute -inset-2 rounded-xl bg-primary/5 blur-[8px] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                     </div>
-
-                    {/* Step number */}
-                    <div className="flex items-baseline gap-2 mb-2">
-                      <span className="font-heading font-black text-2xl text-gradient-brand-bright">{s.num}</span>
-                      <div className="h-px flex-1 bg-gradient-to-r from-primary/20 to-transparent" />
-                    </div>
-
-                    <h3 className="font-heading font-bold text-lg text-foreground mb-2">{s.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
-                  </motion.div>
-
-                  {/* Connecting arrow — OUTSIDE overflow-hidden card so it's never clipped */}
-                  {i < steps.length - 1 && (
-                    <div className="absolute -right-2.5 top-1/2 -translate-y-1/2 z-30 hidden lg:block">
-                      <motion.div
-                        className="w-6 h-6 rounded-full bg-background border border-primary/20 flex items-center justify-center"
-                        whileInView={{ scale: [0.8, 1.1, 1] }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.5 + i * 0.15, duration: 0.5 }}
-                      >
-                        <ArrowRight className="w-3 h-3 text-primary/60" />
-                      </motion.div>
-                    </div>
-                  )}
-                </div>
+                    <span className="font-heading font-black text-xs tracking-wider uppercase text-primary/60 mb-1" style={{ transform: "translateZ(8px)" }}>Krok {parseInt(s.num)}</span>
+                    <h3 className="font-heading font-bold text-lg text-foreground leading-tight">{s.title}</h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed flex-1 relative z-10">{s.desc}</p>
+                </TiltCard>
               </Reveal>
             ))}
           </div>
 
-          {/* Progress bar under cards */}
-          <div className="mt-8 mx-auto max-w-3xl">
-            <div className="h-0.5 bg-border/15 rounded-full overflow-hidden">
-              <motion.div
-                className="h-full bg-gradient-to-r from-primary/60 via-primary to-primary/60 rounded-full"
-                initial={{ width: 0 }}
-                whileInView={{ width: "100%" }}
-                viewport={{ once: true }}
-                transition={{ duration: 2, delay: 0.5, ease }}
-              />
-            </div>
+          {/* Timeline bottom line */}
+          <div className="absolute bottom-4 left-2 right-2 h-0.5 bg-border/20 rounded-full overflow-hidden">
+            <motion.div className="h-full bg-gradient-to-r from-primary/40 via-primary to-primary/40 rounded-full"
+              initial={{ width: 0 }} whileInView={{ width: "100%" }} viewport={{ once: true }}
+              transition={{ duration: 1.5, delay: 0.3, ease }} />
           </div>
         </div>
 
@@ -829,9 +746,7 @@ function ProcessTimeline() {
               {steps.map((s, i) => (
                 <Reveal key={s.num} delay={i * 0.1}>
                   <div className="relative">
-                    {/* Dot */}
                     <MobileTimelineDot index={i} />
-                    {/* Card */}
                     <div className="rounded-xl glass-card p-5 relative overflow-hidden">
                       <div className="absolute -top-2 -right-1 font-heading font-black text-[60px] leading-none text-primary/[0.04] select-none pointer-events-none">{s.num}</div>
                       <div className="flex items-center gap-3 mb-3">
@@ -869,7 +784,7 @@ function BenefitsSection() {
   const { count, ref: cRef } = useCountUp(2500, 2.5);
 
   return (
-    <section className="py-16 md:py-24 relative overflow-hidden" style={{ contentVisibility: "auto" }} aria-label="Korzyści dla Twojej marki">
+    <section className="py-16 md:py-24 relative overflow-hidden" aria-label="Korzyści dla Twojej marki">
       <div className="absolute inset-0 bg-noise" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
         <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
@@ -956,7 +871,7 @@ function CTASection() {
           </p>
         </Reveal>
 
-        {/* Social proof */}
+        {/* Point 42: Urgency + social proof */}
         <Reveal delay={0.25}>
           <div className="flex items-center justify-center gap-6 mb-8 text-sm text-muted-foreground/60">
             <span className="flex items-center gap-1.5"><Shield className="w-4 h-4 text-primary/40" /> Bez zobowiązań</span>
@@ -966,8 +881,8 @@ function CTASection() {
         </Reveal>
 
         <Reveal delay={0.3}>
-          <Link to="/kontakt">
-            <Button variant="hero" size="xl" className="group glow-red-intense cta-proximity-glow relative overflow-hidden">
+          <Link href="/kontakt">
+            <Button variant="hero" size="xl" className="group glow-red-intense cta-proximity-glow relative overflow-hidden min-h-[44px]">
               <span className="relative z-10 flex items-center gap-2">
                 Chcę otrzymać wycenę <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
               </span>

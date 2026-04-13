@@ -1,62 +1,31 @@
 "use client";
 
-import { createFileRoute, Link } from "@tanstack/react-router";
+import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { motion, useInView, animate } from "motion/react";
 import { useRef, useEffect, useState } from "react";
 import { Award, Users, Target, TrendingUp, ArrowRight, Zap, Calendar, MapPin, Shield } from "lucide-react";
 
 import { TiltCard } from "@/components/TiltCard";
-
-export const Route = createFileRoute("/o-nas")({
-  head: () => ({
-    meta: [
-      { title: "O nas — wielkiformat.pl" },
-      { name: "description", content: "Poznaj firmę Billboard Sp. z o.o. — ponad 25 lat doświadczenia w reklamie wielkoformatowej i billboardach." },
-      { property: "og:title", content: "O nas — wielkiformat.pl" },
-      { property: "og:description", content: "Ponad 25 lat doświadczenia w reklamie wielkoformatowej." },
-    ],
-  }),
-  component: AboutPage,
-});
-
-const ease = [0.25, 0.46, 0.45, 0.94] as const;
-
-function Reveal({ children, className = "", delay = 0, from = "bottom" }: {
-  children: React.ReactNode; className?: string; delay?: number;
-  from?: "bottom" | "left" | "right" | "scale";
-}) {
-  const variants: Record<string, any> = {
-    bottom: { opacity: 0, y: 24 },
-    left: { opacity: 0, x: -30 },
-    right: { opacity: 0, x: 30 },
-    scale: { opacity: 0, scale: 0.95 },
-  };
-  return (
-    <motion.div initial={variants[from]} whileInView={{ opacity: 1, x: 0, y: 0, scale: 1 }}
-      viewport={{ once: true, amount: 0.12 }} transition={{ duration: 0.6, delay, ease }} className={className}>
-      {children}
-    </motion.div>
-  );
-}
+import { Reveal } from "@/components/Reveal";
 
 export default function AboutPage() {
   return (
     <>
-      {/* Hero with image */}
       <section className="relative py-20 md:py-28 overflow-hidden">
         <div className="absolute inset-0">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&auto=format&fit=crop&q=60"
             alt="Biuro firmy Billboard — profesjonalne środowisko pracy"
-            className="w-full h-full object-cover opacity-15"
-            loading="eager"
-            width={1920} height={1080}
+            fill
+            sizes="100vw"
+            priority
+            className="object-cover opacity-15"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/80 to-background" />
         </div>
         <div className="absolute inset-0 bg-noise" />
-
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
@@ -112,7 +81,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Story + Timeline */}
+      {/* Story */}
       <section className="py-16 md:py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-noise" />
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
@@ -158,9 +127,8 @@ export default function AboutPage() {
                       initial={{ opacity: 0, x: 20 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
-                      transition={{ delay: i * 0.1, duration: 0.5, ease }}
+                      transition={{ delay: i * 0.1, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
                     >
-                      {/* Timeline line */}
                       {i < 4 && <div className="absolute left-[22px] top-[52px] bottom-0 w-px bg-gradient-to-b from-primary/20 to-transparent" />}
                       <div className="relative z-10 w-11 h-11 rounded-lg bg-primary/8 border border-primary/15 flex items-center justify-center shrink-0">
                         <Calendar className="w-4 h-4 text-primary/60" />
@@ -178,7 +146,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* W liczbach — animated counters */}
+      {/* Counters */}
       <section className="py-16 md:py-24 bg-surface border-y border-border/30 relative overflow-hidden">
         <div className="absolute inset-0 bg-noise" />
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
@@ -217,8 +185,8 @@ export default function AboutPage() {
             </p>
           </Reveal>
           <Reveal delay={0.2}>
-            <Link to="/kontakt">
-              <Button variant="hero" size="xl" className="group glow-red relative overflow-hidden">
+            <Link href="/kontakt">
+              <Button variant="hero" size="xl" className="group glow-red relative overflow-hidden min-h-[44px]">
                 <span className="relative z-10 flex items-center gap-2">
                   Skontaktuj się z nami
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />

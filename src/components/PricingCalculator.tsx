@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { motion } from "motion/react";
 import { Calculator, MapPin, Calendar, Maximize2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "@tanstack/react-router";
 
 const formats = [
   { name: "Super 12", area: "12 m²", base: 800 },
@@ -69,15 +69,17 @@ export function PricingCalculator() {
         <div className="space-y-5">
           {/* Format */}
           <div>
-            <label className="text-xs font-heading font-semibold text-muted-foreground/70 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <label htmlFor="format-selector" className="text-xs font-heading font-semibold text-muted-foreground/70 uppercase tracking-wider mb-2 flex items-center gap-1.5">
               <Maximize2 className="w-3 h-3" /> Format nośnika
             </label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div id="format-selector" role="group" aria-label="Wybierz format nośnika" className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {formats.map((f, i) => (
                 <button
                   key={f.name}
+                  type="button"
                   onClick={() => setFormatIdx(i)}
-                  className={`px-3 py-2.5 rounded-lg text-xs font-heading font-semibold transition-all cursor-pointer ${
+                  aria-pressed={i === formatIdx}
+                  className={`px-3 py-2.5 rounded-lg text-xs font-heading font-semibold transition-all cursor-pointer min-h-[44px] ${
                     i === formatIdx
                       ? "bg-primary/15 border border-primary/30 text-primary"
                       : "bg-card/30 border border-border/30 text-muted-foreground hover:border-border/50"
@@ -92,15 +94,17 @@ export function PricingCalculator() {
 
           {/* City */}
           <div>
-            <label className="text-xs font-heading font-semibold text-muted-foreground/70 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <label htmlFor="city-selector" className="text-xs font-heading font-semibold text-muted-foreground/70 uppercase tracking-wider mb-2 flex items-center gap-1.5">
               <MapPin className="w-3 h-3" /> Miasto
             </label>
-            <div className="grid grid-cols-4 gap-2">
+            <div id="city-selector" role="group" aria-label="Wybierz miasto" className="grid grid-cols-4 gap-2">
               {cities.map((c, i) => (
                 <button
                   key={c.name}
+                  type="button"
                   onClick={() => setCityIdx(i)}
-                  className={`px-2 py-2 rounded-lg text-xs font-heading font-medium transition-all cursor-pointer ${
+                  aria-pressed={i === cityIdx}
+                  className={`px-2 py-2 rounded-lg text-xs font-heading font-medium transition-all cursor-pointer min-h-[44px] ${
                     i === cityIdx
                       ? "bg-primary/15 border border-primary/30 text-primary"
                       : "bg-card/30 border border-border/30 text-muted-foreground hover:border-border/50"
@@ -114,15 +118,17 @@ export function PricingCalculator() {
 
           {/* Period */}
           <div>
-            <label className="text-xs font-heading font-semibold text-muted-foreground/70 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <label htmlFor="period-selector" className="text-xs font-heading font-semibold text-muted-foreground/70 uppercase tracking-wider mb-2 flex items-center gap-1.5">
               <Calendar className="w-3 h-3" /> Okres wynajmu
             </label>
-            <div className="flex flex-wrap gap-2">
+            <div id="period-selector" role="group" aria-label="Wybierz okres wynajmu" className="flex flex-wrap gap-2">
               {periods.map((p, i) => (
                 <button
                   key={p.name}
+                  type="button"
                   onClick={() => setPeriodIdx(i)}
-                  className={`px-3 py-2 rounded-lg text-xs font-heading font-medium transition-all cursor-pointer ${
+                  aria-pressed={i === periodIdx}
+                  className={`px-3 py-2 rounded-lg text-xs font-heading font-medium transition-all cursor-pointer min-h-[44px] ${
                     i === periodIdx
                       ? "bg-primary/15 border border-primary/30 text-primary"
                       : "bg-card/30 border border-border/30 text-muted-foreground hover:border-border/50"
@@ -139,17 +145,21 @@ export function PricingCalculator() {
 
           {/* Count */}
           <div>
-            <label className="text-xs font-heading font-semibold text-muted-foreground/70 uppercase tracking-wider mb-2 block">
+            <label htmlFor="carrier-count" className="text-xs font-heading font-semibold text-muted-foreground/70 uppercase tracking-wider mb-2 block">
               Liczba nośników
             </label>
             <div className="flex items-center gap-3">
               <input
+                id="carrier-count"
                 type="range"
                 min={1}
                 max={50}
                 value={count}
                 onChange={(e) => setCount(Number(e.target.value))}
                 className="flex-1 h-1.5 rounded-full appearance-none bg-border/30 accent-primary cursor-pointer"
+                aria-valuemin={1}
+                aria-valuemax={50}
+                aria-valuenow={count}
               />
               <span className="font-heading font-bold text-foreground text-lg w-10 text-right tabular-nums">{count}</span>
             </div>
@@ -180,8 +190,8 @@ export function PricingCalculator() {
           <p className="text-[11px] text-muted-foreground/30 mb-4">
             * Ceny orientacyjne. Ostateczna wycena zależy od konkretnej lokalizacji i dostępności.
           </p>
-          <Link to="/kontakt">
-            <Button variant="cta" className="w-full group">
+          <Link href="/kontakt">
+            <Button variant="cta" className="w-full group min-h-[44px]">
               Poproś o dokładną wycenę
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Button>

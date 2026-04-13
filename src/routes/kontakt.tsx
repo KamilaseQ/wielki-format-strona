@@ -1,43 +1,11 @@
 "use client";
 
-import { createFileRoute, Link } from "@tanstack/react-router";
+import Image from "next/image";
+import { Reveal } from "@/components/Reveal";
 import { LeadForm } from "@/components/LeadForm";
 import { Button } from "@/components/ui/button";
-import { motion } from "motion/react";
 import { MapPin, Phone, Mail, Clock, Shield, Star, CheckCircle } from "lucide-react";
-
-
-export const Route = createFileRoute("/kontakt")({
-  head: () => ({
-    meta: [
-      { title: "Kontakt — wielkiformat.pl" },
-      { name: "description", content: "Skontaktuj się z nami. Zapytaj o dostępność billboardów, poproś o wycenę lub umów się na rozmowę." },
-      { property: "og:title", content: "Kontakt — wielkiformat.pl" },
-      { property: "og:description", content: "Zapytaj o dostępność billboardów i poproś o wycenę." },
-    ],
-  }),
-  component: ContactPage,
-});
-
-const ease = [0.25, 0.46, 0.45, 0.94] as const;
-
-function Reveal({ children, className = "", delay = 0, from = "bottom" }: {
-  children: React.ReactNode; className?: string; delay?: number;
-  from?: "bottom" | "left" | "right" | "scale";
-}) {
-  const variants: Record<string, any> = {
-    bottom: { opacity: 0, y: 24 },
-    left: { opacity: 0, x: -30 },
-    right: { opacity: 0, x: 30 },
-    scale: { opacity: 0, scale: 0.95 },
-  };
-  return (
-    <motion.div initial={variants[from]} whileInView={{ opacity: 1, x: 0, y: 0, scale: 1 }}
-      viewport={{ once: true, amount: 0.12 }} transition={{ duration: 0.6, delay, ease }} className={className}>
-      {children}
-    </motion.div>
-  );
-}
+import { motion } from "motion/react";
 
 export default function ContactPage() {
   return (
@@ -45,16 +13,17 @@ export default function ContactPage() {
       {/* Hero with image */}
       <section className="relative py-20 md:py-28 overflow-hidden">
         <div className="absolute inset-0">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&auto=format&fit=crop&q=60"
             alt="Biurowiec w centrum miasta — kontakt z firmą"
-            className="w-full h-full object-cover opacity-10"
-            loading="eager" width={1920} height={1080}
+            fill
+            sizes="100vw"
+            className="object-cover opacity-10"
+            priority
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/80 to-background" />
         </div>
         <div className="absolute inset-0 bg-noise" />
-
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-start">
@@ -95,7 +64,7 @@ export default function ContactPage() {
                       <div>
                         <div className="text-xs text-muted-foreground/50 mb-0.5">{item.label}</div>
                         {"href" in item && item.href ? (
-                          <a href={item.href} className="text-foreground font-medium hover:text-primary transition-colors">{item.value}</a>
+                          <a href={item.href} className="text-foreground font-medium hover:text-primary transition-colors" aria-label={`${item.label}: ${item.value}`}>{item.value}</a>
                         ) : (
                           <div className="text-foreground font-medium">{item.value}</div>
                         )}
@@ -160,7 +129,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* CTA — different than homepage (point 18) */}
       <section className="relative py-20 md:py-28 overflow-hidden">
         <div className="absolute inset-0 bg-noise" />
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[250px] bg-primary/6 rounded-full blur-[150px] animate-glow-pulse" />
@@ -176,8 +145,8 @@ export default function ContactPage() {
             </p>
           </Reveal>
           <Reveal delay={0.2}>
-            <a href="tel:+48123456789">
-              <Button variant="hero" size="xl" className="group glow-red relative overflow-hidden">
+            <a href="tel:+48123456789" aria-label="Zadzwoń: +48 123 456 789">
+              <Button variant="hero" size="xl" className="group glow-red relative overflow-hidden min-h-[44px]">
                 <span className="relative z-10 flex items-center gap-2">
                   <Phone className="w-5 h-5" /> Zadzwoń teraz
                 </span>

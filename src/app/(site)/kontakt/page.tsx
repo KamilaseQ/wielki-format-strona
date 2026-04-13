@@ -4,7 +4,10 @@ import ContactPage from "@/routes/kontakt";
 export const metadata: Metadata = {
   title: "Kontakt",
   description:
-    "Skontaktuj sie z nami. Zapytaj o dostepnosc billboardow, popros o wycene lub umow rozmowe.",
+    "Skontaktuj się z nami. Zapytaj o dostępność billboardów, poproś o wycenę lub umów rozmowę.",
+  alternates: {
+    canonical: "https://wielkiformat.pl/kontakt",
+  },
 };
 
 export default function Page() {

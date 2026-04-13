@@ -7,6 +7,8 @@ export function CustomCursor() {
   const [hovering, setHovering] = useState(false);
   const [isMobile, setIsMobile] = useState(true);
 
+  const [hasMoved, setHasMoved] = useState(false);
+
   useEffect(() => {
     // Only show on desktop with fine pointer
     const mq = window.matchMedia("(pointer: fine)");
@@ -17,6 +19,7 @@ export function CustomCursor() {
     if (!cursor) return;
 
     const onMove = (e: MouseEvent) => {
+      setHasMoved(true);
       cursor.style.left = e.clientX + "px";
       cursor.style.top = e.clientY + "px";
     };
@@ -48,6 +51,7 @@ export function CustomCursor() {
     <div
       ref={cursorRef}
       className={`cursor-glow ${hovering ? "hovering" : ""}`}
+      style={{ opacity: hasMoved ? 1 : 0 }}
       aria-hidden="true"
     />
   );
