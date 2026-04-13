@@ -1,3 +1,5 @@
+"use client";
+
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
@@ -7,8 +9,7 @@ import {
   Maximize2, Car, ChevronRight, ChevronLeft, Phone, Zap, SlidersHorizontal,
   LocateFixed, ArrowUpDown, List, Map as MapIcon,
 } from "lucide-react";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
+import type { CircleMarker, Map } from "leaflet";
 
 export const Route = createFileRoute("/nosniki")({
   head: () => ({
@@ -67,9 +68,11 @@ const STATUS_CFG: Record<Status, { dot: string; pill: string; label: string }> =
 };
 
 type SortKey = "city" | "type" | "status";
+const DEFAULT_MAP_CENTER: [number, number] = [52.1, 19.4];
+const DEFAULT_MAP_ZOOM = 6;
 
 /* ═══════════ PAGE ═══════════ */
-function CarriersPage() {
+export default function CarriersPage() {
   return <div><MapTool /></div>;
 }
 
@@ -120,39 +123,70 @@ function MapTool() {
 
   // Leaflet map
   const mapContainerRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<L.Map | null>(null);
+  const mapInstanceRef = useRef<Map | null>(null);
+  const leafletRef = useRef<typeof import("leaflet") | null>(null);
 
   useEffect(() => {
-    if (!mapContainerRef.current || mapInstanceRef.current) return;
+    let cancelled = false;
 
-    const map = L.map(mapContainerRef.current, {
-      center: [52.1, 19.4],
-      zoom: 6,
-      zoomControl: false,
-      attributionControl: false,
-    });
+    async function initMap() {
+      if (!mapContainerRef.current || mapInstanceRef.current) return;
 
-    // Dark tile layer
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      maxZoom: 19,
-    }).addTo(map);
+      const L = await import("leaflet");
+      if (cancelled || !mapContainerRef.current) return;
 
-    // Zoom control bottom-right
-    L.control.zoom({ position: 'bottomright' }).addTo(map);
+      leafletRef.current = L;
 
-    mapInstanceRef.current = map;
+      const map = L.map(mapContainerRef.current, {
+        center: DEFAULT_MAP_CENTER,
+        zoom: DEFAULT_MAP_ZOOM,
+        zoomControl: false,
+        attributionControl: false,
+      });
+
+      L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+        maxZoom: 19,
+      }).addTo(map);
+
+      L.control.zoom({ position: "bottomright" }).addTo(map);
+
+      mapInstanceRef.current = map;
+      window.setTimeout(() => map.invalidateSize(), 0);
+    }
+
+    void initMap();
 
     return () => {
-      map.remove();
+      cancelled = true;
+      mapInstanceRef.current?.remove();
       mapInstanceRef.current = null;
+      leafletRef.current = null;
     };
   }, []);
 
-  // Update markers when filtered carriers change
-  const markersRef = useRef<L.CircleMarker[]>([]);
+  useEffect(() => {
+    if (selected && !filtered.some((carrier) => carrier.id === selected.id)) {
+      setSelected(null);
+    }
+  }, [filtered, selected]);
+
   useEffect(() => {
     const map = mapInstanceRef.current;
     if (!map) return;
+
+    const timer = window.setTimeout(() => {
+      map.invalidateSize();
+    }, mobileView === "map" ? 80 : 0);
+
+    return () => window.clearTimeout(timer);
+  }, [mobileView, filtersOpen, selected]);
+
+  // Update markers when filtered carriers change
+  const markersRef = useRef<CircleMarker[]>([]);
+  useEffect(() => {
+    const L = leafletRef.current;
+    const map = mapInstanceRef.current;
+    if (!map || !L) return;
 
     // Clear old markers
     markersRef.current.forEach((m) => m.remove());
@@ -191,6 +225,36 @@ function MapTool() {
       }
 
       markersRef.current.push(marker);
+    });
+
+    const visiblePoints = filtered.map((carrier) => [carrier.lat, carrier.lng] as [number, number]);
+    const activeSelected = selected && filtered.some((carrier) => carrier.id === selected.id) ? selected : null;
+
+    window.requestAnimationFrame(() => {
+      map.invalidateSize();
+
+      if (activeSelected) {
+        map.flyTo([activeSelected.lat, activeSelected.lng], Math.max(map.getZoom(), 11), {
+          animate: true,
+          duration: 0.45,
+        });
+        return;
+      }
+
+      if (visiblePoints.length === 0) {
+        map.setView(DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM);
+        return;
+      }
+
+      if (visiblePoints.length === 1) {
+        map.setView(visiblePoints[0], 11);
+        return;
+      }
+
+      map.fitBounds(visiblePoints, {
+        padding: [48, 48],
+        maxZoom: 10,
+      });
     });
   }, [filtered, selected]);
 
@@ -294,7 +358,7 @@ function MapTool() {
             {selected ? (
               <DetailPanel key="detail" carrier={selected} onBack={() => setSelected(null)} />
             ) : (
-              <ListPanel key="list" carriers={filtered} onSelect={(c) => { setSelected(c); setMobileView("map"); }} selectedId={selected?.id} />
+              <ListPanel key="list" carriers={filtered} onSelect={(c) => { setSelected(c); setMobileView("map"); }} />
             )}
           </AnimatePresence>
         </div>

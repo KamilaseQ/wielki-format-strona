@@ -9,6 +9,9 @@ lerna-debug.log*
 
 node_modules
 dist
+/.next
+/out
+*.tsbuildinfo
 dist-ssr
 .output
 .vinxi

@@ -1,3 +1,5 @@
+"use client";
+
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { MagneticButton } from "@/components/MagneticButton";
@@ -28,7 +30,7 @@ function Reveal({ children, className = "", delay = 0, from = "bottom" }: {
   children: React.ReactNode; className?: string; delay?: number;
   from?: "bottom" | "left" | "right" | "scale";
 }) {
-  const variants: Record<string, object> = {
+  const variants: Record<string, any> = {
     bottom: { opacity: 0, y: 24 },
     left: { opacity: 0, x: -30 },
     right: { opacity: 0, x: 30 },
@@ -72,7 +74,7 @@ function AmbientGlow() {
 }
 
 /* ═══════ PAGE ═══════ */
-function HomePage() {
+export default function HomePage() {
   return (
     <>
       <AmbientGlow />
@@ -128,8 +130,7 @@ function HeroSection() {
           className="w-full h-full object-cover"
           style={{ opacity: bgOp, filter: "grayscale(100%) contrast(1.2)" }}
           loading="eager"
-          // @ts-ignore
-          fetchpriority="high"
+          fetchPriority="high"
           width={1920}
           height={1080}
         />
@@ -418,7 +419,7 @@ function ServicesSection() {
                 </Reveal>
                 <Reveal from={rev ? "left" : "right"} delay={0.15}
                   className={`md:col-span-5 ${rev ? "md:col-start-1 md:order-1 md:row-start-1" : ""}`}>
-                  <TiltCard className="group rounded-2xl p-5 cursor-default relative ripple-hover" intensity={4}>
+                  <TiltCard className="group rounded-2xl glass-card p-5 cursor-default relative" intensity={4}>
                     <div className="relative z-20">
                       <div className="flex items-center gap-3 mb-4">
                         <div className="w-11 h-11 rounded-xl bg-primary/6 border border-primary/15 flex items-center justify-center" style={{ transform: "translateZ(12px)" }}>

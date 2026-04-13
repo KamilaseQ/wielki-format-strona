@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef, useState } from "react";
 import { motion, useMotionValue, useSpring } from "motion/react";
 
@@ -24,11 +26,16 @@ export function TiltCard({ children, className = "", intensity = 7 }: TiltCardPr
         const px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
         rx.set((py - 0.5) * -intensity); ry.set((px - 0.5) * intensity);
         setMp({ x: px * 100, y: py * 100 });
+        ref.current?.style.setProperty("--ripple-x", `${px * 100}%`);
+        ref.current?.style.setProperty("--ripple-y", `${py * 100}%`);
       }}
       onMouseLeave={() => { rx.set(0); ry.set(0); }}
       className={className}>
       <div className="pointer-events-none absolute inset-0 z-10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-        style={{ background: `radial-gradient(400px circle at ${mp.x}% ${mp.y}%, oklch(0.58 0.24 25 / 14%), transparent 55%)` }} />
+        style={{
+          background: `radial-gradient(220px circle at ${mp.x}% ${mp.y}%, oklch(0.58 0.24 25 / 7%) 0%, oklch(0.58 0.24 25 / 5%) 28%, oklch(0.58 0.24 25 / 2.5%) 52%, transparent 76%)`,
+          filter: "blur(22px)",
+        }} />
       {children}
     </motion.div>
   );

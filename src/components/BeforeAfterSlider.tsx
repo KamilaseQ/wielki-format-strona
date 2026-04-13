@@ -1,3 +1,6 @@
+"use client";
+
+import Image from "next/image";
 import { useState, useRef, useCallback } from "react";
 import { motion } from "motion/react";
 import { GripVertical } from "lucide-react";
@@ -60,12 +63,12 @@ export function BeforeAfterSlider({
       transition={{ duration: 0.6 }}
     >
       {/* After (bottom layer — full) */}
-      <img
+      <Image
         src={afterImage}
         alt={afterAlt}
-        className="absolute inset-0 w-full h-full object-cover"
-        loading="lazy"
-        draggable={false}
+        fill
+        sizes="(min-width: 1024px) 960px, 100vw"
+        className="absolute inset-0 h-full w-full object-cover"
       />
 
       {/* Before (top layer — clipped) */}
@@ -73,13 +76,12 @@ export function BeforeAfterSlider({
         className="absolute inset-0 overflow-hidden"
         style={{ width: `${position}%` }}
       >
-        <img
+        <Image
           src={beforeImage}
           alt={beforeAlt}
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ width: `${containerRef.current?.offsetWidth || 0}px`, maxWidth: "none" }}
-          loading="lazy"
-          draggable={false}
+          fill
+          sizes="(min-width: 1024px) 960px, 100vw"
+          className="absolute inset-0 h-full w-full object-cover"
         />
       </div>
 

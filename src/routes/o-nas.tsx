@@ -1,3 +1,5 @@
+"use client";
+
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { motion, useInView, animate } from "motion/react";
@@ -24,7 +26,7 @@ function Reveal({ children, className = "", delay = 0, from = "bottom" }: {
   children: React.ReactNode; className?: string; delay?: number;
   from?: "bottom" | "left" | "right" | "scale";
 }) {
-  const variants: Record<string, object> = {
+  const variants: Record<string, any> = {
     bottom: { opacity: 0, y: 24 },
     left: { opacity: 0, x: -30 },
     right: { opacity: 0, x: 30 },
@@ -38,7 +40,7 @@ function Reveal({ children, className = "", delay = 0, from = "bottom" }: {
   );
 }
 
-function AboutPage() {
+export default function AboutPage() {
   return (
     <>
       {/* Hero with image */}

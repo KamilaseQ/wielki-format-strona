@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { motion } from "motion/react";
 import { Calculator, MapPin, Calendar, Maximize2, ArrowRight } from "lucide-react";

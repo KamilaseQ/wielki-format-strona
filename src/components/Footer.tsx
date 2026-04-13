@@ -1,3 +1,5 @@
+"use client";
+
 import { Link } from "@tanstack/react-router";
 import { MapPin, Phone, Mail, ArrowUpRight } from "lucide-react";
 import { motion, useScroll, useTransform } from "motion/react";

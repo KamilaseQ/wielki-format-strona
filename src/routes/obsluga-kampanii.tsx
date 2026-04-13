@@ -1,3 +1,5 @@
+"use client";
+
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { motion } from "motion/react";
@@ -23,7 +25,7 @@ function Reveal({ children, className = "", delay = 0, from = "bottom" }: {
   children: React.ReactNode; className?: string; delay?: number;
   from?: "bottom" | "left" | "right" | "scale";
 }) {
-  const variants: Record<string, object> = {
+  const variants: Record<string, any> = {
     bottom: { opacity: 0, y: 24 },
     left: { opacity: 0, x: -30 },
     right: { opacity: 0, x: 30 },
@@ -46,7 +48,7 @@ const services = [
   { icon: Camera, num: "06", title: "Dokumentacja fotograficzna", desc: "Po montażu otrzymasz zdjęcia każdego nośnika z Twoją reklamą — potwierdzenie realizacji.", img: "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=500&auto=format&fit=crop&q=60" },
 ];
 
-function CampaignServicePage() {
+export default function CampaignServicePage() {
   return (
     <>
       {/* Hero */}

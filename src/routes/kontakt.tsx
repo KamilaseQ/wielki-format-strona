@@ -1,3 +1,5 @@
+"use client";
+
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { LeadForm } from "@/components/LeadForm";
 import { Button } from "@/components/ui/button";
@@ -23,7 +25,7 @@ function Reveal({ children, className = "", delay = 0, from = "bottom" }: {
   children: React.ReactNode; className?: string; delay?: number;
   from?: "bottom" | "left" | "right" | "scale";
 }) {
-  const variants: Record<string, object> = {
+  const variants: Record<string, any> = {
     bottom: { opacity: 0, y: 24 },
     left: { opacity: 0, x: -30 },
     right: { opacity: 0, x: 30 },
@@ -37,7 +39,7 @@ function Reveal({ children, className = "", delay = 0, from = "bottom" }: {
   );
 }
 
-function ContactPage() {
+export default function ContactPage() {
   return (
     <>
       {/* Hero with image */}
