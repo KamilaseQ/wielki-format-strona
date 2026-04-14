@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description:
     "Interaktywna mapa nośników billboardowych w całej Polsce. Sprawdź dostępność i lokalizacje.",
   openGraph: {
-    title: "Mapa nośników reklamowych — wielkiformat.pl",
+    title: "Mapa nośników reklamowych - wielkiformat.pl",
     description:
       "Interaktywna mapa nośników billboardowych w całej Polsce.",
   },

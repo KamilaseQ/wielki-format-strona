@@ -102,9 +102,9 @@ export function Footer() {
                   <MapPin className="w-3.5 h-3.5 text-primary/60" />
                 </div>
                 <span>
-                  ul. Przykładowa 10,
+                  Al. Marszałka Józefa Piłsudskiego 55A,
                   <br />
-                  00-001 Warszawa
+                  05-270 Marki
                 </span>
               </li>
               <li className="flex items-center gap-3 text-sm text-muted-foreground">
@@ -112,10 +112,10 @@ export function Footer() {
                   <Phone className="w-3.5 h-3.5 text-primary/60" />
                 </div>
                 <a
-                  href="tel:+48123456789"
+                  href="tel:+48600131013"
                   className="hover:text-foreground transition-colors"
                 >
-                  +48 123 456 789
+                  Wdrożenia: 600 13 10 13
                 </a>
               </li>
               <li className="flex items-center gap-3 text-sm text-muted-foreground">
@@ -123,10 +123,10 @@ export function Footer() {
                   <Mail className="w-3.5 h-3.5 text-primary/60" />
                 </div>
                 <a
-                  href="mailto:biuro@wielkiformat.pl"
+                  href="mailto:info@wielkiformat.pl"
                   className="hover:text-foreground transition-colors"
                 >
-                  biuro@wielkiformat.pl
+                  Obsługa: info@wielkiformat.pl
                 </a>
               </li>
             </ul>
@@ -144,11 +144,12 @@ export function Footer() {
               <p className="font-medium text-muted-foreground">
                 Billboard Sp. z o.o.
               </p>
-              <p>NIP: 000-000-00-00</p>
-              <p>REGON: 000000000</p>
-              <p>KRS: 0000000000</p>
+              <p>NIP: 5322051052 | REGON: 361032049</p>
+              <p>KRS: 0000547439</p>
+              <p className="pt-1 text-xs">Bank PKO BP S.A.:</p>
+              <p className="text-xs">17 1020 1127 0000 1102 0248 2073</p>
             </div>
-            {/* Social — hidden until real URLs are available (point 17) */}
+            {/* Social - hidden until real URLs are available (point 17) */}
           </motion.div>
         </div>
 

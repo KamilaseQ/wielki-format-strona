@@ -61,7 +61,7 @@ export function Header() {
           <Link
             href="/"
             className="flex items-center group"
-            aria-label="wielkiformat.pl — Strona główna"
+            aria-label="wielkiformat.pl - Strona główna"
           >
             <span className="font-heading font-bold text-lg text-foreground group-hover:text-primary transition-colors">
               wielkiformat<span className="text-primary">.pl</span>
@@ -109,12 +109,12 @@ export function Header() {
 
           <div className="hidden lg:flex items-center gap-3">
             <a
-              href="tel:+48123456789"
+              href="tel:+48600131013"
               className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-              aria-label="Zadzwoń: +48 123 456 789"
+              aria-label="Wdrożenia: 600 13 10 13"
             >
               <Phone className="w-4 h-4" />
-              <span>+48 123 456 789</span>
+              <span>600 13 10 13</span>
             </a>
             <Link href="/kontakt">
               <Button variant="cta" size="sm">

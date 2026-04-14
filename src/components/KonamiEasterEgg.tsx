@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 
 const KONAMI_CODE = [
@@ -15,23 +15,23 @@ const KONAMI_CODE = [
  */
 export function KonamiEasterEgg() {
   const [activated, setActivated] = useState(false);
-  const [sequence, setSequence] = useState<string[]>([]);
-
-  const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    const newSeq = [...sequence, e.code].slice(-KONAMI_CODE.length);
-    setSequence(newSeq);
-
-    if (newSeq.length === KONAMI_CODE.length && newSeq.every((k, i) => k === KONAMI_CODE[i])) {
-      setActivated(true);
-      setSequence([]);
-      setTimeout(() => setActivated(false), 5000);
-    }
-  }, [sequence]);
+  const sequenceRef = useRef<string[]>([]);
 
   useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const newSeq = [...sequenceRef.current, e.code].slice(-KONAMI_CODE.length);
+      sequenceRef.current = newSeq;
+
+      if (newSeq.length === KONAMI_CODE.length && newSeq.every((k, i) => k === KONAMI_CODE[i])) {
+        setActivated(true);
+        sequenceRef.current = [];
+        setTimeout(() => setActivated(false), 5000);
+      }
+    };
+
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleKeyDown]);
+  }, []);
 
   return (
     <AnimatePresence>

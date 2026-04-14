@@ -19,7 +19,7 @@ export default function RentalPage() {
         <div className="absolute inset-0">
           <Image
             src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1920&auto=format&fit=crop&q=60"
-            alt="Billboard w centrum miasta — wynajem reklamy wielkoformatowej"
+            alt="Billboard w centrum miasta - wynajem reklamy wielkoformatowej"
             fill
             sizes="100vw"
             priority
@@ -44,17 +44,17 @@ export default function RentalPage() {
               </Reveal>
               <Reveal delay={0.16}>
                 <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                  Sprawdź dostępność nośników w interesującym Cię regionie. Wystarczy jedno zapytanie — resztą zajmiemy się my.
+                  Sprawdź dostępność nośników w interesującym Cię regionie. Wystarczy jedno zapytanie - resztą zajmiemy się my.
                 </p>
               </Reveal>
 
               <div className="space-y-3 mb-8">
                 {[
-                  "Wynajem na dowolny okres — od 2 tygodni wzwyż",
+                  "Wynajem na dowolny okres - od 2 tygodni wzwyż",
                   "Elastyczne warunki i rabaty przy dłuższych kampaniach",
                   "Możliwość rezerwacji wielu nośników jednocześnie",
                   "Dostępność w największych miastach i przy trasach",
-                  "Szybka oferta cenowa — odpowiedź w 24h",
+                  "Szybka oferta cenowa - odpowiedź w 24h",
                 ].map((item, i) => (
                   <Reveal key={item} delay={i * 0.05} from="left">
                     <div className="flex items-start gap-3 group">
@@ -89,15 +89,17 @@ export default function RentalPage() {
           <Reveal>
             <span className="text-xs font-semibold tracking-[0.25em] uppercase text-primary/70 font-heading block mb-3 text-center">Formaty</span>
             <h2 className="font-heading font-black text-3xl md:text-4xl text-foreground text-center mb-4 leading-tight">Porównaj formaty nośników</h2>
-            <p className="text-center text-muted-foreground mb-14 max-w-lg mx-auto">Wybierz format dopasowany do Twoich celów i budżetu.</p>
+            <p className="text-center text-muted-foreground mb-14 max-w-2xl mx-auto leading-relaxed">
+              Nasi Klienci mogą zdecydować się na wynajem BILLBOARDÓW SUPER 12, SUPER 18 i SUPER 36, których wymiary wynoszą odpowiednio 5,04 x 2,38 m, 6 x 3 m oraz 12 x 3 m. Do dyspozycji pozostawimy też nośniki MONSTER XXL o powierzchni wynoszącej od 30 do ponad 100 m².
+            </p>
           </Reveal>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { name: "Super 12", size: "4 × 3 m", area: "12 m²", best: "Lokalne kampanie", icon: Maximize2, highlight: false },
+              { name: "Super 12", size: "5,04 × 2,38 m", area: "12 m²", best: "Lokalne kampanie", icon: Maximize2, highlight: false },
               { name: "Super 18", size: "6 × 3 m", area: "18 m²", best: "Kampanie miejskie", icon: Maximize2, highlight: true },
               { name: "Super 36", size: "12 × 3 m", area: "36 m²", best: "Trasy krajowe", icon: Layers, highlight: false },
-              { name: "Monster XXL", size: "18 × 4 m", area: "72 m²", best: "Maksymalny impact", icon: Zap, highlight: false },
+              { name: "Monster XXL", size: "niestandardowy", area: "30-100+ m²", best: "Maksymalny impact", icon: Zap, highlight: false },
             ].map((f, i) => (
               <Reveal key={f.name} delay={i * 0.08}>
                 <TiltCard
@@ -141,7 +143,7 @@ export default function RentalPage() {
             {[
               { icon: Calendar, title: "Okres wynajmu", desc: "Minimalny okres to 2 tygodnie. Dłuższe kampanie = lepsze stawki." },
               { icon: MapPin, title: "Lokalizacja", desc: "Cena zależy od miasta i konkretnej lokalizacji nośnika." },
-              { icon: Maximize2, title: "Format nośnika", desc: "Im większy format, tym silniejszy wpływ — i nieco wyższa stawka." },
+              { icon: Maximize2, title: "Format nośnika", desc: "Im większy format, tym silniejszy wpływ - i nieco wyższa stawka." },
             ].map((item, i) => (
               <Reveal key={item.title} delay={i * 0.08}>
                 <motion.div
@@ -168,7 +170,7 @@ export default function RentalPage() {
           <Reveal>
             <span className="text-xs font-semibold tracking-[0.25em] uppercase text-primary/70 font-heading block mb-3 text-center">Kalkulator</span>
             <h2 className="font-heading font-black text-3xl md:text-4xl text-foreground text-center mb-4 leading-tight">Oszacuj budżet kampanii</h2>
-            <p className="text-center text-muted-foreground mb-10 max-w-md mx-auto">Dobierz format, miasto i okres — otrzymasz orientacyjną cenę w kilka sekund.</p>
+            <p className="text-center text-muted-foreground mb-10 max-w-md mx-auto">Dobierz format, miasto i okres - otrzymasz orientacyjną cenę w kilka sekund.</p>
           </Reveal>
           <Reveal delay={0.1}>
             <PricingCalculator />
@@ -186,11 +188,11 @@ export default function RentalPage() {
           </Reveal>
           <div className="space-y-3">
             {[
-              { q: "Jaki jest minimalny okres wynajmu billboardu?", a: "Minimalny okres wynajmu to 2 tygodnie. Oferujemy korzystniejsze stawki przy dłuższych kampaniach — od 1 miesiąca wzwyż." },
+              { q: "Jaki jest minimalny okres wynajmu billboardu?", a: "Minimalny okres wynajmu to 2 tygodnie. Oferujemy korzystniejsze stawki przy dłuższych kampaniach - od 1 miesiąca wzwyż." },
               { q: "Czy mogę wynająć billboard w dowolnym mieście?", a: "Tak, dysponujemy nośnikami w 16 województwach. Największa koncentracja nośników to Warszawa, Kraków, Wrocław, Poznań, Gdańsk i Katowice." },
-              { q: "Co obejmuje cena wynajmu?", a: "Cena wynajmu obejmuje ekspozycję na nośniku. Druk, montaż, demontaż i dokumentację fotograficzną wyceniamy w ramach kompleksowej oferty — często w pakiecie." },
-              { q: "Jak szybko mogę uruchomić kampanię?", a: "Od momentu akceptacji oferty do montażu potrzebujemy zazwyczaj 5-7 dni roboczych. W trybie ekspresowym — nawet 3 dni." },
-              { q: "Czy otrzymam potwierdzenie montażu?", a: "Tak. Po zamontowaniu plakatu wysyłamy dokumentację fotograficzną każdego nośnika — to nasz standard przy każdej kampanii." },
+              { q: "Co obejmuje cena wynajmu?", a: "Cena wynajmu obejmuje ekspozycję na nośniku. Druk, montaż, demontaż i dokumentację fotograficzną wyceniamy w ramach kompleksowej oferty - często w pakiecie." },
+              { q: "Jak szybko mogę uruchomić kampanię?", a: "Od momentu akceptacji oferty do montażu potrzebujemy zazwyczaj 5-7 dni roboczych. W trybie ekspresowym - nawet 3 dni." },
+              { q: "Czy otrzymam potwierdzenie montażu?", a: "Tak. Po zamontowaniu plakatu wysyłamy dokumentację fotograficzną każdego nośnika - to nasz standard przy każdej kampanii." },
             ].map((item, i) => (
               <Reveal key={i} delay={i * 0.06}>
                 <FAQItem question={item.q} answer={item.a} />

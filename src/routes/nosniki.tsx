@@ -182,7 +182,7 @@ export default function CarriersPage() {
         <Link
           href="/"
           className="flex items-center shrink-0 mr-2"
-          aria-label="wielkiformat.pl — Strona główna"
+          aria-label="wielkiformat.pl - Strona główna"
         >
           <span className="font-heading font-bold text-sm text-foreground hidden md:block">
             Mapa nośników
@@ -645,7 +645,7 @@ function DetailPanel({
         <div className="relative h-44 overflow-hidden">
           <Image
             src={c.image}
-            alt={`Nośnik ${c.code} — ${c.address}, ${c.city}`}
+            alt={`Nośnik ${c.code} - ${c.address}, ${c.city}`}
             fill
             sizes="380px"
             className="object-cover"
@@ -726,7 +726,7 @@ function DetailPanel({
                 <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping-slow" />
                 <span className="relative block w-2 h-2 rounded-full bg-emerald-400" />
               </span>
-              Nośnik dostępny — zarezerwuj zanim ktoś Cię wyprzedzi
+              Nośnik dostępny - zarezerwuj zanim ktoś Cię wyprzedzi
             </div>
           </div>
         )}

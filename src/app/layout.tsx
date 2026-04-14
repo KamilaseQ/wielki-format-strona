@@ -1,5 +1,27 @@
 import type { Metadata } from "next";
+import { Inter, Space_Grotesk, DM_Serif_Display } from "next/font/google";
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin", "latin-ext"],
+  display: "swap",
+  variable: "--font-body",
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin", "latin-ext"],
+  display: "swap",
+  variable: "--font-heading",
+  weight: ["400", "500", "600", "700"],
+});
+
+const dmSerifDisplay = DM_Serif_Display({
+  subsets: ["latin", "latin-ext"],
+  display: "swap",
+  variable: "--font-accent",
+  weight: "400",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://wielkiformat.pl"),
@@ -35,7 +57,7 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "wielkiformat.pl — Reklama wielkoformatowa i billboardy w całej Polsce",
+        alt: "wielkiformat.pl - Reklama wielkoformatowa i billboardy w całej Polsce",
       },
     ],
   },
@@ -58,13 +80,13 @@ const organizationJsonLd = {
   name: "Billboard Sp. z o.o.",
   alternateName: "wielkiformat.pl",
   url: "https://wielkiformat.pl",
-  telephone: "+48123456789",
-  email: "biuro@wielkiformat.pl",
+  telephone: "+48600131013",
+  email: "info@wielkiformat.pl",
   address: {
     "@type": "PostalAddress",
-    streetAddress: "ul. Przykładowa 10",
-    addressLocality: "Warszawa",
-    postalCode: "00-001",
+    streetAddress: "Al. Marszałka Józefa Piłsudskiego 55A",
+    addressLocality: "Marki",
+    postalCode: "05-270",
     addressCountry: "PL",
   },
   areaServed: {
@@ -81,16 +103,16 @@ const localBusinessJsonLd = {
   name: "Billboard Sp. z o.o.",
   alternateName: "wielkiformat.pl",
   url: "https://wielkiformat.pl",
-  telephone: "+48123456789",
-  email: "biuro@wielkiformat.pl",
+  telephone: "+48600131013",
+  email: "info@wielkiformat.pl",
   image: "https://wielkiformat.pl/og-image.png",
   description:
     "Billboardy i reklama wielkoformatowa na terenie całej Polski. Ponad 25 lat doświadczenia.",
   address: {
     "@type": "PostalAddress",
-    streetAddress: "ul. Przykładowa 10",
-    addressLocality: "Warszawa",
-    postalCode: "00-001",
+    streetAddress: "Al. Marszałka Józefa Piłsudskiego 55A",
+    addressLocality: "Marki",
+    postalCode: "05-270",
     addressCountry: "PL",
   },
   geo: {
@@ -141,15 +163,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl" suppressHydrationWarning>
+    <html lang="pl" suppressHydrationWarning className={`${inter.variable} ${spaceGrotesk.variable} ${dmSerifDisplay.variable}`}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800;900&display=swap"
-          rel="stylesheet"
-        />
-        {/* Point 12: Hero image preload removed from global layout — should be per-page */}
+        {/* Point 12: Hero image preload removed from global layout - should be per-page */}
       </head>
       <body>
         {children}

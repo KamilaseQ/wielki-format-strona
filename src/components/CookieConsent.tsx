@@ -19,6 +19,8 @@ export function CookieConsent() {
   const accept = () => {
     localStorage.setItem("cookie-consent", "true");
     setVisible(false);
+    // Notify other components (e.g. StickyMobileCTA) without polling
+    window.dispatchEvent(new Event("cookie-consent-accepted"));
   };
 
   return (

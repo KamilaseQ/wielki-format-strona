@@ -53,9 +53,9 @@
 
 :root {
   --radius: 0.5rem;
-  --font-heading: 'Space Grotesk', sans-serif;
-  --font-body: 'Inter', sans-serif;
-  --font-accent: 'DM Serif Display', serif;
+  --font-heading: var(--font-heading, 'Space Grotesk', sans-serif);
+  --font-body: var(--font-body, 'Inter', sans-serif);
+  --font-accent: var(--font-accent, 'DM Serif Display', serif);
 
   /* ── Ultra-deep Ink Black ── */
   --background: oklch(0.06 0.002 0);

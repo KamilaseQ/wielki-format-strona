@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
@@ -8,32 +8,43 @@ import { ArrowRight } from "lucide-react";
 export function StickyMobileCTA() {
   const [visible, setVisible] = useState(false);
   const [cookieVisible, setCookieVisible] = useState(false);
-  const [lastY, setLastY] = useState(0);
+  const lastYRef = useRef(0);
+
+  const handleScroll = useCallback(() => {
+    const y = window.scrollY;
+    if (y > 400 && y > lastYRef.current) {
+      setVisible(true);
+    } else if (y < lastYRef.current - 10) {
+      setVisible(false);
+    }
+    lastYRef.current = y;
+  }, []);
 
   useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY;
-      if (y > 400 && y > lastY) {
-        setVisible(true);
-      } else if (y < lastY - 10) {
-        setVisible(false);
-      }
-      setLastY(y);
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [lastY]);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
-  // Point 59: Hide when CookieConsent is visible
+  // Point 59: Hide when CookieConsent is visible - check once on mount
   useEffect(() => {
-    const check = () => {
+    const accepted = localStorage.getItem("cookie-consent");
+    setCookieVisible(!accepted);
+
+    // Listen for storage changes (cookie consent accepted in same tab)
+    const onStorage = () => {
       const accepted = localStorage.getItem("cookie-consent");
       setCookieVisible(!accepted);
     };
-    check();
-    // Re-check periodically in case consent changes
-    const interval = setInterval(check, 1000);
-    return () => clearInterval(interval);
+    window.addEventListener("storage", onStorage);
+    
+    // Also listen for custom event dispatched by CookieConsent
+    const onConsent = () => setCookieVisible(false);
+    window.addEventListener("cookie-consent-accepted", onConsent);
+    
+    return () => {
+      window.removeEventListener("storage", onStorage);
+      window.removeEventListener("cookie-consent-accepted", onConsent);
+    };
   }, []);
 
   // Don't render if cookie consent is active

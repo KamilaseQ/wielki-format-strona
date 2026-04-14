@@ -15,7 +15,7 @@ export default function ContactPage() {
         <div className="absolute inset-0">
           <Image
             src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&auto=format&fit=crop&q=60"
-            alt="Biurowiec w centrum miasta — kontakt z firmą"
+            alt="Biurowiec w centrum miasta - kontakt z firmą"
             fill
             sizes="100vw"
             className="object-cover opacity-10"
@@ -47,10 +47,10 @@ export default function ContactPage() {
 
               <div className="space-y-5">
                 {[
-                  { icon: Phone, label: "Telefon", value: "+48 123 456 789", href: "tel:+48123456789" },
-                  { icon: Mail, label: "E-mail", value: "biuro@wielkiformat.pl", href: "mailto:biuro@wielkiformat.pl" },
-                  { icon: MapPin, label: "Adres", value: "ul. Przykładowa 10, 00-001 Warszawa" },
-                  { icon: Clock, label: "Godziny pracy", value: "Pon–Pt: 8:00–17:00" },
+                  { icon: Phone, label: "Telefon", value: "600 13 10 13", href: "tel:+48600131013" },
+                  { icon: Mail, label: "E-mail", value: "info@wielkiformat.pl", href: "mailto:info@wielkiformat.pl" },
+                  { icon: MapPin, label: "Adres", value: "Al. Józefa Piłsudskiego 55A, Marki" },
+                  { icon: Clock, label: "Godziny pracy", value: "Pon-Pt: 8:00-17:00" },
                 ].map((item, i) => (
                   <Reveal key={item.label} delay={i * 0.06} from="left">
                     <motion.div
@@ -89,9 +89,11 @@ export default function ContactPage() {
                   <h3 className="font-heading font-bold text-foreground text-sm mb-2">Dane firmowe</h3>
                   <div className="text-sm text-muted-foreground/70 space-y-1">
                     <p className="font-medium text-muted-foreground">Billboard Sp. z o.o.</p>
-                    <p>ul. Przykładowa 10, 00-001 Warszawa</p>
-                    <p>NIP: 000-000-00-00 | REGON: 000000000</p>
-                    <p>KRS: 0000000000</p>
+                    <p>Al. Marszałka Józefa Piłsudskiego 55A, 05-270 Marki</p>
+                    <p>NIP: 5322051052 | REGON: 361032049</p>
+                    <p>KRS: 0000547439</p>
+                    <p className="pt-2">Bank PKO BP S.A.:</p>
+                    <p>17 1020 1127 0000 1102 0248 2073</p>
                   </div>
                 </div>
               </Reveal>
@@ -129,7 +131,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* CTA — different than homepage (point 18) */}
+      {/* CTA - different than homepage (point 18) */}
       <section className="relative py-20 md:py-28 overflow-hidden">
         <div className="absolute inset-0 bg-noise" />
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[250px] bg-primary/6 rounded-full blur-[150px] animate-glow-pulse" />
@@ -141,7 +143,7 @@ export default function ContactPage() {
           </Reveal>
           <Reveal delay={0.1}>
             <p className="text-lg text-muted-foreground mb-8">
-              Wyślij zapytanie — oddzwonimy lub odpiszemy jeszcze tego samego dnia.
+              Wyślij zapytanie - oddzwonimy lub odpiszemy jeszcze tego samego dnia.
             </p>
           </Reveal>
           <Reveal delay={0.2}>

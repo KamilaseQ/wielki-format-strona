@@ -28,7 +28,7 @@ const faqJsonLd = {
       name: "Jaki jest minimalny okres wynajmu billboardu?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Minimalny okres wynajmu to 2 tygodnie. Oferujemy również rabaty przy dłuższych kampaniach — do 40% zniżki przy wynajmie rocznym.",
+        text: "Minimalny okres wynajmu to 2 tygodnie. Oferujemy również rabaty przy dłuższych kampaniach - do 40% zniżki przy wynajmie rocznym.",
       },
     },
     {

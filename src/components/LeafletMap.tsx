@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useCallback, useState } from "react";
-import type { Map, CircleMarker } from "leaflet";
+import type { Map, Layer } from "leaflet";
 
 export type MapMarker = {
   id: string;
@@ -31,7 +31,7 @@ export function LeafletMap({
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<Map | null>(null);
   const leafletRef = useRef<typeof import("leaflet") | null>(null);
-  const markersRef = useRef<CircleMarker[]>([]);
+  const markersRef = useRef<Layer[]>([]);
   const onMarkerClickRef = useRef(onMarkerClick);
   const [mapReady, setMapReady] = useState(false);
 

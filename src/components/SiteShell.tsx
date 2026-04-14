@@ -1,18 +1,39 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
+import dynamic from "next/dynamic";
 import { motion, useReducedMotion } from "motion/react";
 import { usePathname } from "next/navigation";
-import { BackToTop } from "@/components/BackToTop";
-import { CookieConsent } from "@/components/CookieConsent";
-import { CustomCursor } from "@/components/CustomCursor";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import { KonamiEasterEgg } from "@/components/KonamiEasterEgg";
-import { LoadingSplash } from "@/components/LoadingSplash";
 import { ScrollProgress } from "@/components/ScrollProgress";
-import { StickyMobileCTA } from "@/components/StickyMobileCTA";
 import { useLenis } from "@/hooks/useLenis";
+
+/* ── Non-critical components loaded after initial paint ── */
+const BackToTop = dynamic(
+  () => import("@/components/BackToTop").then((m) => m.BackToTop),
+  { ssr: false }
+);
+const CookieConsent = dynamic(
+  () => import("@/components/CookieConsent").then((m) => m.CookieConsent),
+  { ssr: false }
+);
+const CustomCursor = dynamic(
+  () => import("@/components/CustomCursor").then((m) => m.CustomCursor),
+  { ssr: false }
+);
+const KonamiEasterEgg = dynamic(
+  () => import("@/components/KonamiEasterEgg").then((m) => m.KonamiEasterEgg),
+  { ssr: false }
+);
+const LoadingSplash = dynamic(
+  () => import("@/components/LoadingSplash").then((m) => m.LoadingSplash),
+  { ssr: false }
+);
+const StickyMobileCTA = dynamic(
+  () => import("@/components/StickyMobileCTA").then((m) => m.StickyMobileCTA),
+  { ssr: false }
+);
 
 export function SiteShell({ children }: PropsWithChildren) {
   const pathname = usePathname();

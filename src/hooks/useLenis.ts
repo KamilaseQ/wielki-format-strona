@@ -14,16 +14,18 @@ export function useLenis(enabled: boolean = true) {
       touchMultiplier: 1.5,
     });
 
+    let rafId: number;
     function raf(time: number) {
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      rafId = requestAnimationFrame(raf);
     }
-    requestAnimationFrame(raf);
+    rafId = requestAnimationFrame(raf);
 
     // Expose for scroll-to links
     (window as any).__lenis = lenis;
 
     return () => {
+      cancelAnimationFrame(rafId);
       lenis.destroy();
       delete (window as any).__lenis;
     };

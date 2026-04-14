@@ -62,7 +62,7 @@ export function BeforeAfterSlider({
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
     >
-      {/* After (bottom layer — full) */}
+      {/* After (bottom layer - full) */}
       <Image
         src={afterImage}
         alt={afterAlt}
@@ -71,7 +71,7 @@ export function BeforeAfterSlider({
         className="absolute inset-0 h-full w-full object-cover"
       />
 
-      {/* Before (top layer — clipped) */}
+      {/* Before (top layer - clipped) */}
       <div
         className="absolute inset-0 overflow-hidden"
         style={{ width: `${position}%` }}

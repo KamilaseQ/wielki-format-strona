@@ -34,7 +34,7 @@ function LightDivider() {
   return <div className="light-leak-divider" />;
 }
 
-/** Floating ambient glow orbs — pure CSS, no JS overhead */
+/** Floating ambient glow orbs - pure CSS, no JS overhead */
 function AmbientGlow() {
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
@@ -132,13 +132,13 @@ function HeroSection() {
           <Reveal delay={0.16}>
             <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-10 max-w-xl">
               Billboardy i kampanie outdoorowe w&nbsp;całej Polsce.
-              Jeden partner od A do Z — projekt, druk, montaż, raportowanie.
+              Jeden partner od A do Z - projekt, druk, montaż, raportowanie.
             </p>
           </Reveal>
           <Reveal delay={0.24}>
             <div className="flex flex-col sm:flex-row gap-4">
               <MagneticButton>
-                {/* Point 41: CTA leads to /nosniki (map) — matches "Sprawdź dostępność" */}
+                {/* Point 41: CTA leads to /nosniki (map) - matches "Sprawdź dostępność" */}
                 <Link href="/nosniki">
                   <Button variant="hero" size="xl" className="group glow-red relative overflow-hidden">
                     <span className="relative z-10 flex items-center gap-2">
@@ -195,7 +195,7 @@ function HeroSection() {
                 ))}
               </div>
               <span className="text-xs text-muted-foreground/50">
-                <span className="text-foreground/60 font-medium">4.9 / 5</span> — opinie klientów
+                <span className="text-foreground/60 font-medium">4.9 / 5</span> - opinie klientów
               </span>
             </div>
           </Reveal>
@@ -252,7 +252,7 @@ function EditorialStats() {
   const { scrollYProgress: statsScroll } = useScroll({ target: statsRef, offset: ["start end", "end start"] });
   const rightColY = useTransform(statsScroll, [0, 1], [30, -30]);
 
-  // Masking text reveal — clip-path driven by scroll
+  // Masking text reveal - clip-path driven by scroll
   const maskRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: maskScroll } = useScroll({ target: maskRef, offset: ["start 0.9", "start 0.4"] });
   const clipRight = useTransform(maskScroll, [0, 1], [100, 0]);
@@ -332,9 +332,9 @@ function WhyOutdoor() {
           </div>
           <div className="lg:col-span-6 lg:col-start-7 space-y-4">
             {[
-              { icon: EyeOff, title: "Nieblokowana ekspozycja", desc: "Adblock nie istnieje w outdoorze. Twoja reklama jest widoczna — zawsze, dla każdego." },
+              { icon: EyeOff, title: "Nieblokowana ekspozycja", desc: "Adblock nie istnieje w outdoorze. Twoja reklama jest widoczna - zawsze, dla każdego." },
               { icon: Flame, title: "Budowanie prestiżu", desc: "Obecność w przestrzeni miejskiej to sygnał siły marki. Firmy na billboardach są postrzegane jako liderzy." },
-              { icon: AlertTriangle, title: "Kompleksowość bez chaosu", desc: "Druk, logistyka, montaż, dokumentacja — wszystko po naszej stronie. Ty skupiasz się na biznesie." },
+              { icon: AlertTriangle, title: "Kompleksowość bez chaosu", desc: "Druk, logistyka, montaż, dokumentacja - wszystko po naszej stronie. Ty skupiasz się na biznesie." },
             ].map((p, i) => (
               <Reveal key={p.title} delay={i * 0.1} from="right">
                 <TiltCard className="group relative rounded-xl glass-card p-5 cursor-default" intensity={4}>
@@ -357,10 +357,10 @@ function WhyOutdoor() {
   );
 }
 
-/* ═══════ SERVICES — Alternating magazine rows ═══════ */
+/* ═══════ SERVICES - Alternating magazine rows ═══════ */
 function ServicesSection() {
   const services = [
-    { icon: Maximize2, title: "Billboardy\nreklamowe", hoverAnim: "group-hover:rotate-12 group-hover:scale-110 transition-transform duration-500 ease-out", desc: "Nośniki od 12 do 54+ m² w precyzyjnie dobranych lokalizacjach. Arterie komunikacyjne, centra miast, drogi krajowe.", tag: "12–54+ m²", img: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=700&auto=format&fit=crop&q=70" },
+    { icon: Maximize2, title: "Billboardy\nreklamowe", hoverAnim: "group-hover:rotate-12 group-hover:scale-110 transition-transform duration-500 ease-out", desc: "Nośniki od 12 do ponad 100 m² w precyzyjnie dobranych lokalizacjach. Arterie komunikacyjne, centra miast, drogi krajowe.", tag: "12-100+ m²", img: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=700&auto=format&fit=crop&q=70" },
     { icon: Layers, title: "Druk\nwielkoformatowy", hoverAnim: "group-hover:scale-y-[1.3] group-hover:scale-x-[1.1] transition-transform duration-500 ease-out", desc: "Druk UV i solwentowy na materiałach odpornych na warunki pogodowe. Kolory wierne projektowi przez cały okres ekspozycji.", tag: "pełna gama", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=700&auto=format&fit=crop&q=70" },
     { icon: Truck, title: "Montaż\ni serwis", hoverAnim: "group-hover:-translate-y-1 group-hover:scale-[1.20] group-hover:-rotate-6 transition-transform duration-500 ease-out", desc: "Własne ekipy w 16 województwach. Montaż, demontaż, zaklejenie po kampanii. Dokumentacja fotograficzna w standardzie.", tag: "cała Polska", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=700&auto=format&fit=crop&q=70" },
   ];
@@ -386,7 +386,7 @@ function ServicesSection() {
                   >
                     <Image
                       src={s.img}
-                      alt={`Usługa: ${s.title.replace('\n', ' ')} — reklama wielkoformatowa`}
+                      alt={`Usługa: ${s.title.replace('\n', ' ')} - reklama wielkoformatowa`}
                       width={700}
                       height={438}
                       className="w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03]"
@@ -424,7 +424,7 @@ function ServicesSection() {
 }
 
 /* ═══════════════════════════════════════════════
-   TESTIMONIALS — Social proof section
+   TESTIMONIALS - Social proof section
    ═══════════════════════════════════════════════ */
 function TestimonialParallaxCard({ children, offset }: { children: React.ReactNode; offset: number }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -450,14 +450,14 @@ function TestimonialsSection() {
       name: "Marcin Nowak",
       role: "Brand Manager",
       company: "Operator telekomunikacyjny",
-      text: "Wybraliśmy wielkiformat.pl ze względu na zasięg i kompleksowość obsługi. Jeden partner do druku, montażu i dokumentacji — to oszczędność czasu i nerwów. Polecam każdemu, kto planuje kampanię outdoor.",
+      text: "Wybraliśmy wielkiformat.pl ze względu na zasięg i kompleksowość obsługi. Jeden partner do druku, montażu i dokumentacji - to oszczędność czasu i nerwów. Polecam każdemu, kto planuje kampanię outdoor.",
       rating: 5,
     },
     {
       name: "Katarzyna Wiśniewska",
       role: "CEO",
       company: "Agencja reklamowa",
-      text: "Jako agencja potrzebujemy partnera, na którym możemy polegać. Wielkiformat.pl to niezawodny wykonawca — szybka wycena, elastyczne terminy i zawsze czysta dokumentacja fotograficzna dla naszych klientów.",
+      text: "Jako agencja potrzebujemy partnera, na którym możemy polegać. Wielkiformat.pl to niezawodny wykonawca - szybka wycena, elastyczne terminy i zawsze czysta dokumentacja fotograficzna dla naszych klientów.",
       rating: 5,
     },
   ];
@@ -535,21 +535,21 @@ function TestimonialsSection() {
 }
 
 /* ═══════════════════════════════════════════════
-   CLIENT SHOWCASE — Horizontal scroll on desktop
+   CLIENT SHOWCASE - Horizontal scroll on desktop
    ═══════════════════════════════════════════════ */
 function ClientShowcase() {
   const clients = [
-    { name: "Sieć handlowa", category: "Retail", scope: "120 nośników, kampania ogólnopolska", img: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&auto=format&fit=crop&q=70" },
-    { name: "Operator telekomunikacyjny", category: "Telco", scope: "80 billboardów, 8 województw", img: "https://images.unsplash.com/photo-1586105251261-72a756497a11?w=600&auto=format&fit=crop&q=70" },
-    { name: "Deweloper", category: "Nieruchomości", scope: "45 nośników, kampania lokalna", img: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&auto=format&fit=crop&q=70" },
-    { name: "Marka FMCG", category: "FMCG", scope: "200+ nośników, launch produktu", img: "https://images.unsplash.com/photo-1534430480872-3498386e7856?w=600&auto=format&fit=crop&q=70" },
-    { name: "Agencja reklamowa", category: "Agencja", scope: "60 nośników, kampania sezonowa", img: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&auto=format&fit=crop&q=70" },
+    { name: "KFC", category: "Kampania reklamowa", scope: "Najpopularniejsza sieć restauracji założona przez Harlanda Sandersa.", img: "https://logo.clearbit.com/kfc.com" },
+    { name: "McDonald's", category: "Kampania reklamowa", scope: "Największa sieć restauracji szybkiej obsługi o globalnym zasięgu.", img: "https://logo.clearbit.com/mcdonalds.com" },
+    { name: "Leroy Merlin", category: "Kampania reklamowa", scope: "Francuska sieć hipermarketów z branży budowlanej i dekoracyjnej.", img: "https://logo.clearbit.com/leroymerlin.fr" },
+    { name: "Renault", category: "Kampania reklamowa", scope: "Prestiżowy francuski producent innowacyjnych aut miejskich i użytkowych.", img: "https://logo.clearbit.com/renault.com" },
+    { name: "Toyota", category: "Kampania reklamowa", scope: "Japoński lider motoryzacji słynący z niezawodności i technologii.", img: "https://logo.clearbit.com/toyota.com" },
   ];
 
   const sectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end end"] });
-  const x = useTransform(scrollYProgress, [0.05, 0.95], ["0%", "-62%"]);
-  const sectionY = useTransform(scrollYProgress, [0, 1], [0, -300]);
+  const x = useTransform(scrollYProgress, [0.05, 0.95], ["0%", "-65%"]);
+  const sectionY = useTransform(scrollYProgress, [0, 1], [0, -50]);
 
   return (
     <>
@@ -570,8 +570,10 @@ function ClientShowcase() {
               <Reveal key={c.name} delay={i * 0.08}>
                 <motion.div className="group relative rounded-2xl overflow-hidden aspect-[4/3] cursor-pointer"
                   whileHover={{ scale: 1.008 }} transition={{ type: "spring", stiffness: 300, damping: 25 }}>
-                  <Image src={c.img} alt={`Realizacja kampanii: ${c.name} — ${c.scope}`} width={600} height={450} className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105" loading="lazy" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-white/95 p-6 flex flex-col items-center justify-center">
+                    <Image src={c.img} alt={`Logo marki: ${c.name}`} width={200} height={120} className="object-contain w-full h-[60%] transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent opacity-95 group-hover:opacity-100 transition-opacity" />
                   <div className="absolute bottom-3 left-3">
                     <span className="px-2 py-0.5 rounded glass text-[9px] font-heading font-bold text-primary uppercase tracking-wider mb-1 inline-block">{c.category}</span>
                     <h3 className="font-heading font-bold text-xs text-foreground">{c.name}</h3>
@@ -613,14 +615,14 @@ function ClientShowcase() {
                 <div className="col-span-4 col-start-9 flex items-end">
                   <Reveal from="right" delay={0.1}>
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                      Od sieci handlowych po deweloperów — obsługujemy kampanie od kilkunastu do kilkuset nośników jednocześnie.
+                      Od sieci handlowych po deweloperów - obsługujemy kampanie od kilkunastu do kilkuset nośników jednocześnie.
                     </p>
                   </Reveal>
                 </div>
               </div>
             </div>
-            {/* Scrolling cards row */}
-            <div className="flex items-center" style={{ height: "calc(100vh - 200px)" }}>
+            {/* Scrolling cards row - pushed up to leave more space at bottom */}
+            <div className="flex items-start pt-16" style={{ height: "calc(100vh - 280px)" }}>
               <motion.div className="flex gap-6 pl-[5vw]" style={{ x }}>
                 {clients.map((c) => (
                   <motion.div
@@ -629,20 +631,25 @@ function ClientShowcase() {
                     whileHover={{ scale: 1.02 }}
                     transition={{ type: "spring", stiffness: 300, damping: 25 }}
                   >
-                    <Image
-                      src={c.img}
-                      alt={`Realizacja kampanii: ${c.name} — ${c.scope}`}
-                      width={600}
-                      height={450}
-                      className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 group-hover:brightness-110"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
+                    <div className="absolute inset-0 bg-white/95 flex items-center justify-center p-12">
+                      <Image
+                        src={c.img}
+                        alt={`Logo marki: ${c.name}`}
+                        width={400}
+                        height={240}
+                        className="object-contain w-full h-[60%] transition-transform duration-700 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    </div>
+                    {/* Shadow overlay for text readability */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent opacity-95 group-hover:opacity-100 transition-opacity" />
                     <div className="absolute -bottom-6 -left-6 w-40 h-40 bg-primary/15 rounded-full blur-[50px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                    <div className="absolute bottom-5 left-5 right-5">
-                      <span className="px-2.5 py-1 rounded-md glass text-[10px] font-heading font-bold text-primary uppercase tracking-wider mb-2 inline-block">{c.category}</span>
-                      <h3 className="font-heading font-bold text-lg text-foreground mb-1">{c.name}</h3>
-                      <p className="text-sm text-muted-foreground/70">{c.scope}</p>
+                    <div className="absolute bottom-6 left-6 right-6 z-10 transition-transform duration-500 group-hover:-translate-y-2">
+                      <span className="px-2 py-0.5 rounded glass-strong text-[10px] font-heading font-bold text-primary uppercase tracking-wider mb-2 inline-block">
+                        {c.category}
+                      </span>
+                      <h3 className="font-heading font-bold text-xl text-foreground mb-1">{c.name}</h3>
+                      <p className="text-sm text-foreground/80 leading-relaxed">{c.scope}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -776,7 +783,7 @@ function BenefitsSection() {
   const benefits = [
     { icon: Award, text: "25+ lat doświadczenia w reklamie zewnętrznej" },
     { icon: TrendingUp, text: "2500 kampanii reklamowych rocznie" },
-    { icon: Globe, text: "Nośniki w całej Polsce — 16 województw" },
+    { icon: Globe, text: "Nośniki w całej Polsce - 16 województw" },
     { icon: Layers, text: "Kompleksowa obsługa: projekt → druk → montaż → demontaż" },
     { icon: Camera, text: "Dokumentacja fotograficzna każdej realizacji" },
     { icon: Zap, text: "Wycena i rezerwacja w ciągu 24 godzin" },

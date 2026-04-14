@@ -11,10 +11,10 @@ import { Reveal } from "@/components/Reveal";
 const services = [
   { icon: Paintbrush, num: "01", title: "Projekt graficzny", desc: "Przygotujemy projekt plakatu dostosowany do formatu nośnika. Zadbamy o czytelność, kompozycję i zgodność z Twoim brandem.", img: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&auto=format&fit=crop&q=60" },
   { icon: Printer, num: "02", title: "Druk wielkoformatowy", desc: "Profesjonalny druk na materiałach odpornych na warunki atmosferyczne. Najwyższa jakość kolorów i trwałość.", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=500&auto=format&fit=crop&q=60" },
-  { icon: Truck, num: "03", title: "Logistyka i transport", desc: "Zajmiemy się dostarczeniem materiałów na miejsce montażu — bez Twojego udziału.", img: "https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=500&auto=format&fit=crop&q=60" },
+  { icon: Truck, num: "03", title: "Logistyka i transport", desc: "Zajmiemy się dostarczeniem materiałów na miejsce montażu - bez Twojego udziału.", img: "https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=500&auto=format&fit=crop&q=60" },
   { icon: Wrench, num: "04", title: "Montaż", desc: "Sprawny montaż plakatów na nośnikach. Realizujemy montaże terminowo, na terenie całej Polski.", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=500&auto=format&fit=crop&q=60" },
   { icon: FileCheck, num: "05", title: "Demontaż i zaklejenie", desc: "Po zakończeniu kampanii demontujemy plakat i zaklejamy nośnik. Wszystko w ramach usługi.", img: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=500&auto=format&fit=crop&q=60" },
-  { icon: Camera, num: "06", title: "Dokumentacja fotograficzna", desc: "Po montażu otrzymasz zdjęcia każdego nośnika z Twoją reklamą — potwierdzenie realizacji.", img: "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=500&auto=format&fit=crop&q=60" },
+  { icon: Camera, num: "06", title: "Dokumentacja fotograficzna", desc: "Po montażu otrzymasz zdjęcia każdego nośnika z Twoją reklamą - potwierdzenie realizacji.", img: "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=500&auto=format&fit=crop&q=60" },
 ];
 
 export default function CampaignServicePage() {
@@ -24,7 +24,7 @@ export default function CampaignServicePage() {
         <div className="absolute inset-0">
           <Image
             src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1920&auto=format&fit=crop&q=60"
-            alt="Profesjonalny druk wielkoformatowy — obsługa kampanii"
+            alt="Profesjonalny druk wielkoformatowy - obsługa kampanii"
             fill
             sizes="100vw"
             priority
@@ -49,7 +49,7 @@ export default function CampaignServicePage() {
             <Reveal delay={0.16}>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-xl">
                 Nie musisz koordynować projektu, druku, transportu i montażu osobno.
-                Obsłużymy Twoją kampanię od A do Z — szybko, sprawnie i bez komplikacji.
+                Obsłużymy Twoją kampanię od A do Z - szybko, sprawnie i bez komplikacji.
               </p>
             </Reveal>
           </div>
@@ -70,7 +70,7 @@ export default function CampaignServicePage() {
                   <div className="relative h-40 overflow-hidden">
                     <Image
                       src={s.img}
-                      alt={`${s.title} — etap obsługi kampanii reklamowej`}
+                      alt={`${s.title} - etap obsługi kampanii reklamowej`}
                       width={500}
                       height={300}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -147,7 +147,7 @@ export default function CampaignServicePage() {
           </Reveal>
           <Reveal delay={0.1}>
             <p className="text-lg text-muted-foreground mb-8">
-              Od projektu po dokumentację fotograficzną. Ty podejmiesz decyzję — my zajmiemy się resztą.
+              Od projektu po dokumentację fotograficzną. Ty podejmiesz decyzję - my zajmiemy się resztą.
             </p>
           </Reveal>
           <Reveal delay={0.15}>

@@ -17,7 +17,7 @@ export default function AboutPage() {
         <div className="absolute inset-0">
           <Image
             src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&auto=format&fit=crop&q=60"
-            alt="Biuro firmy Billboard — profesjonalne środowisko pracy"
+            alt="Biuro firmy Billboard - profesjonalne środowisko pracy"
             fill
             sizes="100vw"
             priority
@@ -41,7 +41,7 @@ export default function AboutPage() {
             </Reveal>
             <Reveal delay={0.16}>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-xl">
-                Jesteśmy jednym z najbardziej doświadczonych operatorów reklamy zewnętrznej w Polsce. Realizujemy kampanie billboardowe od projektu po montaż — profesjonalnie, terminowo i&nbsp;na dużą skalę.
+                Jesteśmy jednym z najbardziej doświadczonych operatorów reklamy zewnętrznej w Polsce. Realizujemy kampanie billboardowe od projektu po montaż - profesjonalnie, terminowo i&nbsp;na dużą skalę.
               </p>
             </Reveal>
           </div>
@@ -60,7 +60,7 @@ export default function AboutPage() {
             {[
               { icon: Award, title: "Doświadczenie", desc: "25+ lat w branży reklamy wielkoformatowej. Znamy rynek, lokalizacje i skuteczne rozwiązania." },
               { icon: TrendingUp, title: "Skala", desc: "Około 2500 kampanii rocznie na terenie całej Polski. Zarówno lokalne, jak i ogólnokrajowe." },
-              { icon: Target, title: "Kompleksowość", desc: "Od projektu graficznego przez druk po montaż i demontaż — obsługujemy cały proces." },
+              { icon: Target, title: "Kompleksowość", desc: "Od projektu graficznego przez druk po montaż i demontaż - obsługujemy cały proces." },
               { icon: Users, title: "Partnerstwo", desc: "Budujemy długoterminowe relacje z klientami. Wielu z nich wraca do nas od lat." },
             ].map((v, i) => (
               <Reveal key={v.title} delay={i * 0.08}>
@@ -94,18 +94,26 @@ export default function AboutPage() {
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <Reveal delay={0.1} from="left">
                   <p>
-                    Billboard Sp. z o.o. działa na polskim rynku reklamy zewnętrznej od ponad 25 lat. Zaczynaliśmy od kilku nośników w jednym mieście — dziś obsługujemy tysiące kampanii rocznie na terenie całego kraju.
+                    Billboard Sp. z o.o. działa na polskim rynku reklamy zewnętrznej od ponad 25 lat. Zaczynaliśmy od kilku nośników w jednym mieście - dziś obsługujemy tysiące kampanii rocznie na terenie całego kraju.
                   </p>
                 </Reveal>
                 <Reveal delay={0.15} from="left">
                   <p>
-                    Przez lata zbudowaliśmy sieć nośników reklamowych obejmującą kluczowe lokalizacje w największych polskich miastach i przy głównych trasach komunikacyjnych. Naszą przewagą jest nie tylko skala, ale przede wszystkim sprawna, kompleksowa obsługa na każdym etapie kampanii.
+                    Przez lata zbudowaliśmy sieć nośników reklamowych obejmującą kluczowe lokalizacje w największych polskich miastach i przy głównych trasach komunikacyjnych. Niezmiennie od 1998 roku obsługujemy wybranych klientów, dbając o jakość na każdym etapie kampanii.
                   </p>
                 </Reveal>
                 <Reveal delay={0.2} from="left">
                   <p>
-                    Współpracujemy z agencjami reklamowymi, domami mediowymi i bezpośrednio z klientami. Bez względu na wielkość kampanii — zawsze dostarczamy jakość i terminowość.
+                    Współpracujemy z agencjami reklamowymi, domami mediowymi i bezpośrednio z klientami. Bez względu na wielkość kampanii - zawsze dostarczamy jakość i terminowość.
                   </p>
+                </Reveal>
+                <Reveal delay={0.25} from="left">
+                  <div className="mt-8 p-5 rounded-xl border border-primary/20 bg-primary/5">
+                    <span className="text-xs font-semibold tracking-[0.2em] uppercase text-primary mb-2 block">Odpowiedzialność Społeczna</span>
+                    <p className="text-sm leading-relaxed text-foreground/80">
+                      Pomaganie mamy w DNA. Od 16 lat jesteśmy dumnym partnerem Fundacji WOŚP i Hospicjum Promyczek. Aktywnie współpracujemy z Warszawskim Hospicjum dla Dzieci, Fundacją Drużyna Błażeja oraz Fundacją Się Pomaga, wspierając tych, którzy tej pomocy potrzebują najbardziej.
+                    </p>
+                  </div>
                 </Reveal>
               </div>
             </div>

@@ -11,7 +11,7 @@ interface MagneticButtonProps {
 }
 
 /**
- * Przycisk z efektem magnetycznym — subtelnie podąża za kursorem.
+ * Przycisk z efektem magnetycznym - subtelnie podąża za kursorem.
  * Max przesunięcie: intensity px (domyślnie 4px).
  */
 export function MagneticButton({ children, className = "", intensity = 4, onClick }: MagneticButtonProps) {

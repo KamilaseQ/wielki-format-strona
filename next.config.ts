@@ -7,9 +7,42 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
       },
+      {
+        protocol: "https",
+        hostname: "logo.clearbit.com",
+      },
     ],
+    // Serve modern formats for smaller file sizes
+    formats: ["image/avif", "image/webp"],
   },
   poweredByHeader: false,
+  // Enable gzip/brotli compression
+  compress: true,
+  // Optimize production builds
+  reactStrictMode: true,
+  // Cache static assets aggressively
+  async headers() {
+    return [
+      {
+        source: "/:all*(svg|jpg|jpeg|png|gif|ico|webp|avif|woff|woff2)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/_next/static/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

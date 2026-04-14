@@ -21,7 +21,7 @@ const ease = [0.25, 0.46, 0.45, 0.94] as const;
 
 /**
  * Scroll-reveal animation wrapper.
- * Respects `prefers-reduced-motion` — skips animation when enabled.
+ * Respects `prefers-reduced-motion` - skips animation when enabled.
  */
 export function Reveal({
   children,
