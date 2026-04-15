@@ -3,6 +3,7 @@
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef, useState } from "react";
 import type { Map, Layer, Renderer } from "leaflet";
+import { PersonStanding, X } from "lucide-react";
 
 export type MapMarker = {
   id: string;
@@ -50,6 +51,7 @@ export function LeafletMap({
   const previousAutoFitKeyRef = useRef<string | undefined>(undefined);
   const markersDataRef = useRef<MapMarker[]>(markers);
   const [mapReady, setMapReady] = useState(false);
+  const [streetViewArmed, setStreetViewArmed] = useState(false);
 
   // Keep a ref to the latest markers so effects that shouldn't re-run on
   // marker updates can still read current positions when they fire.
@@ -265,12 +267,84 @@ export function LeafletMap({
     return () => resizeObserverRef.current?.disconnect();
   }, []);
 
+  // Street View "pegman" mode: when armed, the next click on the map
+  // opens Google Street View at that point in a new tab. Esc or clicking
+  // the button again cancels the mode.
+  useEffect(() => {
+    const map = mapRef.current;
+    const container = containerRef.current;
+    if (!map || !container || !mapReady) return;
+
+    if (!streetViewArmed) {
+      container.classList.remove("streetview-armed");
+      return;
+    }
+
+    container.classList.add("streetview-armed");
+
+    const handleClick = (event: LeafletMouseEvent) => {
+      const { lat, lng } = event.latlng;
+      const url = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}`;
+      window.open(url, "_blank", "noopener,noreferrer");
+      setStreetViewArmed(false);
+    };
+
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setStreetViewArmed(false);
+    };
+
+    map.on("click", handleClick);
+    window.addEventListener("keydown", handleKey);
+
+    return () => {
+      map.off("click", handleClick);
+      window.removeEventListener("keydown", handleKey);
+      container.classList.remove("streetview-armed");
+    };
+  }, [streetViewArmed, mapReady]);
+
   return (
-    <div
-      ref={containerRef}
-      className={`relative w-full h-full ${className}`}
-      role="application"
-      aria-label="Interaktywna mapa nośników reklamowych"
-    />
+    <div className="relative w-full h-full">
+      <div
+        ref={containerRef}
+        className={`absolute inset-0 ${className}`}
+        role="application"
+        aria-label="Interaktywna mapa nośników reklamowych"
+      />
+
+      <button
+        type="button"
+        onClick={() => setStreetViewArmed((value) => !value)}
+        className={`absolute top-3 right-3 z-[1000] glass rounded-lg min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors cursor-pointer ${
+          streetViewArmed
+            ? "bg-primary/20 text-primary ring-1 ring-primary/40"
+            : "text-muted-foreground hover:text-primary"
+        }`}
+        title={
+          streetViewArmed
+            ? "Kliknij miejsce na mapie, aby otworzyć Street View (Esc aby anulować)"
+            : "Street View – kliknij, potem wybierz punkt na mapie"
+        }
+        aria-label="Tryb Street View"
+        aria-pressed={streetViewArmed}
+      >
+        <PersonStanding className="w-5 h-5" />
+      </button>
+
+      {streetViewArmed && (
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] glass rounded-lg px-3 py-2 flex items-center gap-2 text-xs text-foreground shadow-lg">
+          <PersonStanding className="w-4 h-4 text-primary" />
+          <span>Kliknij na mapie, aby otworzyć Street View</span>
+          <button
+            type="button"
+            onClick={() => setStreetViewArmed(false)}
+            className="ml-1 text-muted-foreground hover:text-foreground cursor-pointer"
+            aria-label="Wyjdź z trybu Street View"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+    </div>
   );
 }

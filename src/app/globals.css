@@ -829,3 +829,16 @@
 
 /* Ensure map overlays stay above Leaflet */
 .leaflet-top, .leaflet-bottom { z-index: 10 !important; }
+
+/* Boosted contrast on dark CartoDB tiles for better map legibility. */
+.leaflet-tile-pane {
+  filter: contrast(1.35) saturate(1.15) brightness(1.08);
+}
+
+/* Street View arming mode: map crosshair cursor so the user knows
+   the next click will open Street View at that point. */
+.leaflet-container.streetview-armed,
+.leaflet-container.streetview-armed .leaflet-interactive,
+.leaflet-container.streetview-armed .leaflet-grab {
+  cursor: crosshair !important;
+}

@@ -72,7 +72,6 @@ export function ListPanel({
                   <div className="flex items-center gap-2.5 mt-1 text-[10px] text-muted-foreground/50 flex-wrap">
                     <span>{carrier.format}</span>
                     <span>~{(carrier.traffic / 1000).toFixed(0)}k/dzień</span>
-                    {carrier.lit && <span className="text-amber-400/70">podświetlenie</span>}
                   </div>
                 </div>
                 <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/20 group-hover:text-primary mt-1 transition-colors shrink-0" />

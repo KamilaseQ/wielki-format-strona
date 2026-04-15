@@ -12,8 +12,8 @@ import {
   LocateFixed,
   MapPin,
   Phone,
+  PersonStanding,
   Ruler,
-  Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Carrier } from "@/features/carriers/data";
@@ -126,15 +126,11 @@ export function DetailPanel({ carrier, onBack }: DetailPanelProps) {
             <SpecBox icon={Ruler} value={carrier.format} label="Format" />
             <SpecBox icon={Layers} value={cfg.label} label="Segment" />
             <SpecBox
-              icon={Zap}
-              value={carrier.lit ? "Tak" : "Nie"}
-              label="Podświetlenie"
-            />
-            <SpecBox
               icon={LocateFixed}
               value={`${((carrier.traffic * 30) / 1000).toFixed(0)}k`}
               label="Kontakty/mies."
             />
+            <SpecBox icon={MapPin} value={carrier.zip || "—"} label="Kod poczt." />
           </div>
         </div>
 
@@ -163,6 +159,15 @@ export function DetailPanel({ carrier, onBack }: DetailPanelProps) {
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
+          <a
+            href={`https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${carrier.lat},${carrier.lng}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 flex items-center justify-center gap-2 rounded-lg border border-border/40 bg-secondary/40 py-2 text-xs font-medium text-foreground hover:bg-secondary hover:text-primary transition-colors"
+          >
+            <PersonStanding className="w-4 h-4" />
+            Zobacz w Street View
+          </a>
           <a
             href={COMPANY_PHONE_TEL}
             aria-label={COMPANY_PHONE_ARIA}

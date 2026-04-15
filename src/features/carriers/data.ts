@@ -16,7 +16,6 @@ export interface Carrier {
   lng: number;
   traffic: number;
   visibility: number;
-  lit: boolean;
   image: string | null;
   zip: string;
 }
@@ -30,10 +29,10 @@ export const TYPE_CFG: Record<CarrierType, { dot: string; pill: string; label: s
   "STANDARD": { dot: "bg-sky-400", pill: "bg-sky-400/10 text-sky-300 ring-sky-400/20", label: "Standard", color: "#38bdf8" },
 };
 
-const SEGMENT_DEFAULTS: Record<CarrierType, { traffic: number; visibility: number; lit: boolean }> = {
-  "SUPER PREMIUM": { traffic: 55000, visibility: 95, lit: true },
-  "PREMIUM": { traffic: 38000, visibility: 88, lit: true },
-  "STANDARD": { traffic: 22000, visibility: 80, lit: false },
+const SEGMENT_DEFAULTS: Record<CarrierType, { traffic: number; visibility: number }> = {
+  "SUPER PREMIUM": { traffic: 55000, visibility: 95 },
+  "PREMIUM": { traffic: 38000, visibility: 88 },
+  "STANDARD": { traffic: 22000, visibility: 80 },
 };
 
 // Rough voivodeship mapping by ZIP prefix (first two digits). Accurate enough
@@ -131,7 +130,6 @@ export function parseBillboardsXml(xml: string): Carrier[] {
       lng,
       traffic: defaults.traffic,
       visibility: defaults.visibility,
-      lit: defaults.lit,
       image: attrs.Image ? attrs.Image.trim() : null,
       zip,
     });
