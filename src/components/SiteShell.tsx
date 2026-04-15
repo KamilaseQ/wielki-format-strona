@@ -42,13 +42,6 @@ export function SiteShell({ children }: PropsWithChildren) {
 
   return (
     <>
-      {/* Point 36: Fixed skip-nav with Polish diacritics */}
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[99999] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-primary-foreground"
-      >
-        Przejdź do treści
-      </a>
       <LoadingSplash />
       <ScrollProgress />
       <CustomCursor />

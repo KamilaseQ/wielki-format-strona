@@ -71,7 +71,7 @@ export function ListPanel({
                   </div>
                   <div className="flex items-center gap-2.5 mt-1 text-[10px] text-muted-foreground/50 flex-wrap">
                     <span>{carrier.format}</span>
-                    <span>{(carrier.traffic / 1000).toFixed(0)}k/dzień</span>
+                    <span>~{(carrier.traffic / 1000).toFixed(0)}k/dzień</span>
                     {carrier.lit && <span className="text-amber-400/70">podświetlenie</span>}
                   </div>
                 </div>

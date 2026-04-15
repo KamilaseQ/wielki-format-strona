@@ -17,12 +17,10 @@ import {
 import { DetailPanel } from "@/features/carriers/DetailPanel";
 import { ListPanel } from "@/features/carriers/ListPanel";
 import {
-  CARRIERS,
-  CITIES,
   LIST_PAGE_SIZE,
   MAP_PANEL_PAGE_SIZE,
   TYPE_CFG,
-  TYPES,
+  deriveFilterOptions,
   distanceFromCenter,
   getMarkerBudget,
   isCarrierInsideBounds,
@@ -52,7 +50,15 @@ const LeafletMap = dynamic(
   }
 );
 
-export default function CarriersPage() {
+interface CarriersPageProps {
+  carriers: Carrier[];
+}
+
+export default function CarriersPage({ carriers }: CarriersPageProps) {
+  const { cities: CITIES, types: TYPES } = useMemo(
+    () => deriveFilterOptions(carriers),
+    [carriers]
+  );
   const [query, setQuery] = useState("");
   const [city, setCity] = useState("");
   const [type, setType] = useState("");
@@ -79,22 +85,26 @@ export default function CarriersPage() {
   }, []);
 
   const filtered = useMemo(() => {
-    let result = CARRIERS.filter((carrier) => {
+    let result = carriers.filter((carrier) => {
       if (city && carrier.city !== city) return false;
       if (type && carrier.type !== type) return false;
       if (!debouncedQuery) return true;
       const normalized = debouncedQuery.toLowerCase();
-      return carrier.city.toLowerCase().includes(normalized) || carrier.code.toLowerCase().includes(normalized) || carrier.address.toLowerCase().includes(normalized);
+      return (
+        carrier.city.toLowerCase().includes(normalized) ||
+        carrier.code.toLowerCase().includes(normalized) ||
+        carrier.address.toLowerCase().includes(normalized)
+      );
     });
 
     result = [...result].sort((left, right) => {
-      if (sortBy === "city") return left.city.localeCompare(right.city);
+      if (sortBy === "city") return left.city.localeCompare(right.city, "pl");
       if (sortBy === "type") return left.type.localeCompare(right.type);
       return right.traffic - left.traffic;
     });
 
     return result;
-  }, [city, type, debouncedQuery, sortBy]);
+  }, [carriers, city, type, debouncedQuery, sortBy]);
 
   const autoFitKey = `${city}|${type}|${debouncedQuery}|${sortBy}|${filtered.length}`;
 
@@ -159,7 +169,7 @@ export default function CarriersPage() {
         lat: carrier.lat,
         lng: carrier.lng,
         color: TYPE_CFG[carrier.type].color,
-        label: `<strong>${carrier.code}</strong><br/>${carrier.city}, ${carrier.address}<br/><em>${carrier.type} · ${carrier.format}</em>`,
+        label: `<strong>${carrier.code}</strong><br/>${carrier.city}, ${carrier.address}<br/><em>${TYPE_CFG[carrier.type].label} · ${carrier.format}</em>`,
         selected: selected?.id === carrier.id,
       })),
     [mapCarriers, selected]
@@ -248,13 +258,17 @@ export default function CarriersPage() {
             <LeafletMap markers={mapMarkers} selectedId={selected?.id} onMarkerClick={handleMarkerClick} onViewportChange={handleViewportChange} autoFitKey={autoFitKey} />
             {/* Legend - compact on narrow screens */}
             <div className="absolute bottom-3 left-3 glass rounded-lg px-2 py-1.5 sm:px-3 sm:py-2 flex flex-wrap gap-x-3 sm:gap-x-4 gap-y-1 z-20 text-[10px] sm:text-[11px]" aria-label="Legenda mapy">
-              {TYPES.map((carrierType) => (
-                <div key={carrierType} className="flex items-center gap-1.5 text-muted-foreground">
-                  <span className={`w-2 h-2 rounded-full ${TYPE_CFG[carrierType].dot}`} />
-                  <span className="hidden sm:inline">{carrierType}</span>
-                  <span className="sm:hidden">{carrierType.replace("Super ", "S").replace("Monster XXL", "XXL")}</span>
-                </div>
-              ))}
+              {TYPES.map((carrierType) => {
+                const cfg = TYPE_CFG[carrierType];
+                const shortLabel = cfg.label.replace("Super Premium", "S. Premium");
+                return (
+                  <div key={carrierType} className="flex items-center gap-1.5 text-muted-foreground">
+                    <span className={`w-2 h-2 rounded-full ${cfg.dot}`} />
+                    <span className="hidden sm:inline">{cfg.label}</span>
+                    <span className="sm:hidden">{shortLabel}</span>
+                  </div>
+                );
+              })}
             </div>
             {/* Map label */}
             <div className="absolute top-3 left-3 right-14 sm:right-auto glass rounded-lg px-2 py-1.5 sm:px-3 sm:py-2 z-20">

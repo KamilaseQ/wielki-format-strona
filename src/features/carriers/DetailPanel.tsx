@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { motion } from "motion/react";
 import {
   ArrowRight,
   Car,
   ChevronLeft,
   Eye,
+  ImageIcon,
   Layers,
   LocateFixed,
   MapPin,
@@ -61,27 +61,26 @@ export function DetailPanel({ carrier, onBack }: DetailPanelProps) {
           className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ring-1 ${cfg.pill}`}
         >
           <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
-          {carrier.type}
+          {cfg.label}
         </span>
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        <div className="relative h-44 overflow-hidden">
-          <Image
-            src={carrier.image}
-            alt={`Nośnik ${carrier.code} - ${carrier.address}, ${carrier.city}`}
-            fill
-            sizes="380px"
-            className="object-cover"
-          />
+        <div className="relative h-44 overflow-hidden bg-gradient-to-br from-primary/10 via-surface to-secondary/40 flex items-center justify-center">
+          <ImageIcon className="w-10 h-10 text-primary/30" />
           <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent" />
           <div className="absolute bottom-2 left-3 flex gap-1.5 flex-wrap">
             <span className="px-2 py-0.5 rounded glass text-[10px] font-heading font-bold text-primary">
-              {carrier.type}
+              {cfg.label}
             </span>
             <span className="px-2 py-0.5 rounded glass text-[10px] text-muted-foreground">
               {carrier.format}
             </span>
+            {carrier.zip && (
+              <span className="px-2 py-0.5 rounded glass text-[10px] text-muted-foreground">
+                {carrier.zip}
+              </span>
+            )}
           </div>
         </div>
 
@@ -105,8 +104,8 @@ export function DetailPanel({ carrier, onBack }: DetailPanelProps) {
           </div>
           <ProgressRow
             icon={Car}
-            label="Ruch dzienny"
-            value={`${carrier.traffic.toLocaleString()} poj.`}
+            label="Ruch dzienny (szac.)"
+            value={`~${carrier.traffic.toLocaleString()} poj.`}
             pct={Math.min((carrier.traffic / 80000) * 100, 100)}
             color="from-primary/60 to-primary"
           />
@@ -125,7 +124,7 @@ export function DetailPanel({ carrier, onBack }: DetailPanelProps) {
           </div>
           <div className="grid grid-cols-2 gap-2">
             <SpecBox icon={Ruler} value={carrier.format} label="Format" />
-            <SpecBox icon={Layers} value={carrier.type} label="Typ" />
+            <SpecBox icon={Layers} value={cfg.label} label="Segment" />
             <SpecBox
               icon={Zap}
               value={carrier.lit ? "Tak" : "Nie"}
@@ -138,6 +137,17 @@ export function DetailPanel({ carrier, onBack }: DetailPanelProps) {
             />
           </div>
         </div>
+
+        {carrier.description && (
+          <div className="px-4 py-4 border-b border-border/20">
+            <div className="text-[10px] tracking-wider uppercase text-muted-foreground/40 font-heading mb-2">
+              Opis lokalizacji
+            </div>
+            <p className="text-[12px] leading-relaxed text-muted-foreground whitespace-pre-line">
+              {carrier.description}
+            </p>
+          </div>
+        )}
 
         <div className="px-4 pt-3">
           <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/5 border border-primary/15 text-xs text-muted-foreground">

@@ -249,9 +249,9 @@ function EditorialStats() {
   const maskRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: maskScroll } = useScroll({ target: maskRef, offset: ["start 0.9", "start 0.4"] });
   const clipRight = useTransform(maskScroll, [0, 1], [100, 0]);
-  const clipPath = useTransform(clipRight, (v) => `inset(0 ${v}% 0 0)`);
+  const clipPath = useTransform(clipRight, (v) => `inset(-80px ${v}% -80px -80px)`);
   // Expanded clip for blur glow - allows blur to extend beyond tight bounding box
-  const blurClipPath = useTransform(clipRight, (v) => `inset(-30px ${v}% -30px -30px)`);
+  const blurClipPath = useTransform(clipRight, (v) => `inset(-80px ${v}% -80px -80px)`);
 
   return (
     <section ref={statsRef} className="py-16 md:py-24 relative overflow-visible" aria-label="Statystyki firmy">
