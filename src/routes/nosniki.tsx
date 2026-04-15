@@ -7,6 +7,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "motion/react";
 import type { MapMarker } from "@/components/LeafletMap";
+import { COMPANY_PHONE_DISPLAY, COMPANY_PHONE_TEL } from "@/lib/contact";
 import {
   ArrowRight,
   Ruler,
@@ -742,10 +743,10 @@ function DetailPanel({
           <div className="mt-2 text-center text-[10px] text-muted-foreground/40">
             <Phone className="w-3 h-3 inline mr-1" />
             <a
-              href="tel:+48123456789"
+              href={COMPANY_PHONE_TEL}
               className="hover:text-primary transition-colors"
             >
-              +48 123 456 789
+              {COMPANY_PHONE_DISPLAY}
             </a>
           </div>
         </div>

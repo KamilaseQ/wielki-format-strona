@@ -8,6 +8,7 @@ import { ArrowRight } from "lucide-react";
 export function StickyMobileCTA() {
   const [visible, setVisible] = useState(false);
   const [cookieVisible, setCookieVisible] = useState(false);
+  const [footerVisible, setFooterVisible] = useState(false);
   const lastYRef = useRef(0);
 
   const handleScroll = useCallback(() => {
@@ -47,8 +48,22 @@ export function StickyMobileCTA() {
     };
   }, []);
 
+  useEffect(() => {
+    const footer = document.querySelector("footer");
+    if (!footer) return;
+
+    // Hide CTA when footer is within 120px of viewport bottom
+    const observer = new IntersectionObserver(
+      ([entry]) => setFooterVisible(entry.isIntersecting),
+      { rootMargin: "0px 0px 120px 0px", threshold: 0 }
+    );
+
+    observer.observe(footer);
+    return () => observer.disconnect();
+  }, []);
+
   // Don't render if cookie consent is active
-  if (cookieVisible) return null;
+  if (cookieVisible || footerVisible) return null;
 
   return (
     <div className={`sticky-mobile-cta ${visible ? "visible" : ""}`}>

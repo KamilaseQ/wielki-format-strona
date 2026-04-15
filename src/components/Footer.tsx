@@ -4,6 +4,11 @@ import Link from "next/link";
 import { MapPin, Phone, Mail, ArrowUpRight } from "lucide-react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
+import {
+  COMPANY_PHONE_ARIA,
+  COMPANY_PHONE_DISPLAY,
+  COMPANY_PHONE_TEL,
+} from "@/lib/contact";
 
 export function Footer() {
   const footerRef = useRef<HTMLElement>(null);
@@ -112,10 +117,11 @@ export function Footer() {
                   <Phone className="w-3.5 h-3.5 text-primary/60" />
                 </div>
                 <a
-                  href="tel:+48600131013"
+                  href={COMPANY_PHONE_TEL}
                   className="hover:text-foreground transition-colors"
+                  aria-label={COMPANY_PHONE_ARIA}
                 >
-                  Wdrożenia: 600 13 10 13
+                  {COMPANY_PHONE_DISPLAY}
                 </a>
               </li>
               <li className="flex items-center gap-3 text-sm text-muted-foreground">

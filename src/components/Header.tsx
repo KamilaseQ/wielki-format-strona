@@ -6,12 +6,18 @@ import { useState, useEffect } from "react";
 import { Menu, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import {
+  COMPANY_PHONE_ARIA,
+  COMPANY_PHONE_DISPLAY,
+  COMPANY_PHONE_TEL,
+} from "@/lib/contact";
 
 const navLinks = [
   { href: "/", label: "Strona główna" },
   { href: "/o-nas", label: "O nas" },
   { href: "/nosniki", label: "Nośniki i mapa" },
   { href: "/wynajem", label: "Wynajem" },
+  { href: "/obsluga-kampanii", label: "Obsługa kampanii" },
   { href: "/kontakt", label: "Kontakt" },
 ] as const;
 
@@ -109,12 +115,12 @@ export function Header() {
 
           <div className="hidden lg:flex items-center gap-3">
             <a
-              href="tel:+48600131013"
+              href={COMPANY_PHONE_TEL}
               className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-              aria-label="Wdrożenia: 600 13 10 13"
+              aria-label={COMPANY_PHONE_ARIA}
             >
               <Phone className="w-4 h-4" />
-              <span>600 13 10 13</span>
+              <span>{COMPANY_PHONE_DISPLAY}</span>
             </a>
             <Link href="/kontakt">
               <Button variant="cta" size="sm">

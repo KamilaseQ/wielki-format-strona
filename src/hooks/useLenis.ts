@@ -7,11 +7,19 @@ export function useLenis(enabled: boolean = true) {
   useEffect(() => {
     if (!enabled) return;
 
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+
+    if (prefersReducedMotion || coarsePointer) {
+      delete (window as any).__lenis;
+      return;
+    }
+
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 0.9,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      touchMultiplier: 1.5,
+      touchMultiplier: 1,
     });
 
     let rafId: number;

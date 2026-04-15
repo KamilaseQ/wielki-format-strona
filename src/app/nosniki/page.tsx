@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import "leaflet/dist/leaflet.css";
-import CarriersPage from "@/routes/nosniki";
+import CarriersPage from "@/features/carriers/CarriersPage";
 
 export const metadata: Metadata = {
   title: "Mapa nośników reklamowych",
   description:
-    "Interaktywna mapa nośników billboardowych w całej Polsce. Sprawdź dostępność i lokalizacje.",
+    "Interaktywna mapa nośników billboardowych w całej Polsce. Poznaj lokalizacje, formaty i rozmieszczenie nośników.",
   openGraph: {
     title: "Mapa nośników reklamowych - wielkiformat.pl",
     description:

@@ -53,7 +53,7 @@ export function SiteShell({ children }: PropsWithChildren) {
       <ScrollProgress />
       <CustomCursor />
       <Header />
-      <main id="main-content" className="min-h-screen pt-16 lg:pt-20">
+      <main id="main-content" className="min-h-screen pt-16 pb-24 sm:pb-28 lg:pt-20 lg:pb-0">
         {shouldReduceMotion ? (
           <div key={pathname}>{children}</div>
         ) : (

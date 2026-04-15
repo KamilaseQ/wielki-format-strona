@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useCallback, useState } from "react";
-import type { Map, Layer } from "leaflet";
+import "leaflet/dist/leaflet.css";
+import { useEffect, useRef, useState } from "react";
+import type { Map, Layer, Renderer } from "leaflet";
 
 export type MapMarker = {
   id: string;
@@ -12,10 +13,18 @@ export type MapMarker = {
   selected?: boolean;
 };
 
+export type MapViewport = {
+  zoom: number;
+  center: { lat: number; lng: number };
+  bounds: { north: number; south: number; east: number; west: number };
+};
+
 interface LeafletMapProps {
   markers: MapMarker[];
   selectedId?: string | null;
   onMarkerClick?: (id: string) => void;
+  onViewportChange?: (viewport: MapViewport) => void;
+  autoFitKey?: string;
   className?: string;
 }
 
@@ -26,19 +35,30 @@ export function LeafletMap({
   markers,
   selectedId,
   onMarkerClick,
+  onViewportChange,
+  autoFitKey,
   className = "",
 }: LeafletMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<Map | null>(null);
   const leafletRef = useRef<typeof import("leaflet") | null>(null);
+  const rendererRef = useRef<Renderer | null>(null);
   const markersRef = useRef<Layer[]>([]);
   const onMarkerClickRef = useRef(onMarkerClick);
+  const onViewportChangeRef = useRef(onViewportChange);
+  const initialBoundsFitDoneRef = useRef(false);
+  const previousSelectedIdRef = useRef<string | null>(null);
+  const previousAutoFitKeyRef = useRef<string | undefined>(undefined);
   const [mapReady, setMapReady] = useState(false);
 
   // Keep callback ref updated without re-running effects
   useEffect(() => {
     onMarkerClickRef.current = onMarkerClick;
   }, [onMarkerClick]);
+
+  useEffect(() => {
+    onViewportChangeRef.current = onViewportChange;
+  }, [onViewportChange]);
 
   // Initialize map once
   useEffect(() => {
@@ -47,19 +67,21 @@ export function LeafletMap({
     async function init() {
       if (!containerRef.current || mapRef.current) return;
 
-      // Import Leaflet and its CSS
+      // CSS is imported by the route. Only load the Leaflet runtime here.
       const L = await import("leaflet");
-      await import("leaflet/dist/leaflet.css");
 
       if (cancelled || !containerRef.current) return;
 
       leafletRef.current = L;
+      rendererRef.current = L.canvas({ padding: 0.5 });
 
       const map = L.map(containerRef.current, {
         center: DEFAULT_CENTER,
         zoom: DEFAULT_ZOOM,
         zoomControl: false,
         attributionControl: false,
+        preferCanvas: true,
+        renderer: rendererRef.current,
       });
 
       // Dark CartoDB tiles
@@ -79,6 +101,24 @@ export function LeafletMap({
         )
         .addTo(map);
 
+      const emitViewport = () => {
+        const center = map.getCenter();
+        const bounds = map.getBounds();
+        onViewportChangeRef.current?.({
+          zoom: map.getZoom(),
+          center: { lat: center.lat, lng: center.lng },
+          bounds: {
+            north: bounds.getNorth(),
+            south: bounds.getSouth(),
+            east: bounds.getEast(),
+            west: bounds.getWest(),
+          },
+        });
+      };
+
+      map.on("moveend zoomend", emitViewport);
+      map.whenReady(emitViewport);
+
       mapRef.current = map;
       setMapReady(true);
 
@@ -93,6 +133,7 @@ export function LeafletMap({
       mapRef.current?.remove();
       mapRef.current = null;
       leafletRef.current = null;
+      rendererRef.current = null;
       markersRef.current = [];
     };
   }, []);
@@ -120,6 +161,7 @@ export function LeafletMap({
         weight: baseWeight,
         opacity: 0.9,
         fillOpacity: baseFillOpacity,
+        renderer: rendererRef.current ?? undefined,
       }).addTo(map);
 
       marker.bindTooltip(m.label, {
@@ -153,7 +195,7 @@ export function LeafletMap({
       markersRef.current.push(marker);
     });
 
-    // Fit bounds / fly to selected
+    // Only focus the map when a marker is explicitly selected.
     requestAnimationFrame(() => {
       map.invalidateSize();
 
@@ -161,27 +203,47 @@ export function LeafletMap({
         ? markers.find((m) => m.id === selectedId)
         : null;
 
-      if (sel) {
+      if (sel && previousSelectedIdRef.current !== selectedId) {
         map.flyTo([sel.lat, sel.lng], Math.max(map.getZoom(), 11), {
           animate: true,
           duration: 0.45,
         });
-        return;
       }
+    });
 
-      const points = markers.map(
-        (m) => [m.lat, m.lng] as [number, number]
-      );
+    previousSelectedIdRef.current = selectedId ?? null;
+  }, [markers, selectedId, mapReady]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
+
+    const points = markers.map((marker) => [marker.lat, marker.lng] as [number, number]);
+
+    requestAnimationFrame(() => {
+      map.invalidateSize();
 
       if (points.length === 0) {
         map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
-      } else if (points.length === 1) {
+        return;
+      }
+
+      if (points.length === 1) {
         map.setView(points[0], 11);
-      } else {
+        return;
+      }
+
+      const shouldAutoFit =
+        !initialBoundsFitDoneRef.current ||
+        (typeof autoFitKey === "string" && autoFitKey !== previousAutoFitKeyRef.current);
+
+      if (shouldAutoFit) {
         map.fitBounds(points, { padding: [48, 48], maxZoom: 10 });
+        initialBoundsFitDoneRef.current = true;
+        previousAutoFitKeyRef.current = autoFitKey;
       }
     });
-  }, [markers, selectedId, mapReady]);
+  }, [autoFitKey, markers, mapReady]);
 
   // Re-invalidate on container resize
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
@@ -200,7 +262,7 @@ export function LeafletMap({
   return (
     <div
       ref={containerRef}
-      className={`w-full h-full ${className}`}
+      className={`relative w-full h-full ${className}`}
       role="application"
       aria-label="Interaktywna mapa nośników reklamowych"
     />

@@ -1,0 +1,4 @@
+export const COMPANY_PHONE_DISPLAY = "600 13 10 13";
+export const COMPANY_PHONE_E164 = "+48600131013";
+export const COMPANY_PHONE_TEL = `tel:${COMPANY_PHONE_E164}`;
+export const COMPANY_PHONE_ARIA = `Zadzwoń: ${COMPANY_PHONE_DISPLAY}`;

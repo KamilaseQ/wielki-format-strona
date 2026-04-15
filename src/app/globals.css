@@ -665,8 +665,8 @@
     left: 0;
     right: 0;
     z-index: 49;
-    padding: 0.75rem 1rem;
-    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    padding: 0.75rem 1rem 0;
+    padding-bottom: max(0.25rem, env(safe-area-inset-bottom, 0px));
     background: oklch(0.06 0.002 0 / 95%);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -705,6 +705,49 @@
   opacity: 1;
   transform: translateY(0);
   transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* ═══════════ MOBILE / iPHONE OPTIMIZATIONS ═══════════ */
+
+/* Reduce backdrop-filter intensity on mobile for smoother scroll */
+@media (max-width: 767px) {
+  .glass {
+    backdrop-filter: blur(10px) saturate(130%);
+    -webkit-backdrop-filter: blur(10px) saturate(130%);
+  }
+  .glass-card {
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+  }
+  .glass-strong {
+    backdrop-filter: blur(14px) saturate(150%);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+  }
+  /* Reduce bg-noise complexity on mobile */
+  .bg-noise {
+    display: none;
+  }
+  /* Disable heavy scroll-based CSS animations on mobile */
+  .animate-float-slow,
+  .animate-float,
+  .animate-float-subtle {
+    animation: none;
+  }
+}
+
+/* Safe area padding for iOS home indicator */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .sticky-mobile-cta {
+    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* GPU acceleration for animated elements */
+.animate-ticker,
+.animate-glow-pulse,
+.animate-ping-slow {
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 /* ═══════════ HEADER SHRINK ON SCROLL ═══════════ */

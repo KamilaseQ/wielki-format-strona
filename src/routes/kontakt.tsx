@@ -6,6 +6,11 @@ import { LeadForm } from "@/components/LeadForm";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Mail, Clock, Shield, Star, CheckCircle } from "lucide-react";
 import { motion } from "motion/react";
+import {
+  COMPANY_PHONE_ARIA,
+  COMPANY_PHONE_DISPLAY,
+  COMPANY_PHONE_TEL,
+} from "@/lib/contact";
 
 export default function ContactPage() {
   return (
@@ -47,7 +52,7 @@ export default function ContactPage() {
 
               <div className="space-y-5">
                 {[
-                  { icon: Phone, label: "Telefon", value: "600 13 10 13", href: "tel:+48600131013" },
+                  { icon: Phone, label: "Telefon", value: COMPANY_PHONE_DISPLAY, href: COMPANY_PHONE_TEL },
                   { icon: Mail, label: "E-mail", value: "info@wielkiformat.pl", href: "mailto:info@wielkiformat.pl" },
                   { icon: MapPin, label: "Adres", value: "Al. Józefa Piłsudskiego 55A, Marki" },
                   { icon: Clock, label: "Godziny pracy", value: "Pon-Pt: 8:00-17:00" },
@@ -107,30 +112,6 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Map embed */}
-      <section className="py-16 md:py-24 bg-surface border-t border-border/30 relative overflow-hidden">
-        <div className="absolute inset-0 bg-noise" />
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-          <Reveal>
-            <span className="text-xs font-semibold tracking-[0.25em] uppercase text-primary/70 font-heading block mb-3 text-center">Lokalizacja</span>
-            <h2 className="font-heading font-black text-3xl md:text-4xl text-foreground text-center mb-10 leading-tight">Gdzie nas znajdziesz</h2>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <div className="rounded-2xl overflow-hidden border border-border/40 aspect-[16/7] relative">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2443.5!2d21.01!3d52.23!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNTLCsDEzJzQ4LjAiTiAyMcKwMDAnMzYuMCJF!5e0!3m2!1spl!2spl!4v1"
-                className="w-full h-full border-0 grayscale contrast-125 opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-700"
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Lokalizacja biura Billboard Sp. z o.o. na mapie Google"
-              />
-              <div className="absolute inset-0 pointer-events-none border border-border/20 rounded-2xl" />
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
       {/* CTA - different than homepage (point 18) */}
       <section className="relative py-20 md:py-28 overflow-hidden">
         <div className="absolute inset-0 bg-noise" />
@@ -147,7 +128,7 @@ export default function ContactPage() {
             </p>
           </Reveal>
           <Reveal delay={0.2}>
-            <a href="tel:+48123456789" aria-label="Zadzwoń: +48 123 456 789">
+            <a href={COMPANY_PHONE_TEL} aria-label={COMPANY_PHONE_ARIA}>
               <Button variant="hero" size="xl" className="group glow-red relative overflow-hidden min-h-[44px]">
                 <span className="relative z-10 flex items-center gap-2">
                   <Phone className="w-5 h-5" /> Zadzwoń teraz

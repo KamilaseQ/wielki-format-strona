@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk, DM_Serif_Display } from "next/font/google";
 import "./globals.css";
+import { COMPANY_PHONE_E164 } from "@/lib/contact";
 
 const inter = Inter({
   subsets: ["latin", "latin-ext"],
@@ -80,7 +81,7 @@ const organizationJsonLd = {
   name: "Billboard Sp. z o.o.",
   alternateName: "wielkiformat.pl",
   url: "https://wielkiformat.pl",
-  telephone: "+48600131013",
+  telephone: COMPANY_PHONE_E164,
   email: "info@wielkiformat.pl",
   address: {
     "@type": "PostalAddress",
@@ -103,7 +104,7 @@ const localBusinessJsonLd = {
   name: "Billboard Sp. z o.o.",
   alternateName: "wielkiformat.pl",
   url: "https://wielkiformat.pl",
-  telephone: "+48600131013",
+  telephone: COMPANY_PHONE_E164,
   email: "info@wielkiformat.pl",
   image: "https://wielkiformat.pl/og-image.png",
   description:

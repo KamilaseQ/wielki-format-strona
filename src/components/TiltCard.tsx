@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { motion, useMotionValue, useSpring } from "motion/react";
 
 interface TiltCardProps {
@@ -18,9 +18,19 @@ export function TiltCard({ children, className = "", intensity = 7 }: TiltCardPr
   const ref = useRef<HTMLDivElement>(null);
   const [mp, setMp] = useState({ x: 50, y: 50 });
   const [isHovering, setIsHovering] = useState(false);
+  const [interactive, setInteractive] = useState(true);
   const rx = useMotionValue(0), ry = useMotionValue(0);
   const srx = useSpring(rx, { stiffness: 150, damping: 20 });
   const sry = useSpring(ry, { stiffness: 150, damping: 20 });
+
+  useEffect(() => {
+    const media = window.matchMedia("(pointer: fine)");
+    const update = () => setInteractive(media.matches);
+
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     const r = ref.current?.getBoundingClientRect(); if (!r) return;
@@ -36,6 +46,10 @@ export function TiltCard({ children, className = "", intensity = 7 }: TiltCardPr
     rx.set(0); ry.set(0);
     setIsHovering(false);
   }, [rx, ry]);
+
+  if (!interactive) {
+    return <div className={className}>{children}</div>;
+  }
 
   return (
     <motion.div

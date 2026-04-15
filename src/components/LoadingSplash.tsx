@@ -15,7 +15,7 @@ export function LoadingSplash() {
     const timer = setTimeout(() => {
       setVisible(false);
       sessionStorage.setItem("splash-shown", "true");
-    }, 1800);
+    }, 900);
     return () => clearTimeout(timer);
   }, []);
 

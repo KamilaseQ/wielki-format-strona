@@ -9,6 +9,11 @@ import { Reveal } from "@/components/Reveal";
 import { motion, useScroll, useTransform, useInView, animate, useReducedMotion } from "motion/react";
 import { useRef, useEffect, useState } from "react";
 import {
+  COMPANY_PHONE_ARIA,
+  COMPANY_PHONE_DISPLAY,
+  COMPANY_PHONE_TEL,
+} from "@/lib/contact";
+import {
   ArrowRight, Zap, MapPin, CheckCircle,
   TrendingUp, Award, Clock, Maximize2, BarChart3, Target, Phone, Layers,
   Camera, Truck, Globe, ArrowUpRight, EyeOff, AlertTriangle, Flame,
@@ -34,10 +39,10 @@ function LightDivider() {
   return <div className="light-leak-divider" />;
 }
 
-/** Floating ambient glow orbs - pure CSS, no JS overhead */
+/** Floating ambient glow orbs - hidden on mobile to save GPU */
 function AmbientGlow() {
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden hidden md:block" aria-hidden="true">
       <div className="absolute w-[500px] h-[350px] rounded-full blur-[160px] bg-primary/[0.04] animate-float-slow" style={{ top: "15%", left: "10%" }} />
       <div className="absolute w-[400px] h-[300px] rounded-full blur-[140px] bg-primary/[0.03] animate-float" style={{ top: "45%", right: "8%", animationDelay: "2s" }} />
       <div className="absolute w-[500px] h-[350px] rounded-full blur-[180px] bg-primary/[0.03] animate-float-subtle" style={{ top: "75%", left: "25%", animationDelay: "4s" }} />
@@ -174,18 +179,6 @@ function HeroSection() {
               ))}
             </div>
           </Reveal>
-          {/* Point 42: Urgency trigger */}
-          <Reveal delay={0.36}>
-            <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-xs">
-              <span className="relative w-2 h-2">
-                <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping-slow" />
-                <span className="relative block w-2 h-2 rounded-full bg-emerald-400" />
-              </span>
-              <span className="text-muted-foreground">
-                W tej chwili <span className="text-foreground font-semibold">47 nośników</span> dostępnych
-              </span>
-            </div>
-          </Reveal>
           {/* Social proof under stats */}
           <Reveal delay={0.4}>
             <div className="mt-8 flex items-center gap-3">
@@ -256,20 +249,36 @@ function EditorialStats() {
   const maskRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: maskScroll } = useScroll({ target: maskRef, offset: ["start 0.9", "start 0.4"] });
   const clipRight = useTransform(maskScroll, [0, 1], [100, 0]);
+  const clipPath = useTransform(clipRight, (v) => `inset(0 ${v}% 0 0)`);
+  // Expanded clip for blur glow - allows blur to extend beyond tight bounding box
+  const blurClipPath = useTransform(clipRight, (v) => `inset(-30px ${v}% -30px -30px)`);
 
   return (
-    <section ref={statsRef} className="py-16 md:py-24 relative overflow-hidden" aria-label="Statystyki firmy">
+    <section ref={statsRef} className="py-16 md:py-24 relative overflow-visible" aria-label="Statystyki firmy">
       <div className="absolute inset-0 bg-noise" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-6 items-end">
           <div className="lg:col-span-5">
             <Reveal from="left">
-              <div ref={c1.ref}>
-                <motion.div
+              <div ref={c1.ref} className="pb-4 md:pb-6">
+                <div
                   ref={maskRef}
-                  className="font-heading font-black text-[80px] md:text-[110px] lg:text-[130px] leading-none text-gradient-brand-bright text-glow-red tabular-nums"
-                  style={{ clipPath: useTransform(clipRight, (v) => `inset(0 ${v}% 0 0)`) }}
-                >{c1.count}+</motion.div>
+                  className="relative inline-block overflow-visible pr-2 pb-[0.14em] md:pb-[0.18em]"
+                >
+                  <motion.div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute left-0 top-0 whitespace-nowrap font-heading font-black text-[80px] md:text-[110px] lg:text-[130px] leading-[0.92] tabular-nums text-primary/85 blur-[18px] md:blur-[22px]"
+                    style={{ clipPath: blurClipPath, transform: "translateY(0.06em)" }}
+                  >
+                    {c1.count}+
+                  </motion.div>
+                  <motion.div
+                    className="relative whitespace-nowrap font-heading font-black text-[80px] md:text-[110px] lg:text-[130px] leading-[0.92] text-gradient-brand-bright tabular-nums"
+                    style={{ clipPath }}
+                  >
+                    {c1.count}+
+                  </motion.div>
+                </div>
                 <div className="mt-2 text-lg font-heading font-semibold text-foreground">kampanii rocznie</div>
                 <p className="mt-2 text-sm text-muted-foreground/60 max-w-sm leading-relaxed">Każda zakończona dokumentacją fotograficzną. Każda zrealizowana na czas.</p>
               </div>
@@ -539,11 +548,11 @@ function TestimonialsSection() {
    ═══════════════════════════════════════════════ */
 function ClientShowcase() {
   const clients = [
-    { name: "KFC", category: "Kampania reklamowa", scope: "Najpopularniejsza sieć restauracji założona przez Harlanda Sandersa.", img: "https://logo.clearbit.com/kfc.com" },
-    { name: "McDonald's", category: "Kampania reklamowa", scope: "Największa sieć restauracji szybkiej obsługi o globalnym zasięgu.", img: "https://logo.clearbit.com/mcdonalds.com" },
-    { name: "Leroy Merlin", category: "Kampania reklamowa", scope: "Francuska sieć hipermarketów z branży budowlanej i dekoracyjnej.", img: "https://logo.clearbit.com/leroymerlin.fr" },
-    { name: "Renault", category: "Kampania reklamowa", scope: "Prestiżowy francuski producent innowacyjnych aut miejskich i użytkowych.", img: "https://logo.clearbit.com/renault.com" },
-    { name: "Toyota", category: "Kampania reklamowa", scope: "Japoński lider motoryzacji słynący z niezawodności i technologii.", img: "https://logo.clearbit.com/toyota.com" },
+    { name: "KFC", category: "Kampania reklamowa", scope: "Najpopularniejsza sieć restauracji założona przez Harlanda Sandersa.", img: "/clients/new_kfc.png" },
+    { name: "McDonald's", category: "Kampania reklamowa", scope: "Największa sieć restauracji szybkiej obsługi o globalnym zasięgu.", img: "/clients/new_mc.png" },
+    { name: "Leroy Merlin", category: "Kampania reklamowa", scope: "Francuska sieć hipermarketów z branży budowlanej i dekoracyjnej.", img: "/clients/new_leroymerlin.png" },
+    { name: "Renault", category: "Kampania reklamowa", scope: "Francuski producent innowacyjnych aut miejskich i użytkowych.", img: "/clients/new_renault.png" },
+    { name: "Toyota", category: "Kampania reklamowa", scope: "Japoński lider motoryzacji słynący z niezawodności i technologii.", img: "/clients/new_toyota.png" },
   ];
 
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -565,18 +574,17 @@ function ClientShowcase() {
               <span className="text-muted-foreground/40">dla największych marek.</span>
             </h2>
           </Reveal>
-          <div className="grid grid-cols-2 gap-3">
-            {clients.slice(0, 4).map((c, i) => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {clients.map((c, i) => (
               <Reveal key={c.name} delay={i * 0.08}>
-                <motion.div className="group relative rounded-2xl overflow-hidden aspect-[4/3] cursor-pointer"
+                <motion.div className={`group relative rounded-2xl bg-white border border-border/10 overflow-hidden aspect-[4/3] cursor-pointer shadow-sm ${i === clients.length - 1 ? "col-span-2 sm:col-span-1" : ""}`}
                   whileHover={{ scale: 1.008 }} transition={{ type: "spring", stiffness: 300, damping: 25 }}>
-                  <div className="absolute inset-0 bg-white/95 p-6 flex flex-col items-center justify-center">
-                    <Image src={c.img} alt={`Logo marki: ${c.name}`} width={200} height={120} className="object-contain w-full h-[60%] transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                  <div className="absolute inset-x-0 top-0 bottom-10 flex items-center justify-center z-20 pointer-events-none px-4 py-5">
+                    <Image src={c.img} alt={`Logo marki: ${c.name}`} width={240} height={140} className="object-contain max-w-[85%] max-h-[85%] transition-transform duration-700 group-hover:scale-[1.05]" loading="lazy" />
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent opacity-95 group-hover:opacity-100 transition-opacity" />
-                  <div className="absolute bottom-3 left-3">
-                    <span className="px-2 py-0.5 rounded glass text-[9px] font-heading font-bold text-primary uppercase tracking-wider mb-1 inline-block">{c.category}</span>
-                    <h3 className="font-heading font-bold text-xs text-foreground">{c.name}</h3>
+                  <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-white to-transparent z-10" />
+                  <div className="absolute bottom-2 left-3 z-20">
+                    <h3 className="font-heading font-bold text-[11px] text-slate-800">{c.name}</h3>
                   </div>
                 </motion.div>
               </Reveal>
@@ -627,29 +635,25 @@ function ClientShowcase() {
                 {clients.map((c) => (
                   <motion.div
                     key={c.name}
-                    className="group relative rounded-2xl overflow-hidden cursor-pointer shrink-0 w-[480px] aspect-[4/3]"
+                    className="group relative rounded-2xl bg-white border border-border/10 overflow-hidden cursor-pointer shrink-0 w-[480px] aspect-[4/3] shadow-sm"
                     whileHover={{ scale: 1.02 }}
                     transition={{ type: "spring", stiffness: 300, damping: 25 }}
                   >
-                    <div className="absolute inset-0 bg-white/95 flex items-center justify-center p-12">
+                    <div className="absolute inset-x-0 top-0 bottom-20 flex items-center justify-center p-10 z-20 pointer-events-none">
                       <Image
                         src={c.img}
                         alt={`Logo marki: ${c.name}`}
                         width={400}
                         height={240}
-                        className="object-contain w-full h-[60%] transition-transform duration-700 group-hover:scale-105"
+                        className="object-contain max-w-[85%] max-h-[85%] transition-transform duration-700 group-hover:scale-[1.04]"
                         loading="lazy"
                       />
                     </div>
-                    {/* Shadow overlay for text readability */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent opacity-95 group-hover:opacity-100 transition-opacity" />
-                    <div className="absolute -bottom-6 -left-6 w-40 h-40 bg-primary/15 rounded-full blur-[50px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                    <div className="absolute bottom-6 left-6 right-6 z-10 transition-transform duration-500 group-hover:-translate-y-2">
-                      <span className="px-2 py-0.5 rounded glass-strong text-[10px] font-heading font-bold text-primary uppercase tracking-wider mb-2 inline-block">
-                        {c.category}
-                      </span>
-                      <h3 className="font-heading font-bold text-xl text-foreground mb-1">{c.name}</h3>
-                      <p className="text-sm text-foreground/80 leading-relaxed">{c.scope}</p>
+                    <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-white via-white/95 to-transparent z-10" />
+                    <div className="absolute -bottom-6 -left-6 w-40 h-40 bg-primary/10 rounded-full blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-10" />
+                    <div className="absolute bottom-4 left-6 right-6 z-20 transition-transform duration-500 group-hover:-translate-y-1">
+                      <h3 className="font-heading font-bold text-xl text-slate-900 mb-1">{c.name}</h3>
+                      <p className="text-sm text-slate-600 leading-relaxed font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-500">{c.scope}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -679,9 +683,9 @@ function ClientShowcase() {
 /* ═══════ PROCESS TIMELINE ═══════ */
 function MobileTimelineDot({ index }: { index: number }) {
   return (
-    <div className="absolute left-0 -translate-x-[calc(50%+7px)] top-3">
+    <div className="absolute left-[-1.75rem] top-4 z-[30] isolate">
       <motion.div className="w-6 h-6 rounded-full border-2 border-primary/25 bg-background flex items-center justify-center"
-        initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
+        initial={{ scale: 0, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true }}
         transition={{ delay: index * 0.1 + 0.2, type: "spring", stiffness: 300 }}>
         <CheckCircle className="w-3 h-3 text-primary" />
       </motion.div>
@@ -752,7 +756,7 @@ function ProcessTimeline() {
             <div className="space-y-8">
               {steps.map((s, i) => (
                 <Reveal key={s.num} delay={i * 0.1}>
-                  <div className="relative">
+                  <div className="relative overflow-visible">
                     <MobileTimelineDot index={i} />
                     <div className="rounded-xl glass-card p-5 relative overflow-hidden">
                       <div className="absolute -top-2 -right-1 font-heading font-black text-[60px] leading-none text-primary/[0.04] select-none pointer-events-none">{s.num}</div>
@@ -819,7 +823,7 @@ function BenefitsSection() {
               <TiltCard className="group relative rounded-2xl glass-card p-8 md:p-10 cursor-default" intensity={5}>
                 <div className="relative z-20" ref={cRef}>
                   <div className="absolute -top-6 -left-4 w-36 h-28 rounded-full blur-[50px] bg-primary/8 animate-glow-pulse" />
-                  <div className="font-heading font-black text-6xl md:text-7xl text-gradient-brand-bright mb-3 tabular-nums text-glow-red relative" style={{ transform: "translateZ(20px)" }}>{count}+</div>
+                  <div className="font-heading font-black text-6xl md:text-7xl leading-[0.94] pb-4 text-gradient-brand-bright mb-3 tabular-nums text-glow-red relative" style={{ transform: "translateZ(20px)" }}>{count}+</div>
                   <p className="text-lg text-foreground font-heading font-bold mb-2" style={{ transform: "translateZ(12px)" }}>kampanii rocznie</p>
                   <p className="text-sm text-muted-foreground leading-relaxed mb-6" style={{ transform: "translateZ(8px)" }}>Zaufanie klientów z całej Polski to nasz największy kapitał.</p>
                   <div className="pt-5 border-t border-border/15 grid grid-cols-3 gap-4 text-center">
@@ -900,7 +904,7 @@ function CTASection() {
         <Reveal delay={0.4}>
           <div className="mt-8 text-sm text-muted-foreground/40 flex items-center justify-center gap-2">
             <Phone className="w-4 h-4" /> lub zadzwoń:{" "}
-            <a href="tel:+48123456789" className="text-foreground/60 hover:text-primary transition-colors font-medium">+48 123 456 789</a>
+            <a href={COMPANY_PHONE_TEL} aria-label={COMPANY_PHONE_ARIA} className="text-foreground/60 hover:text-primary transition-colors font-medium">{COMPANY_PHONE_DISPLAY}</a>
           </div>
         </Reveal>
       </div>
