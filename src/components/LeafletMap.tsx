@@ -2,7 +2,7 @@
 
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef, useState } from "react";
-import type { Map, Layer, Renderer } from "leaflet";
+import type { LeafletMouseEvent, Map, Layer, Renderer } from "leaflet";
 import { PersonStanding, X } from "lucide-react";
 
 export type MapMarker = {
