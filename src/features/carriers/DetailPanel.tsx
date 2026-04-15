@@ -163,16 +163,14 @@ export function DetailPanel({ carrier, onBack }: DetailPanelProps) {
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
-          <div className="mt-2 text-center text-[10px] text-muted-foreground/40">
-            <Phone className="w-3 h-3 inline mr-1" />
-            <a
-              href={COMPANY_PHONE_TEL}
-              aria-label={COMPANY_PHONE_ARIA}
-              className="hover:text-primary transition-colors"
-            >
-              {COMPANY_PHONE_DISPLAY}
-            </a>
-          </div>
+          <a
+            href={COMPANY_PHONE_TEL}
+            aria-label={COMPANY_PHONE_ARIA}
+            className="mt-3 flex items-center justify-center gap-2 rounded-lg border border-primary/20 bg-primary/5 py-2.5 text-base font-heading font-bold text-foreground hover:bg-primary/10 hover:text-primary transition-colors"
+          >
+            <Phone className="w-4 h-4 text-primary" />
+            {COMPANY_PHONE_DISPLAY}
+          </a>
         </div>
       </div>
     </motion.div>

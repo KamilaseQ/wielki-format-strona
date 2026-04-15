@@ -47,9 +47,15 @@ export function LeafletMap({
   const onMarkerClickRef = useRef(onMarkerClick);
   const onViewportChangeRef = useRef(onViewportChange);
   const initialBoundsFitDoneRef = useRef(false);
-  const previousSelectedIdRef = useRef<string | null>(null);
   const previousAutoFitKeyRef = useRef<string | undefined>(undefined);
+  const markersDataRef = useRef<MapMarker[]>(markers);
   const [mapReady, setMapReady] = useState(false);
+
+  // Keep a ref to the latest markers so effects that shouldn't re-run on
+  // marker updates can still read current positions when they fire.
+  useEffect(() => {
+    markersDataRef.current = markers;
+  }, [markers]);
 
   // Keep callback ref updated without re-running effects
   useEffect(() => {
@@ -195,55 +201,55 @@ export function LeafletMap({
       markersRef.current.push(marker);
     });
 
-    // Only focus the map when a marker is explicitly selected.
-    requestAnimationFrame(() => {
-      map.invalidateSize();
-
-      const sel = selectedId
-        ? markers.find((m) => m.id === selectedId)
-        : null;
-
-      if (sel && previousSelectedIdRef.current !== selectedId) {
-        map.flyTo([sel.lat, sel.lng], Math.max(map.getZoom(), 11), {
-          animate: true,
-          duration: 0.45,
-        });
-      }
-    });
-
-    previousSelectedIdRef.current = selectedId ?? null;
+    requestAnimationFrame(() => map.invalidateSize());
   }, [markers, selectedId, mapReady]);
 
+  // Fly to selected carrier — runs ONLY when selectedId changes.
+  // Deselect is intentionally a no-op (Google Maps-like: closing the card
+  // leaves the map where the user is).
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady || !selectedId) return;
+
+    const sel = markersDataRef.current.find((m) => m.id === selectedId);
+    if (!sel) return;
+
+    const targetZoom = Math.max(map.getZoom(), 16);
+    map.flyTo([sel.lat, sel.lng], targetZoom, {
+      animate: true,
+      duration: 0.6,
+    });
+  }, [selectedId, mapReady]);
+
+  // Fit to the filtered set — runs ONLY on initial load or when autoFitKey
+  // changes (i.e. filters/search changed). Panning/zooming or marker-set
+  // reshuffles from viewport-driven budgeting do NOT trigger a re-fit.
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !mapReady) return;
 
-    const points = markers.map((marker) => [marker.lat, marker.lng] as [number, number]);
+    const needsFit =
+      !initialBoundsFitDoneRef.current ||
+      autoFitKey !== previousAutoFitKeyRef.current;
+    if (!needsFit) return;
+
+    const points = markersDataRef.current.map(
+      (marker) => [marker.lat, marker.lng] as [number, number]
+    );
 
     requestAnimationFrame(() => {
       map.invalidateSize();
-
       if (points.length === 0) {
         map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
-        return;
-      }
-
-      if (points.length === 1) {
-        map.setView(points[0], 11);
-        return;
-      }
-
-      const shouldAutoFit =
-        !initialBoundsFitDoneRef.current ||
-        (typeof autoFitKey === "string" && autoFitKey !== previousAutoFitKeyRef.current);
-
-      if (shouldAutoFit) {
+      } else if (points.length === 1) {
+        map.setView(points[0], 13);
+      } else {
         map.fitBounds(points, { padding: [48, 48], maxZoom: 10 });
-        initialBoundsFitDoneRef.current = true;
-        previousAutoFitKeyRef.current = autoFitKey;
       }
+      initialBoundsFitDoneRef.current = true;
+      previousAutoFitKeyRef.current = autoFitKey;
     });
-  }, [autoFitKey, markers, mapReady]);
+  }, [autoFitKey, mapReady, markers]);
 
   // Re-invalidate on container resize
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
