@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Skontaktuj się z nami. Zapytaj o dostępność billboardów, poproś o wycenę lub umów rozmowę.",
   alternates: {
-    canonical: "https://wielkiformat.pl/kontakt",
+    canonical: "https://wielki-format-strona.vercel.app/kontakt",
   },
 };
 

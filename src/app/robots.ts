@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://wielkiformat.pl/sitemap.xml",
+    sitemap: "https://wielki-format-strona.vercel.app/sitemap.xml",
   };
 }

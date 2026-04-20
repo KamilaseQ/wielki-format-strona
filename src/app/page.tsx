@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description:
     "Billboardy i reklama wielkoformatowa na terenie całej Polski. Ponad 25 lat doświadczenia, 2500+ kampanii rocznie.",
   alternates: {
-    canonical: "https://wielkiformat.pl",
+    canonical: "https://wielki-format-strona.vercel.app",
   },
 };
 

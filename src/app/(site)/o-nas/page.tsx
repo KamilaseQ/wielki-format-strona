@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Poznaj Billboard Sp. z o.o. - ponad 25 lat doświadczenia w reklamie wielkoformatowej i billboardach.",
   alternates: {
-    canonical: "https://wielkiformat.pl/o-nas",
+    canonical: "https://wielki-format-strona.vercel.app/o-nas",
   },
 };
 

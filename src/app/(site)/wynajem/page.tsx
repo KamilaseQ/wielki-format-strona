@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Wynajmij billboard w dowolnym mieście w Polsce. Sprawdź dostępność nośników i zarezerwuj termin kampanii.",
   alternates: {
-    canonical: "https://wielkiformat.pl/wynajem",
+    canonical: "https://wielki-format-strona.vercel.app/wynajem",
   },
 };
 

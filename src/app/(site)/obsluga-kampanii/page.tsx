@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Pełna obsługa kampanii billboardowej: projekt, druk, montaż, demontaż i dokumentacja fotograficzna.",
   alternates: {
-    canonical: "https://wielkiformat.pl/obsluga-kampanii",
+    canonical: "https://wielki-format-strona.vercel.app/obsluga-kampanii",
   },
 };
 

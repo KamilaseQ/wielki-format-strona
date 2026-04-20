@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const baseUrl = "https://wielkiformat.pl";
+const baseUrl = "https://wielki-format-strona.vercel.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

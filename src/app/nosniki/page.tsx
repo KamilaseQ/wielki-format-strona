@@ -14,7 +14,7 @@ export const metadata: Metadata = {
       "Interaktywna mapa nośników billboardowych w całej Polsce.",
   },
   alternates: {
-    canonical: "https://wielkiformat.pl/nosniki",
+    canonical: "https://wielki-format-strona.vercel.app/nosniki",
   },
 };
 
