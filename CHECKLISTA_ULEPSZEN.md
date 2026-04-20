@@ -327,19 +327,3 @@
 ### 70. ❌ Dodać Web Vitals monitoring
 **Co to jest:** Automatyczne śledzenie LCP, FID/INP, CLS na produkcji pozwala wykrywać problemy z performance u prawdziwych użytkowników.  
 **Co zrobić:** Użyć `next/web-vitals` lub `web-vitals` library do raportowania metryk do analytics.
-
----
-
-## 📊 PODSUMOWANIE PRIORYTETÓW
-
-| Priorytet | Punkty | Cel |
-|-----------|--------|-----|
-| 🔴 **KRYTYCZNE** | 3, 7, 8, 25, 27, 38, 45, 46, 47, 48 | Strona nie powinna być live bez tych poprawek |
-| 🟠 **WYSOKIE** | 1, 2, 4, 5, 6, 9, 14, 17, 26, 28, 33, 35, 39, 41, 49 | Profesjonalność i konwersja |
-| 🟡 **ŚREDNIE** | 10, 15, 16, 18, 19, 22, 23, 24, 29, 34, 37, 42, 52, 56 | Premium experience |
-| 🟢 **NICE-TO-HAVE** | 20, 21, 30, 31, 36, 40, 43, 44, 50, 51, 53, 54, 55, 57-70 | Kolejne iteracje |
-
----
-
-> 💡 **Następny krok:** Rozpocznij od punktów krytycznych (🔴). Każdy z nich powinien zająć 15–60 minut. Razem ~1 dzień roboczy.  
-> Punkty wysokie (🟠) to kolejny dzień. Po ich wdrożeniu strona będzie na poziomie profesjonalnym.

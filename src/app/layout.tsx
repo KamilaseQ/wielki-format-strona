@@ -25,7 +25,7 @@ const dmSerifDisplay = DM_Serif_Display({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://wielkiformat.pl"),
+  metadataBase: new URL("https://wielki-format-strona.vercel.app"),
   title: {
     default: "wielkiformat.pl | Reklama wielkoformatowa i billboardy",
     template: "%s | wielkiformat.pl",
@@ -48,14 +48,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "pl_PL",
-    url: "https://wielkiformat.pl",
+    url: "https://wielki-format-strona.vercel.app",
     siteName: "wielkiformat.pl",
     title: "wielkiformat.pl | Reklama wielkoformatowa i billboardy",
     description:
       "Billboardy i reklama wielkoformatowa na terenie całej Polski. Ponad 25 lat doświadczenia i kompleksowa obsługa kampanii.",
     images: [
       {
-        url: "/og-image.png",
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "wielkiformat.pl - Reklama wielkoformatowa i billboardy w całej Polsce",
@@ -67,10 +67,10 @@ export const metadata: Metadata = {
     title: "wielkiformat.pl | Reklama wielkoformatowa i billboardy",
     description:
       "Billboardy i reklama wielkoformatowa na terenie całej Polski. Ponad 25 lat doświadczenia i kompleksowa obsługa kampanii.",
-    images: ["/og-image.png"],
+    images: ["/og-image.jpg"],
   },
   alternates: {
-    canonical: "https://wielkiformat.pl",
+    canonical: "https://wielki-format-strona.vercel.app",
   },
 };
 
@@ -106,7 +106,7 @@ const localBusinessJsonLd = {
   url: "https://wielkiformat.pl",
   telephone: COMPANY_PHONE_E164,
   email: "info@wielkiformat.pl",
-  image: "https://wielkiformat.pl/og-image.png",
+  image: "https://wielki-format-strona.vercel.app/og-image.jpg",
   description:
     "Billboardy i reklama wielkoformatowa na terenie całej Polski. Ponad 25 lat doświadczenia.",
   address: {
