@@ -251,7 +251,11 @@ function EditorialStats() {
   const clipRight = useTransform(maskScroll, [0, 1], [100, 0]);
   const clipPath = useTransform(clipRight, (v) => `inset(-80px ${v}% -80px -80px)`);
   // Expanded clip for blur glow - allows blur to extend beyond tight bounding box
-  const blurClipPath = useTransform(clipRight, (v) => `inset(-80px ${v}% -80px -80px)`);
+  // on the right side too, so the glow isn't sharply cut when fully revealed.
+  const blurClipPath = useTransform(
+    clipRight,
+    (v) => `inset(-80px calc(${v}% - ${(100 - v) * 0.8}px) -80px -80px)`
+  );
 
   return (
     <section ref={statsRef} className="py-16 md:py-24 relative overflow-visible" aria-label="Statystyki firmy">
