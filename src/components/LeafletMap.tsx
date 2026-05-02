@@ -92,10 +92,14 @@ export function LeafletMap({
         renderer: rendererRef.current,
       });
 
-      // Dark CartoDB tiles
+      // CartoDB Voyager tiles - light, clear, multilingual
       L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-        { maxZoom: 19 }
+        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+        {
+          maxZoom: 19,
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        }
       ).addTo(map);
 
       // Zoom control bottom-right
@@ -158,41 +162,53 @@ export function LeafletMap({
 
     markers.forEach((m) => {
       const isSelected = m.id === selectedId;
-      const baseRadius = isSelected ? 12 : 7;
-      const baseWeight = isSelected ? 3 : 2;
-      const baseFillOpacity = isSelected ? 0.9 : 0.55;
+      // Larger, higher-contrast pin: outer ring + inner solid dot
+      const outerRadius = isSelected ? 15 : 10;
+      const innerRadius = isSelected ? 7 : 4.5;
 
-      const marker = L.circleMarker([m.lat, m.lng], {
-        radius: baseRadius,
-        fillColor: m.color,
+      const ring = L.circleMarker([m.lat, m.lng], {
+        radius: outerRadius,
+        fillColor: "#ffffff",
         color: m.color,
-        weight: baseWeight,
-        opacity: 0.9,
-        fillOpacity: baseFillOpacity,
+        weight: isSelected ? 4 : 3,
+        opacity: 1,
+        fillOpacity: 1,
         renderer: rendererRef.current ?? undefined,
       }).addTo(map);
 
-      marker.bindTooltip(m.label, {
+      const dot = L.circleMarker([m.lat, m.lng], {
+        radius: innerRadius,
+        fillColor: m.color,
+        color: m.color,
+        weight: 0,
+        opacity: 1,
+        fillOpacity: 1,
+        renderer: rendererRef.current ?? undefined,
+      }).addTo(map);
+
+      ring.bindTooltip(m.label, {
         className: "leaflet-dark-tooltip",
         direction: "top",
-        offset: [0, -10],
+        offset: [0, -12],
       });
 
-      marker.on("click", () => {
+      ring.on("click", () => {
+        onMarkerClickRef.current?.(m.id);
+      });
+      dot.on("click", () => {
         onMarkerClickRef.current?.(m.id);
       });
 
-      // Add animated pulse ring for selected marker
+      // Animated pulse ring for selected marker
       if (isSelected) {
-        // Use divIcon to avoid SVG transform-origin issues with scale animations
         const pulse = L.marker([m.lat, m.lng], {
           icon: L.divIcon({
             className: "bg-transparent border-0",
-            iconSize: [24, 24],
-            iconAnchor: [12, 12],
+            iconSize: [40, 40],
+            iconAnchor: [20, 20],
             html: `<div class="relative w-full h-full flex items-center justify-center">
-                     <div class="absolute w-10 h-10 rounded-full opacity-30 animate-[ping_3s_cubic-bezier(0,0,0.2,1)_infinite]" style="background-color: ${m.color}"></div>
-                     <div class="absolute w-5 h-5 rounded-full opacity-60 animate-pulse" style="border: 2px solid ${m.color}"></div>
+                     <div class="absolute w-12 h-12 rounded-full opacity-35 animate-[ping_3s_cubic-bezier(0,0,0.2,1)_infinite]" style="background-color: ${m.color}"></div>
+                     <div class="absolute w-7 h-7 rounded-full opacity-70" style="border: 2px solid ${m.color}; box-shadow: 0 2px 12px ${m.color}80"></div>
                    </div>`,
           }),
           interactive: false,
@@ -200,7 +216,8 @@ export function LeafletMap({
         markersRef.current.push(pulse);
       }
 
-      markersRef.current.push(marker);
+      markersRef.current.push(ring);
+      markersRef.current.push(dot);
     });
 
     requestAnimationFrame(() => map.invalidateSize());

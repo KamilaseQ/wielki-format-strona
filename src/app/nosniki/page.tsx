@@ -7,11 +7,11 @@ import { parseBillboardsXml, type Carrier } from "@/features/carriers/data";
 export const metadata: Metadata = {
   title: "Mapa nośników reklamowych",
   description:
-    "Interaktywna mapa nośników billboardowych w całej Polsce. Poznaj lokalizacje, formaty i rozmieszczenie nośników.",
+    "Interaktywna mapa nośników billboardowych w województwie mazowieckim. Poznaj lokalizacje, formaty i rozmieszczenie ponad 1400 nośników.",
   openGraph: {
     title: "Mapa nośników reklamowych - wielkiformat.pl",
     description:
-      "Interaktywna mapa nośników billboardowych w całej Polsce.",
+      "Interaktywna mapa nośników billboardowych w województwie mazowieckim.",
   },
   alternates: {
     canonical: "https://wielki-format-strona.vercel.app/nosniki",

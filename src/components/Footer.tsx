@@ -45,8 +45,8 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed mb-5 max-w-xs">
-              Reklama wielkoformatowa i billboardy na terenie całej Polski.
-              Ponad 25 lat doświadczenia, 2500+ kampanii rocznie.
+              Reklama wielkoformatowa i billboardy na terenie województwa mazowieckiego.
+              Działamy od 1998 roku, 2500+ kampanii rocznie.
             </p>
             {/* Coverage mini visual */}
             <div className="flex items-center gap-3 p-3 rounded-xl bg-card/30 border border-border/30 max-w-xs">
@@ -55,10 +55,10 @@ export function Footer() {
               </div>
               <div>
                 <div className="text-sm font-heading font-bold text-foreground">
-                  16 województw
+                  Mazowsze
                 </div>
-                <div className="text-[11px] text-muted-foreground/50">
-                  Zasięg ogólnopolski
+                <div className="text-xs text-muted-foreground">
+                  1400+ nośników w regionie
                 </div>
               </div>
             </div>
@@ -161,20 +161,20 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="mt-14 pt-8 border-t border-border/30 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-muted-foreground/40">
+          <p className="text-xs text-muted-foreground">
             © {new Date().getFullYear()} Billboard Sp. z o.o. Wszelkie prawa
             zastrzeżone.
           </p>
-          <div className="flex items-center gap-6 text-xs text-muted-foreground/40">
+          <div className="flex items-center gap-6 text-xs text-muted-foreground">
             <Link
               href="/polityka-prywatnosci"
-              className="hover:text-muted-foreground transition-colors"
+              className="hover:text-foreground transition-colors"
             >
               Polityka prywatności
             </Link>
             <Link
               href="/regulamin"
-              className="hover:text-muted-foreground transition-colors"
+              className="hover:text-foreground transition-colors"
             >
               Regulamin
             </Link>

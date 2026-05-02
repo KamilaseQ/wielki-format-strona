@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { ScrollProgress } from "@/components/ScrollProgress";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { useLenis } from "@/hooks/useLenis";
 
 /* ── Non-critical components loaded after initial paint ── */
@@ -41,7 +42,7 @@ export function SiteShell({ children }: PropsWithChildren) {
   useLenis(true);
 
   return (
-    <>
+    <ThemeProvider>
       <LoadingSplash />
       <ScrollProgress />
       <CustomCursor />
@@ -65,6 +66,6 @@ export function SiteShell({ children }: PropsWithChildren) {
       <StickyMobileCTA />
       <CookieConsent />
       <KonamiEasterEgg />
-    </>
+    </ThemeProvider>
   );
 }

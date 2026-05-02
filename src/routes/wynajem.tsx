@@ -6,10 +6,9 @@ import { Button } from "@/components/ui/button";
 import { LeadForm } from "@/components/LeadForm";
 import { PricingCalculator } from "@/components/PricingCalculator";
 import { motion } from "motion/react";
-import { ArrowRight, Calendar, CheckCircle, MapPin, Maximize2, Star, Shield, Clock, Layers, Zap, ChevronDown } from "lucide-react";
+import { ArrowRight, Calendar, CheckCircle, MapPin, Maximize2, Star, Shield, Clock, ChevronDown } from "lucide-react";
 import { useState } from "react";
 
-import { TiltCard } from "@/components/TiltCard";
 import { Reveal } from "@/components/Reveal";
 
 export default function RentalPage() {
@@ -89,45 +88,14 @@ export default function RentalPage() {
           <Reveal>
             <span className="text-xs font-semibold tracking-[0.25em] uppercase text-primary/70 font-heading block mb-3 text-center">Formaty</span>
             <h2 className="font-heading font-black text-3xl md:text-4xl text-foreground text-center mb-4 leading-tight">Porównaj formaty nośników</h2>
-            <p className="text-center text-muted-foreground mb-14 max-w-2xl mx-auto leading-relaxed">
-              Nasi Klienci mogą zdecydować się na wynajem BILLBOARDÓW SUPER 12, SUPER 18 i SUPER 36, których wymiary wynoszą odpowiednio 5,04 x 2,38 m, 6 x 3 m oraz 12 x 3 m. Do dyspozycji pozostawimy też nośniki MONSTER XXL o powierzchni wynoszącej od 30 do ponad 100 m².
+            <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed">
+              Cztery formaty - od kompaktowych Super 12 po wielkoformatowe Monster XXL. Wszystkie dostępne w&nbsp;województwie mazowieckim.
             </p>
           </Reveal>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[
-              { name: "Super 12", size: "5,04 × 2,38 m", area: "12 m²", best: "Lokalne kampanie", icon: Maximize2, highlight: false },
-              { name: "Super 18", size: "6 × 3 m", area: "18 m²", best: "Kampanie miejskie", icon: Maximize2, highlight: true },
-              { name: "Super 36", size: "12 × 3 m", area: "36 m²", best: "Trasy krajowe", icon: Layers, highlight: false },
-              { name: "Monster XXL", size: "niestandardowy", area: "30-100+ m²", best: "Maksymalny impact", icon: Zap, highlight: false },
-            ].map((f, i) => (
-              <Reveal key={f.name} delay={i * 0.08}>
-                <TiltCard
-                  className={`rounded-2xl p-6 border h-full cursor-default transition-all duration-500 group relative overflow-hidden ${
-                    f.highlight
-                      ? "glass-card border-primary/20"
-                      : "bg-card/30 border-border/30 hover:border-primary/15"
-                  }`}
-                  intensity={4}
-                >
-                  <div className="relative z-20">
-                    {f.highlight && (
-                      <span className="absolute top-0 right-0 px-2 py-0.5 rounded text-[9px] font-heading font-bold text-primary bg-primary/10 border border-primary/20 uppercase tracking-wider" style={{ transform: "translateZ(20px)" }}>
-                        Popularny
-                      </span>
-                    )}
-                    <div className="w-11 h-11 rounded-xl bg-primary/6 border border-primary/15 flex items-center justify-center mb-5" style={{ transform: "translateZ(12px)" }}>
-                      <f.icon className="w-5 h-5 text-primary/60" />
-                    </div>
-                    <h3 className="font-heading font-bold text-lg text-foreground mb-1">{f.name}</h3>
-                    <div className="text-3xl font-heading font-black text-gradient-brand-bright mb-1" style={{ transform: "translateZ(10px)" }}>{f.area}</div>
-                    <div className="text-xs text-muted-foreground/50 mb-4">{f.size}</div>
-                    <div className="text-sm text-muted-foreground">{f.best}</div>
-                  </div>
-                </TiltCard>
-              </Reveal>
-            ))}
-          </div>
+          <Reveal delay={0.05}>
+            <FormatTable />
+          </Reveal>
         </div>
       </section>
 
@@ -189,7 +157,7 @@ export default function RentalPage() {
           <div className="space-y-3">
             {[
               { q: "Jaki jest minimalny okres wynajmu billboardu?", a: "Minimalny okres wynajmu to 2 tygodnie. Oferujemy korzystniejsze stawki przy dłuższych kampaniach - od 1 miesiąca wzwyż." },
-              { q: "Czy mogę wynająć billboard w dowolnym mieście?", a: "Tak, dysponujemy nośnikami w 16 województwach. Największa koncentracja nośników to Warszawa, Kraków, Wrocław, Poznań, Gdańsk i Katowice." },
+              { q: "Czy mogę wynająć billboard w dowolnym mieście Mazowsza?", a: "Tak, dysponujemy ponad 1400 nośnikami w województwie mazowieckim. Największa koncentracja nośników to Warszawa i jej obwarzanek, Otwock, Józefów, Marki, Pruszków, Płock, Radom, Siedlce i Ostrołęka." },
               { q: "Co obejmuje cena wynajmu?", a: "Cena wynajmu obejmuje ekspozycję na nośniku. Druk, montaż, demontaż i dokumentację fotograficzną wyceniamy w ramach kompleksowej oferty - często w pakiecie." },
               { q: "Jak szybko mogę uruchomić kampanię?", a: "Od momentu akceptacji oferty do montażu potrzebujemy zazwyczaj 5-7 dni roboczych. W trybie ekspresowym - nawet 3 dni." },
               { q: "Czy otrzymam potwierdzenie montażu?", a: "Tak. Po zamontowaniu plakatu wysyłamy dokumentację fotograficzną każdego nośnika - to nasz standard przy każdej kampanii." },
@@ -208,8 +176,8 @@ export default function RentalPage() {
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[250px] bg-primary/6 rounded-full blur-[150px] animate-glow-pulse" />
         <div className="relative mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
           <Reveal>
-            <h2 className="font-heading font-black text-3xl md:text-4xl lg:text-5xl text-foreground mb-6 leading-tight">
-              Gotowy do <span className="text-gradient-brand-bright text-glow-red">rezerwacji?</span>
+            <h2 className="font-heading font-black text-3xl md:text-4xl lg:text-5xl text-foreground mb-6 leading-[1.18] tracking-tight px-2">
+              Gotowy do <span className="text-gradient-brand-bright text-glow-red inline-block pr-2 pb-1">rezerwacji?</span>
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
@@ -231,6 +199,122 @@ export default function RentalPage() {
           </Reveal>
         </div>
       </section>
+    </>
+  );
+}
+
+const FORMATS = [
+  {
+    name: "Super 12",
+    size: "5,04 × 2,38 m",
+    area: "12 m²",
+    minPeriod: "2 tyg.",
+    bestFor: "Lokalne kampanie, osiedla",
+    available: "Cała sieć mazowiecka",
+    popular: false,
+  },
+  {
+    name: "Super 18",
+    size: "6 × 3 m",
+    area: "18 m²",
+    minPeriod: "2 tyg.",
+    bestFor: "Kampanie miejskie",
+    available: "Warszawa i obwarzanek",
+    popular: true,
+  },
+  {
+    name: "Super 36",
+    size: "12 × 3 m",
+    area: "36 m²",
+    minPeriod: "2 tyg.",
+    bestFor: "Trasy wylotowe, drogi krajowe",
+    available: "Wybrane lokalizacje",
+    popular: false,
+  },
+  {
+    name: "Monster XXL",
+    size: "niestandardowy",
+    area: "30 – 100+ m²",
+    minPeriod: "1 mies.",
+    bestFor: "Maksymalny impact, eventy",
+    available: "Na zapytanie",
+    popular: false,
+  },
+];
+
+function FormatTable() {
+  return (
+    <>
+      {/* Desktop: real table */}
+      <div className="hidden md:block rounded-2xl glass-card overflow-hidden">
+        <table className="w-full text-left">
+          <thead>
+            <tr className="bg-secondary/40 border-b border-border">
+              <th className="px-5 py-4 text-[11px] font-heading font-bold tracking-[0.2em] uppercase text-muted-foreground">Format</th>
+              <th className="px-5 py-4 text-[11px] font-heading font-bold tracking-[0.2em] uppercase text-muted-foreground">Wymiar</th>
+              <th className="px-5 py-4 text-[11px] font-heading font-bold tracking-[0.2em] uppercase text-muted-foreground">Powierzchnia</th>
+              <th className="px-5 py-4 text-[11px] font-heading font-bold tracking-[0.2em] uppercase text-muted-foreground">Min. okres</th>
+              <th className="px-5 py-4 text-[11px] font-heading font-bold tracking-[0.2em] uppercase text-muted-foreground">Dla kogo</th>
+              <th className="px-5 py-4 text-[11px] font-heading font-bold tracking-[0.2em] uppercase text-muted-foreground">Dostępność</th>
+            </tr>
+          </thead>
+          <tbody>
+            {FORMATS.map((f) => (
+              <tr key={f.name} className="border-b border-border/50 last:border-b-0 hover:bg-primary/[0.04] transition-colors">
+                <td className="px-5 py-5 align-top">
+                  <div className="flex items-center gap-2">
+                    <span className="font-heading font-bold text-base text-foreground">{f.name}</span>
+                    {f.popular && (
+                      <span className="px-2 py-0.5 rounded text-[9px] font-heading font-bold text-primary bg-primary/10 border border-primary/30 uppercase tracking-wider">
+                        Popularny
+                      </span>
+                    )}
+                  </div>
+                </td>
+                <td className="px-5 py-5 align-top text-sm text-muted-foreground">{f.size}</td>
+                <td className="px-5 py-5 align-top">
+                  <span className="font-heading font-black text-lg text-gradient-brand-bright">{f.area}</span>
+                </td>
+                <td className="px-5 py-5 align-top text-sm text-foreground">{f.minPeriod}</td>
+                <td className="px-5 py-5 align-top text-sm text-muted-foreground">{f.bestFor}</td>
+                <td className="px-5 py-5 align-top text-sm text-muted-foreground">{f.available}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Mobile: stacked cards */}
+      <div className="md:hidden space-y-3">
+        {FORMATS.map((f) => (
+          <div
+            key={f.name}
+            className={`rounded-2xl glass-card p-5 ${f.popular ? "ring-2 ring-primary/30" : ""}`}
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <h3 className="font-heading font-bold text-lg text-foreground">{f.name}</h3>
+                {f.popular && (
+                  <span className="px-2 py-0.5 rounded text-[9px] font-heading font-bold text-primary bg-primary/10 border border-primary/30 uppercase tracking-wider">
+                    Popularny
+                  </span>
+                )}
+              </div>
+              <span className="font-heading font-black text-xl text-gradient-brand-bright">{f.area}</span>
+            </div>
+            <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+              <dt className="text-muted-foreground">Wymiar</dt>
+              <dd className="text-foreground font-medium">{f.size}</dd>
+              <dt className="text-muted-foreground">Min. okres</dt>
+              <dd className="text-foreground font-medium">{f.minPeriod}</dd>
+              <dt className="text-muted-foreground">Dla kogo</dt>
+              <dd className="text-foreground font-medium">{f.bestFor}</dd>
+              <dt className="text-muted-foreground">Dostępność</dt>
+              <dd className="text-foreground font-medium">{f.available}</dd>
+            </dl>
+          </div>
+        ))}
+      </div>
     </>
   );
 }

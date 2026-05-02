@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { motion, useInView, animate } from "motion/react";
 import { useRef, useEffect, useState } from "react";
-import { Award, Users, Target, TrendingUp, ArrowRight, Zap, Calendar, MapPin, Shield } from "lucide-react";
+import { Award, Users, Target, ArrowRight, Zap, Calendar } from "lucide-react";
 
 import { TiltCard } from "@/components/TiltCard";
 import { Reveal } from "@/components/Reveal";
@@ -36,12 +36,12 @@ export default function AboutPage() {
             </Reveal>
             <Reveal delay={0.08}>
               <h1 className="font-heading font-black text-4xl md:text-5xl lg:text-6xl text-foreground leading-tight mb-6">
-                Ponad <span className="text-gradient-brand-bright text-glow-red">25 lat</span> w reklamie wielkoformatowej
+                <span className="text-gradient-brand-bright text-glow-red">Od 1998 roku</span> w reklamie wielkoformatowej
               </h1>
             </Reveal>
             <Reveal delay={0.16}>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-xl">
-                Jesteśmy jednym z najbardziej doświadczonych operatorów reklamy zewnętrznej w Polsce. Realizujemy kampanie billboardowe od projektu po montaż - profesjonalnie, terminowo i&nbsp;na dużą skalę.
+                Jesteśmy jednym z najbardziej doświadczonych operatorów reklamy zewnętrznej w województwie mazowieckim. Realizujemy kampanie billboardowe od projektu po montaż - profesjonalnie, terminowo i&nbsp;na dużą skalę.
               </p>
             </Reveal>
           </div>
@@ -58,9 +58,9 @@ export default function AboutPage() {
           </Reveal>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {[
-              { icon: Award, title: "Doświadczenie", desc: "25+ lat w branży reklamy wielkoformatowej. Znamy rynek, lokalizacje i skuteczne rozwiązania." },
-              { icon: TrendingUp, title: "Skala", desc: "Około 2500 kampanii rocznie na terenie całej Polski. Zarówno lokalne, jak i ogólnokrajowe." },
-              { icon: Target, title: "Kompleksowość", desc: "Od projektu graficznego przez druk po montaż i demontaż - obsługujemy cały proces." },
+              { icon: Award, title: "Doświadczenie", desc: "Działamy od 1998 roku w branży reklamy wielkoformatowej. Znamy rynek, lokalizacje i skuteczne rozwiązania." },
+              { icon: Zap, title: "Automatyzacja", desc: "Rezerwacja, preflight, powiadomienia, raporty - automatyzujemy procesy od 2022 roku, by uwolnić czas klientów." },
+              { icon: Target, title: "Kompleksowość", desc: "Od projektu graficznego przez druk po montaż i demontaż - obsługujemy cały proces na Mazowszu." },
               { icon: Users, title: "Partnerstwo", desc: "Budujemy długoterminowe relacje z klientami. Wielu z nich wraca do nas od lat." },
             ].map((v, i) => (
               <Reveal key={v.title} delay={i * 0.08}>
@@ -94,7 +94,7 @@ export default function AboutPage() {
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <Reveal delay={0.1} from="left">
                   <p>
-                    Billboard Sp. z o.o. działa na polskim rynku reklamy zewnętrznej od ponad 25 lat. Zaczynaliśmy od kilku nośników w jednym mieście - dziś obsługujemy tysiące kampanii rocznie na terenie całego kraju.
+                    Billboard Sp. z o.o. działa na rynku reklamy zewnętrznej od 1998 roku. Zaczynaliśmy od kilku nośników w jednym mieście - dziś obsługujemy tysiące kampanii rocznie na terenie województwa mazowieckiego.
                   </p>
                 </Reveal>
                 <Reveal delay={0.15} from="left">
@@ -122,31 +122,38 @@ export default function AboutPage() {
               <div className="rounded-2xl glass-card p-6 md:p-8 relative overflow-hidden">
                 <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/8 rounded-full blur-[60px]" />
                 <div className="relative space-y-0">
-                  {[
-                    { year: "1998", text: "Założenie firmy i pierwsze billboardy" },
-                    { year: "2005", text: "Rozszerzenie sieci na główne miasta Polski" },
-                    { year: "2012", text: "Uruchomienie druku wielkoformatowego" },
-                    { year: "2020", text: "Przekroczenie 2000 kampanii rocznie" },
-                    { year: "Dziś", text: "2500+ kampanii rocznie, zasięg ogólnopolski" },
-                  ].map((m, i) => (
-                    <motion.div
-                      key={m.year}
-                      className="flex gap-4 relative py-4"
-                      initial={{ opacity: 0, x: 20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: i * 0.1, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-                    >
-                      {i < 4 && <div className="absolute left-[22px] top-[52px] bottom-0 w-px bg-gradient-to-b from-primary/20 to-transparent" />}
-                      <div className="relative z-10 w-11 h-11 rounded-lg bg-primary/8 border border-primary/15 flex items-center justify-center shrink-0">
-                        <Calendar className="w-4 h-4 text-primary/60" />
-                      </div>
-                      <div className="pt-1">
-                        <span className="font-heading font-bold text-primary text-sm">{m.year}</span>
-                        <p className="text-sm text-muted-foreground mt-0.5">{m.text}</p>
-                      </div>
-                    </motion.div>
-                  ))}
+                  {(() => {
+                    const milestones = [
+                      { year: "1998", text: "Powstanie firmy. Pierwsze billboardy na Mazowszu." },
+                      { year: "2012", text: "Uruchomienie własnego druku wielkoformatowego." },
+                      { year: "2018", text: "Wdrożenie systemu zarządzania KAIZEN - codzienne doskonalenie procesów." },
+                      { year: "2022 · I", text: "Pełna automatyzacja rezerwacji - billboard zamawiasz w 30 sekund online." },
+                      { year: "2022 · III", text: "Automatyczny preflight plików graficznych - błędy łapane przed drukiem." },
+                      { year: "2022 · V", text: "Automatyczne powiadomienia mailowe na każdym etapie kampanii." },
+                      { year: "2022 · VI", text: "Automatyczna wysyłka raportów fotograficznych po montażu." },
+                      { year: "2022 · XII", text: "Pełna baza wymiarów i wykończeń każdego nośnika - zero domysłów." },
+                      { year: "Dziś", text: "1400+ nośników w mazowieckim, 2500+ kampanii rocznie." },
+                    ];
+                    return milestones.map((m, i) => (
+                      <motion.div
+                        key={m.year}
+                        className="flex gap-4 relative py-3.5"
+                        initial={{ opacity: 0, x: 20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.06, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+                      >
+                        {i < milestones.length - 1 && <div className="absolute left-[22px] top-[50px] bottom-0 w-px bg-gradient-to-b from-primary/30 to-transparent" />}
+                        <div className="relative z-10 w-11 h-11 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                          <Calendar className="w-4 h-4 text-primary" />
+                        </div>
+                        <div className="pt-1">
+                          <span className="font-heading font-bold text-primary text-sm">{m.year}</span>
+                          <p className="text-sm text-foreground/85 mt-0.5 leading-relaxed">{m.text}</p>
+                        </div>
+                      </motion.div>
+                    ));
+                  })()}
                 </div>
               </div>
             </Reveal>
@@ -164,10 +171,10 @@ export default function AboutPage() {
           </Reveal>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { target: 25, suffix: "+", label: "lat na rynku", unit: "lat" },
+              { target: new Date().getFullYear() - 1998, suffix: "", label: "lat na rynku (od 1998)", unit: "lat" },
               { target: 2500, suffix: "+", label: "kampanii rocznie", unit: "" },
-              { target: 500, suffix: "+", label: "nośników w sieci", unit: "" },
-              { target: 16, suffix: "", label: "województw", unit: "" },
+              { target: 1400, suffix: "+", label: "nośników w mazowieckim", unit: "" },
+              { target: 1, suffix: "", label: "województwo mazowieckie", unit: "" },
             ].map((stat, i) => (
               <Reveal key={stat.label} delay={i * 0.1}>
                 <CounterCard target={stat.target} suffix={stat.suffix} label={stat.label} />
@@ -183,8 +190,8 @@ export default function AboutPage() {
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[250px] bg-primary/6 rounded-full blur-[150px] animate-glow-pulse" />
         <div className="relative mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
           <Reveal>
-            <h2 className="font-heading font-black text-3xl md:text-4xl lg:text-5xl text-foreground mb-6 leading-tight">
-              Poznajmy się <span className="text-gradient-brand-bright text-glow-red">bliżej</span>
+            <h2 className="font-heading font-black text-3xl md:text-4xl lg:text-5xl text-foreground mb-6 leading-[1.2] tracking-tight px-2">
+              Poznajmy się <span className="text-gradient-brand-bright text-glow-red inline-block pr-2 pb-1">bliżej</span>
             </h2>
           </Reveal>
           <Reveal delay={0.1}>

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Menu, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import {
   COMPANY_PHONE_ARIA,
@@ -122,6 +123,7 @@ export function Header() {
               <Phone className="w-4 h-4" />
               <span>{COMPANY_PHONE_DISPLAY}</span>
             </a>
+            <ThemeToggle />
             <Link href="/kontakt">
               <Button variant="cta" size="sm">
                 Otrzymaj wycenę
@@ -129,19 +131,22 @@ export function Header() {
             </Link>
           </div>
 
-          <button
-            type="button"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="lg:hidden p-2 text-foreground min-w-[44px] min-h-[44px] flex items-center justify-center"
-            aria-label={mobileOpen ? "Zamknij menu" : "Otwórz menu"}
-            aria-expanded={mobileOpen}
-          >
-            {mobileOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
-          </button>
+          <div className="lg:hidden flex items-center gap-1">
+            <ThemeToggle />
+            <button
+              type="button"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="p-2 text-foreground min-w-[44px] min-h-[44px] flex items-center justify-center"
+              aria-label={mobileOpen ? "Zamknij menu" : "Otwórz menu"}
+              aria-expanded={mobileOpen}
+            >
+              {mobileOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
 

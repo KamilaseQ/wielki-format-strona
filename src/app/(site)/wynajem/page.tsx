@@ -4,7 +4,7 @@ import RentalPage from "@/routes/wynajem";
 export const metadata: Metadata = {
   title: "Wynajem billboardów",
   description:
-    "Wynajmij billboard w dowolnym mieście w Polsce. Sprawdź dostępność nośników i zarezerwuj termin kampanii.",
+    "Wynajmij billboard w województwie mazowieckim. Sprawdź dostępność spośród 1400+ nośników i zarezerwuj termin kampanii.",
   alternates: {
     canonical: "https://wielki-format-strona.vercel.app/wynajem",
   },
@@ -44,7 +44,7 @@ const faqJsonLd = {
       name: "W jakich miastach dostępne są nośniki?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Posiadamy nośniki w 16 województwach, z największą koncentracją w Warszawie, Krakowie, Wrocławiu, Poznaniu, Gdańsku i Katowicach. Sprawdź naszą interaktywną mapę nośników.",
+        text: "Posiadamy ponad 1400 nośników w województwie mazowieckim, z największą koncentracją w Warszawie i okolicach (Otwock, Józefów, Marki, Pruszków) oraz w Płocku, Radomiu, Siedlcach i Ostrołęce. Sprawdź naszą interaktywną mapę nośników.",
       },
     },
   ],

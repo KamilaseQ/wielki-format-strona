@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { MagneticButton } from "@/components/MagneticButton";
 import { TiltCard } from "@/components/TiltCard";
 import { Reveal } from "@/components/Reveal";
-import { motion, useScroll, useTransform, useInView, animate, useReducedMotion } from "motion/react";
+import { motion, useScroll, useTransform, useInView, animate } from "motion/react";
 import { useRef, useEffect, useState } from "react";
 import {
   COMPANY_PHONE_ARIA,
@@ -14,9 +14,9 @@ import {
   COMPANY_PHONE_TEL,
 } from "@/lib/contact";
 import {
-  ArrowRight, Zap, MapPin, CheckCircle,
-  TrendingUp, Award, Clock, Maximize2, BarChart3, Target, Phone, Layers,
-  Camera, Truck, Globe, ArrowUpRight, EyeOff, AlertTriangle, Flame,
+  ArrowRight, Zap, MapPin,
+  Clock, Maximize2, BarChart3, Target, Phone, Layers,
+  Camera, Truck,
   Star, Quote, Shield,
 } from "lucide-react";
 
@@ -124,7 +124,7 @@ function HeroSection() {
                 <span className="absolute inset-0 rounded-full bg-primary animate-ping-slow" />
                 <span className="relative block w-2 h-2 rounded-full bg-primary" />
               </span>
-              WIELKI FORMAT · OD 2001
+              WIELKI FORMAT · OD 1998
             </span>
           </Reveal>
           <Reveal delay={0.08}>
@@ -136,7 +136,7 @@ function HeroSection() {
           </Reveal>
           <Reveal delay={0.16}>
             <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-10 max-w-xl">
-              Billboardy i kampanie outdoorowe w&nbsp;całej Polsce.
+              Billboardy i kampanie outdoorowe w&nbsp;województwie mazowieckim.
               Jeden partner od A do Z - projekt, druk, montaż, raportowanie.
             </p>
           </Reveal>
@@ -166,7 +166,7 @@ function HeroSection() {
           </Reveal>
           <Reveal delay={0.32}>
             <div className="flex flex-wrap gap-8 md:gap-12 mt-14">
-              {[{ val: "25+", label: "lat na rynku" }, { val: "2 500+", label: "kampanii / rok" }, { val: "500+", label: "nośników" }].map((s, i) => (
+              {[{ val: "od 1998", label: "lat na rynku" }, { val: "2 500+", label: "kampanii / rok" }, { val: "1400+", label: "nośników na Mazowszu" }].map((s, i) => (
                 <motion.div
                   key={s.label}
                   initial={{ opacity: 0, y: 16 }}
@@ -174,7 +174,7 @@ function HeroSection() {
                   transition={{ delay: 0.6 + i * 0.2, duration: 0.5, ease }}
                 >
                   <div className="font-heading font-black text-2xl md:text-3xl text-foreground">{s.val}</div>
-                  <div className="text-xs text-muted-foreground/50 mt-0.5">{s.label}</div>
+                  <div className="text-sm text-muted-foreground mt-0.5">{s.label}</div>
                 </motion.div>
               ))}
             </div>
@@ -187,8 +187,8 @@ function HeroSection() {
                   <Star key={i} className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
                 ))}
               </div>
-              <span className="text-xs text-muted-foreground/50">
-                <span className="text-foreground/60 font-medium">4.9 / 5</span> - opinie klientów
+              <span className="text-sm text-muted-foreground">
+                <span className="text-foreground font-semibold">4.9 / 5</span> - opinie klientów
               </span>
             </div>
           </Reveal>
@@ -197,7 +197,7 @@ function HeroSection() {
 
       <motion.div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}>
-        <span className="text-[10px] text-muted-foreground/30 tracking-[0.2em] uppercase font-heading">Poznaj nas</span>
+        <span className="text-[11px] text-muted-foreground/70 tracking-[0.2em] uppercase font-heading">Poznaj nas</span>
         <div className="w-px h-8 bg-gradient-to-b from-primary/30 to-transparent overflow-hidden">
           <motion.div className="w-full h-2 bg-primary/50" animate={{ y: ["-100%", "400%"] }}
             transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }} />
@@ -209,14 +209,37 @@ function HeroSection() {
 }
 
 /* ═══════ BRAND TICKER ═══════ */
-const brands = ["Media Expert", "Żabka", "PKN Orlen", "Kaufland", "Lidl", "Biedronka", "Play", "T-Mobile", "Allegro", "InPost", "Pepco", "CCC", "Reserved", "Leroy Merlin", "OBI"];
+const brands = [
+  "AVON",
+  "Euro 2012 - Stadion Narodowy",
+  "Madonna - Stadion Narodowy",
+  "Maraton Warszawski",
+  "Cyfrowy Polsat",
+  "Farby Śnieżka",
+  "Piotr i Paweł",
+  "Baumat",
+  "KFC",
+  "McDonald's",
+  "Subaru Polska",
+  "Renault Polska",
+  "Potis & Verso",
+  "Lexus",
+  "Holiday Inn",
+  "MediaMarkt",
+  "PSB Mrówka",
+  "Uzdrowisko Konstancin",
+  "Saturn",
+  "Euro RTV AGD",
+  "Drogerie Jawa",
+  "Intersport",
+];
 function BrandTicker() {
   return (
     <section className="py-6 relative overflow-hidden" aria-label="Zaufali nam">
       <div className="absolute inset-0 bg-noise" />
       <div className="flex items-center gap-3 mb-3 justify-center relative">
         <div className="h-px w-10 bg-gradient-to-r from-transparent to-primary/20" />
-        <p className="text-[10px] font-semibold tracking-[0.25em] uppercase text-muted-foreground/30 font-heading">Zaufali nam</p>
+        <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground/80 font-heading">Zaufali nam</p>
         <div className="h-px w-10 bg-gradient-to-l from-transparent to-primary/20" />
       </div>
       <div className="relative">
@@ -228,7 +251,7 @@ function BrandTicker() {
         </ul>
         <div className="flex animate-ticker gap-16 items-center" aria-hidden="true">
           {[...brands, ...brands].map((n, i) => (
-            <span key={`${n}-${i}`} className="shrink-0 text-base md:text-lg font-heading font-bold tracking-[0.12em] text-muted-foreground/30 uppercase whitespace-nowrap select-none hover:text-muted-foreground/60 transition-colors duration-500 cursor-default">{n}</span>
+            <span key={`${n}-${i}`} className="shrink-0 text-base md:text-lg font-heading font-bold tracking-[0.12em] text-muted-foreground/70 uppercase whitespace-nowrap select-none hover:text-foreground transition-colors duration-500 cursor-default">{n}</span>
           ))}
         </div>
       </div>
@@ -239,8 +262,8 @@ function BrandTicker() {
 /* ═══════ EDITORIAL STATS ═══════ */
 function EditorialStats() {
   const c1 = useCountUp(2500, 2.5);
-  const c2 = useCountUp(25);
-  const c3 = useCountUp(500);
+  const c2 = useCountUp(new Date().getFullYear() - 1998);
+  const c3 = useCountUp(1400);
   const statsRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: statsScroll } = useScroll({ target: statsRef, offset: ["start end", "end start"] });
   const rightColY = useTransform(statsScroll, [0, 1], [30, -30]);
@@ -284,21 +307,21 @@ function EditorialStats() {
                   </motion.div>
                 </div>
                 <div className="mt-2 text-lg font-heading font-semibold text-foreground">kampanii rocznie</div>
-                <p className="mt-2 text-sm text-muted-foreground/60 max-w-sm leading-relaxed">Każda zakończona dokumentacją fotograficzną. Każda zrealizowana na czas.</p>
+                <p className="mt-2 text-base text-muted-foreground max-w-sm leading-relaxed">Każda zakończona dokumentacją fotograficzną. Każda zrealizowana na czas.</p>
               </div>
             </Reveal>
           </div>
           <motion.div className="lg:col-span-3 lg:col-start-8" style={{ y: rightColY }}>
             <Reveal delay={0.1}>
               <div ref={c2.ref} className="mb-10 lg:mb-12">
-                <div className="font-heading font-black text-5xl md:text-6xl text-foreground tabular-nums">{c2.count}+</div>
-                <div className="text-sm text-muted-foreground/50 mt-1">lat doświadczenia</div>
+                <div className="font-heading font-black text-5xl md:text-6xl text-foreground tabular-nums">{c2.count}</div>
+                <div className="text-sm text-muted-foreground mt-1">lat doświadczenia (od 1998)</div>
               </div>
             </Reveal>
             <Reveal delay={0.2}>
               <div ref={c3.ref}>
                 <div className="font-heading font-black text-5xl md:text-6xl text-foreground tabular-nums">{c3.count}+</div>
-                <div className="text-sm text-muted-foreground/50 mt-1">nośników w 16 województwach</div>
+                <div className="text-sm text-muted-foreground mt-1">nośników w województwie mazowieckim</div>
               </div>
             </Reveal>
           </motion.div>
@@ -334,30 +357,42 @@ function WhyOutdoor() {
           <div className="lg:col-span-5">
             <Reveal from="left">
               <span className="text-xs font-semibold tracking-[0.25em] uppercase text-primary/70 font-heading block mb-4">Dlaczego outdoor</span>
-              <h2 className="font-heading font-black text-3xl md:text-4xl lg:text-[2.75rem] text-foreground leading-[1.05] mb-6">
-                Reklama, której<br /><span className="text-gradient-brand-bright">nie da się zignorować.</span>
+              <h2 className="font-heading font-black text-4xl md:text-5xl lg:text-[3rem] text-foreground leading-[1.04] mb-6 tracking-tight">
+                Medium, które<br /><span className="text-gradient-brand-bright">żyje w mieście.</span>
               </h2>
-              <p className="text-muted-foreground leading-relaxed mb-8">
-                W świecie, w&nbsp;którym reklamy online są scrollowane w ułamku sekundy, billboard pozostaje niezmienny.
-                Stoi 24/7, buduje rozpoznawalność marki jak żadne inne medium.
+              <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-8">
+                Outdoor działa tam, gdzie powstają decyzje zakupowe - na ulicach, przy drogach,
+                w drodze do pracy i sklepu. Twoi klienci mijają go każdego dnia.
               </p>
             </Reveal>
           </div>
           <div className="lg:col-span-6 lg:col-start-7 space-y-4">
             {[
-              { icon: EyeOff, title: "Nieblokowana ekspozycja", desc: "Adblock nie istnieje w outdoorze. Twoja reklama jest widoczna - zawsze, dla każdego." },
-              { icon: Flame, title: "Budowanie prestiżu", desc: "Obecność w przestrzeni miejskiej to sygnał siły marki. Firmy na billboardach są postrzegane jako liderzy." },
-              { icon: AlertTriangle, title: "Kompleksowość bez chaosu", desc: "Druk, logistyka, montaż, dokumentacja - wszystko po naszej stronie. Ty skupiasz się na biznesie." },
+              {
+                icon: MapPin,
+                title: "Geografia decyzji",
+                desc: "Billboardy stoją w punktach, które ludzie codziennie pokonują w drodze do pracy, sklepu czy szkoły. Reklama trafia tam, gdzie zapadają decyzje zakupowe.",
+              },
+              {
+                icon: Clock,
+                title: "Ekspozycja 24/7",
+                desc: 'Nośnik nie ma „off”. Pracuje 365 dni w roku - w słońcu, deszczu, dzień i noc. Każdy dzień to setki tysięcy kontaktów wzrokowych.',
+              },
+              {
+                icon: BarChart3,
+                title: "Mierzalny zasięg",
+                desc: "Znamy ruch dzienny każdej lokalizacji. Wiesz, ile osób zobaczy Twoją kampanię, zanim ona ruszy - bez algorytmów, bez zgadywania.",
+              },
             ].map((p, i) => (
               <Reveal key={p.title} delay={i * 0.1} from="right">
-                <TiltCard className="group relative rounded-xl glass-card p-5 cursor-default" intensity={4}>
+                <TiltCard className="group relative rounded-xl glass-card p-5 md:p-6 cursor-default" intensity={4}>
                   <div className="relative z-20 flex gap-4 items-start">
-                    <div className="w-10 h-10 rounded-lg bg-primary/6 border border-primary/12 flex items-center justify-center shrink-0 mt-0.5">
-                      <p.icon className="w-5 h-5 text-primary/60" />
+                    <div className="w-11 h-11 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 mt-0.5">
+                      <p.icon className="w-5 h-5 text-primary" />
                     </div>
-                    <div>
-                      <h3 className="font-heading font-bold text-sm text-foreground mb-1">{p.title}</h3>
-                      <p className="text-sm text-muted-foreground/70 leading-relaxed">{p.desc}</p>
+                    <div className="flex-1">
+                      <h3 className="font-heading font-bold text-base md:text-lg text-foreground mb-1.5 leading-tight">{p.title}</h3>
+                      <p className="text-sm md:text-[15px] text-muted-foreground leading-relaxed">{p.desc}</p>
                     </div>
                   </div>
                 </TiltCard>
@@ -375,7 +410,7 @@ function ServicesSection() {
   const services = [
     { icon: Maximize2, title: "Billboardy\nreklamowe", hoverAnim: "group-hover:rotate-12 group-hover:scale-110 transition-transform duration-500 ease-out", desc: "Nośniki od 12 do ponad 100 m² w precyzyjnie dobranych lokalizacjach. Arterie komunikacyjne, centra miast, drogi krajowe.", tag: "12-100+ m²", img: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=700&auto=format&fit=crop&q=70" },
     { icon: Layers, title: "Druk\nwielkoformatowy", hoverAnim: "group-hover:scale-y-[1.3] group-hover:scale-x-[1.1] transition-transform duration-500 ease-out", desc: "Druk UV i solwentowy na materiałach odpornych na warunki pogodowe. Kolory wierne projektowi przez cały okres ekspozycji.", tag: "pełna gama", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=700&auto=format&fit=crop&q=70" },
-    { icon: Truck, title: "Montaż\ni serwis", hoverAnim: "group-hover:-translate-y-1 group-hover:scale-[1.20] group-hover:-rotate-6 transition-transform duration-500 ease-out", desc: "Własne ekipy w 16 województwach. Montaż, demontaż, zaklejenie po kampanii. Dokumentacja fotograficzna w standardzie.", tag: "cała Polska", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=700&auto=format&fit=crop&q=70" },
+    { icon: Truck, title: "Montaż\ni serwis", hoverAnim: "group-hover:-translate-y-1 group-hover:scale-[1.20] group-hover:-rotate-6 transition-transform duration-500 ease-out", desc: "Własne ekipy na terenie województwa mazowieckiego. Montaż, demontaż, zaklejenie po kampanii. Dokumentacja fotograficzna w standardzie.", tag: "Mazowsze", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=700&auto=format&fit=crop&q=70" },
   ];
   return (
     <section className="py-16 md:py-24 relative overflow-hidden" aria-label="Nasze usługi">
@@ -456,7 +491,7 @@ function TestimonialsSection() {
       name: "Anna Kowalska",
       role: "Marketing Director",
       company: "Sieć handlowa",
-      text: "Współpracujemy z wielkiformat.pl od 5 lat. Profesjonalizm, terminowość i jakość druku na najwyższym poziomie. Kampania ogólnopolska na 120 nośnikach została zrealizowana bez jednego opóźnienia.",
+      text: "Współpracujemy z wielkiformat.pl od 5 lat. Profesjonalizm, terminowość i jakość druku na najwyższym poziomie. Kampania na 120 nośnikach na Mazowszu została zrealizowana bez jednego opóźnienia.",
       rating: 5,
     },
     {
@@ -503,7 +538,7 @@ function TestimonialsSection() {
                 </div>
                 <div>
                   <div className="font-heading font-bold text-lg text-foreground">4.9 / 5</div>
-                  <div className="text-xs text-muted-foreground/50">Średnia ocena klientów</div>
+                  <div className="text-xs text-muted-foreground">Średnia ocena klientów</div>
                 </div>
               </div>
             </Reveal>
@@ -524,7 +559,7 @@ function TestimonialsSection() {
                         <Star key={j} className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
                       ))}
                     </div>
-                    <p className="text-sm text-muted-foreground/80 leading-relaxed mb-6">„{t.text}"</p>
+                    <p className="text-[15px] text-foreground/85 leading-relaxed mb-6">„{t.text}"</p>
                     <div className="flex items-center gap-3 pt-4 border-t border-border/15">
                       <div className="w-10 h-10 rounded-full bg-primary/8 border border-primary/15 flex items-center justify-center shrink-0">
                         <span className="text-sm font-heading font-bold text-primary/60">
@@ -533,7 +568,7 @@ function TestimonialsSection() {
                       </div>
                       <div>
                         <div className="text-sm font-heading font-semibold text-foreground">{t.name}</div>
-                        <div className="text-[11px] text-muted-foreground/50">{t.role}, {t.company}</div>
+                        <div className="text-xs text-muted-foreground">{t.role}, {t.company}</div>
                       </div>
                     </div>
                   </div>
@@ -581,14 +616,31 @@ function ClientShowcase() {
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {clients.map((c, i) => (
               <Reveal key={c.name} delay={i * 0.08}>
-                <motion.div className={`group relative rounded-2xl bg-white border border-border/10 overflow-hidden aspect-[4/3] cursor-pointer shadow-sm ${i === clients.length - 1 ? "col-span-2 sm:col-span-1" : ""}`}
-                  whileHover={{ scale: 1.008 }} transition={{ type: "spring", stiffness: 300, damping: 25 }}>
-                  <div className="absolute inset-x-0 top-0 bottom-10 flex items-center justify-center z-20 pointer-events-none px-4 py-5">
-                    <Image src={c.img} alt={`Logo marki: ${c.name}`} width={240} height={140} className="object-contain max-w-[85%] max-h-[85%] transition-transform duration-700 group-hover:scale-[1.05]" loading="lazy" />
+                <motion.div
+                  className={`group relative rounded-2xl glass-card overflow-hidden aspect-[4/3] cursor-pointer ${
+                    i === clients.length - 1 ? "col-span-2 sm:col-span-1" : ""
+                  }`}
+                  whileHover={{ y: -4 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                >
+                  {/* Logo plate - jasna podkładka pod logo (czytelność niezależnie od koloru loga) */}
+                  <div className="absolute inset-3 bottom-10 rounded-xl client-logo-plate z-10" aria-hidden="true" />
+                  {/* Hover brand-toned overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.06] via-transparent to-primary/[0.04] opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-15" />
+                  {/* Logo */}
+                  <div className="absolute inset-x-0 top-0 bottom-10 flex items-center justify-center px-5 py-5 z-20 pointer-events-none">
+                    <Image
+                      src={c.img}
+                      alt={`Logo marki: ${c.name}`}
+                      width={240}
+                      height={140}
+                      className="object-contain max-w-[80%] max-h-[80%] transition-all duration-700 group-hover:scale-[1.06] grayscale group-hover:grayscale-0"
+                      loading="lazy"
+                    />
                   </div>
-                  <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-white to-transparent z-10" />
-                  <div className="absolute bottom-2 left-3 z-20">
-                    <h3 className="font-heading font-bold text-[11px] text-slate-800">{c.name}</h3>
+                  <div className="absolute bottom-3 left-3 right-3 z-20 flex items-center justify-between">
+                    <h3 className="font-heading font-bold text-xs text-foreground/85 tracking-wide">{c.name}</h3>
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary/60" />
                   </div>
                 </motion.div>
               </Reveal>
@@ -636,28 +688,48 @@ function ClientShowcase() {
             {/* Scrolling cards row - pushed up to leave more space at bottom */}
             <div className="flex items-start pt-16" style={{ height: "calc(100vh - 280px)" }}>
               <motion.div className="flex gap-6 pl-[5vw]" style={{ x }}>
-                {clients.map((c) => (
+                {clients.map((c, i) => (
                   <motion.div
                     key={c.name}
-                    className="group relative rounded-2xl bg-white border border-border/10 overflow-hidden cursor-pointer shrink-0 w-[480px] aspect-[4/3] shadow-sm"
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                    className="group relative rounded-3xl glass-card overflow-hidden cursor-pointer shrink-0 w-[460px] aspect-[4/3]"
+                    whileHover={{ y: -8, scale: 1.01 }}
+                    transition={{ type: "spring", stiffness: 280, damping: 26 }}
                   >
-                    <div className="absolute inset-x-0 top-0 bottom-20 flex items-center justify-center p-10 z-20 pointer-events-none">
+                    {/* Index marker */}
+                    <div className="absolute top-5 right-6 z-30 font-heading font-black text-3xl text-primary/15 tabular-nums tracking-tight pointer-events-none select-none">
+                      0{i + 1}
+                    </div>
+
+                    {/* Logo plate - jasna podkładka pod logo */}
+                    <div className="absolute inset-5 bottom-24 rounded-2xl client-logo-plate z-10" aria-hidden="true" />
+
+                    {/* Brand glow on hover */}
+                    <div className="absolute -top-12 -left-12 w-64 h-64 bg-primary/10 rounded-full blur-[80px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-0" />
+                    <div className="absolute -bottom-10 -right-10 w-56 h-56 bg-primary/[0.07] rounded-full blur-[70px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-0" />
+
+                    {/* Logo */}
+                    <div className="absolute inset-x-0 top-0 bottom-24 flex items-center justify-center p-12 z-20 pointer-events-none">
                       <Image
                         src={c.img}
                         alt={`Logo marki: ${c.name}`}
                         width={400}
                         height={240}
-                        className="object-contain max-w-[85%] max-h-[85%] transition-transform duration-700 group-hover:scale-[1.04]"
+                        className="object-contain max-w-[80%] max-h-[78%] transition-all duration-700 group-hover:scale-[1.05] grayscale group-hover:grayscale-0"
                         loading="lazy"
                       />
                     </div>
-                    <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-white via-white/95 to-transparent z-10" />
-                    <div className="absolute -bottom-6 -left-6 w-40 h-40 bg-primary/10 rounded-full blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-10" />
-                    <div className="absolute bottom-4 left-6 right-6 z-20 transition-transform duration-500 group-hover:-translate-y-1">
-                      <h3 className="font-heading font-bold text-xl text-slate-900 mb-1">{c.name}</h3>
-                      <p className="text-sm text-slate-600 leading-relaxed font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-500">{c.scope}</p>
+
+                    {/* Top accent line */}
+                    <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-30" />
+
+                    {/* Footer */}
+                    <div className="absolute inset-x-0 bottom-0 z-20 px-7 py-5 border-t border-border/40 bg-gradient-to-t from-background/80 via-background/40 to-transparent">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="w-2 h-2 rounded-full bg-primary animate-pulse-dot" />
+                        <span className="text-[10px] font-heading font-semibold tracking-[0.18em] uppercase text-primary/80">Klient</span>
+                      </div>
+                      <h3 className="font-heading font-bold text-xl text-foreground mb-1 transition-transform duration-500 group-hover:translate-x-1">{c.name}</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2 max-w-[88%]">{c.scope}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -684,103 +756,119 @@ function ClientShowcase() {
   );
 }
 
-/* ═══════ PROCESS TIMELINE ═══════ */
-function MobileTimelineDot({ index }: { index: number }) {
-  return (
-    <div className="absolute left-[-1.75rem] top-4 z-[30] isolate">
-      <motion.div className="w-6 h-6 rounded-full border-2 border-primary/25 bg-background flex items-center justify-center"
-        initial={{ scale: 0, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true }}
-        transition={{ delay: index * 0.1 + 0.2, type: "spring", stiffness: 300 }}>
-        <CheckCircle className="w-3 h-3 text-primary" />
-      </motion.div>
-    </div>
-  );
-}
-
+/* ═══════ PROCESS — compact horizontal/vertical pipeline ═══════ */
 function ProcessTimeline() {
   const steps = [
-    { num: "01", title: "Briefing & analiza", desc: "Poznajemy cele kampanii, grupę docelową i budżet. Proponujemy optymalne lokalizacje i formaty.", icon: Target },
-    { num: "02", title: "Wybór lokalizacji", desc: "Interaktywna mapa z dostępnymi nośnikami. Rekomendacje oparte na danych o ruchu i demografii.", icon: MapPin },
-    { num: "03", title: "Projekt & druk", desc: "Własne studio graficzne i drukarnia wielkoformatowa. Materiały odporne na warunki atmosferyczne.", icon: BarChart3 },
-    { num: "04", title: "Montaż & kampania", desc: "Profesjonalny montaż przez nasze ekipy w całej Polsce. Dokumentacja fotograficzna w standardzie.", icon: CheckCircle },
+    { icon: Target, title: "Briefing", desc: "Cele, grupa, budżet." },
+    { icon: MapPin, title: "Lokalizacje", desc: "Wybór na mapie i rezerwacja w 30 sek." },
+    { icon: Layers, title: "Projekt i druk", desc: "Studio graficzne, preflight, druk." },
+    { icon: Camera, title: "Montaż i raport", desc: "Ekipy w terenie + raport foto." },
   ];
 
   return (
     <section className="py-16 md:py-24 relative overflow-hidden" aria-label="Proces współpracy">
       <div className="absolute inset-0 bg-noise" />
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 relative">
         <Reveal>
-          <span className="text-xs font-semibold tracking-[0.25em] uppercase text-primary/70 font-heading block text-center mb-3">Jak działamy</span>
-          <h2 className="font-heading font-black text-3xl md:text-4xl lg:text-5xl text-foreground text-center mb-16 leading-tight">
-            4 kroki do<br /><span className="text-gradient-brand-bright text-glow-red">skutecznej kampanii</span>
+          <span className="text-xs font-semibold tracking-[0.25em] uppercase text-primary/70 font-heading block text-center mb-3">Cały proces</span>
+          <h2 className="font-heading font-black text-3xl md:text-4xl lg:text-5xl text-foreground text-center mb-4 leading-[1.1] tracking-tight">
+            Od pomysłu do montażu<br /><span className="text-gradient-brand-bright text-glow-red inline-block pr-2 pb-1">krok po kroku.</span>
           </h2>
+          <p className="text-center text-muted-foreground max-w-xl mx-auto mb-14">
+            Cztery proste etapy. Pełen rozkład w&nbsp;
+            <Link href="/obsluga-kampanii" className="text-primary hover:underline font-medium">obsłudze kampanii</Link>.
+          </p>
         </Reveal>
 
-        {/* Desktop: Horizontal timeline */}
-        <div className="hidden lg:block relative pb-10">
-          
-          <div className="grid grid-cols-4 gap-6 relative z-10 mb-8">
-            {steps.map((s, i) => (
-              <Reveal key={s.num} delay={i * 0.1}>
-                {/* Content glass card */}
-                <TiltCard 
-                  className="rounded-2xl glass-card p-6 h-full flex flex-col relative group hover:border-primary/30 transition-colors duration-500 cursor-default bg-surface/80 backdrop-blur-md overflow-hidden block"
-                  intensity={6}
+        {/* Desktop: horizontal pipeline */}
+        <div className="hidden md:block">
+          <div className="relative">
+            {/* Animated background line */}
+            <div className="absolute top-7 left-[6%] right-[6%] h-px bg-border/40 -z-0" aria-hidden="true">
+              <motion.div
+                className="h-full bg-gradient-to-r from-primary/50 via-primary to-primary/50"
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.4, ease, delay: 0.2 }}
+                style={{ transformOrigin: "left" }}
+              />
+            </div>
+
+            <div className="grid grid-cols-4 gap-4 lg:gap-6 relative">
+              {steps.map((s, i) => (
+                <motion.div
+                  key={s.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.5, delay: i * 0.12, ease }}
+                  className="relative flex flex-col items-center text-center"
                 >
-                  <div className="absolute top-4 right-5 font-heading font-black text-6xl text-primary/[0.04] select-none pointer-events-none transition-all duration-500 group-hover:text-primary/[0.08] group-hover:translate-x-1 group-hover:-translate-y-1">{s.num}</div>
-                  <div className="flex flex-col mb-4 relative z-10">
-                    <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 mb-4 group-hover:shadow-[0_0_20px_oklch(0.58_0.24_25/15%)] group-hover:scale-105 transition-all duration-300" style={{ transform: "translateZ(12px)" }}>
+                  {/* Numbered circle */}
+                  <div className="relative z-10 mb-5">
+                    <div className="w-14 h-14 rounded-full bg-card border-2 border-primary/40 flex items-center justify-center shadow-[0_0_24px_oklch(0.58_0.24_25/15%)] group-hover:shadow-[0_0_32px_oklch(0.58_0.24_25/30%)] transition-shadow">
                       <s.icon className="w-5 h-5 text-primary" />
                     </div>
-                    <span className="font-heading font-black text-xs tracking-wider uppercase text-primary/60 mb-1" style={{ transform: "translateZ(8px)" }}>Krok {parseInt(s.num)}</span>
-                    <h3 className="font-heading font-bold text-lg text-foreground leading-tight">{s.title}</h3>
+                    <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] font-heading font-black flex items-center justify-center tabular-nums">
+                      {i + 1}
+                    </span>
                   </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed flex-1 relative z-10">{s.desc}</p>
-                </TiltCard>
-              </Reveal>
-            ))}
-          </div>
-
-          {/* Timeline bottom line */}
-          <div className="absolute bottom-4 left-2 right-2 h-0.5 bg-border/20 rounded-full overflow-hidden">
-            <motion.div className="h-full bg-gradient-to-r from-primary/40 via-primary to-primary/40 rounded-full"
-              initial={{ width: 0 }} whileInView={{ width: "100%" }} viewport={{ once: true }}
-              transition={{ duration: 1.5, delay: 0.3, ease }} />
-          </div>
-        </div>
-
-        {/* Mobile/tablet: vertical timeline */}
-        <div className="lg:hidden">
-          <div className="relative pl-10">
-            <div className="absolute top-0 bottom-0 left-3 w-px bg-border/20">
-              <motion.div className="w-full bg-gradient-to-b from-primary/40 via-primary/60 to-primary/40"
-                initial={{ height: 0 }} whileInView={{ height: "100%" }} viewport={{ once: true }}
-                transition={{ duration: 1.5, delay: 0.2, ease }} />
-            </div>
-            <div className="space-y-8">
-              {steps.map((s, i) => (
-                <Reveal key={s.num} delay={i * 0.1}>
-                  <div className="relative overflow-visible">
-                    <MobileTimelineDot index={i} />
-                    <div className="rounded-xl glass-card p-5 relative overflow-hidden">
-                      <div className="absolute -top-2 -right-1 font-heading font-black text-[60px] leading-none text-primary/[0.04] select-none pointer-events-none">{s.num}</div>
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="w-9 h-9 rounded-lg bg-primary/8 border border-primary/15 flex items-center justify-center">
-                          <s.icon className="w-4 h-4 text-primary" />
-                        </div>
-                        <div>
-                          <span className="font-heading font-black text-sm text-primary/30">{s.num}</span>
-                          <h3 className="font-heading font-bold text-foreground leading-tight">{s.title}</h3>
-                        </div>
-                      </div>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
-                    </div>
-                  </div>
-                </Reveal>
+                  <h3 className="font-heading font-bold text-base lg:text-lg text-foreground mb-1 leading-tight">{s.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed max-w-[14rem]">{s.desc}</p>
+                </motion.div>
               ))}
             </div>
           </div>
         </div>
+
+        {/* Mobile: vertical pipeline */}
+        <div className="md:hidden">
+          <div className="relative pl-12">
+            <div className="absolute left-5 top-3 bottom-3 w-px bg-border/40" aria-hidden="true">
+              <motion.div
+                className="w-full bg-gradient-to-b from-primary/50 via-primary to-primary/50"
+                initial={{ scaleY: 0 }}
+                whileInView={{ scaleY: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.4, ease, delay: 0.2 }}
+                style={{ transformOrigin: "top" }}
+              />
+            </div>
+            <div className="space-y-7">
+              {steps.map((s, i) => (
+                <motion.div
+                  key={s.title}
+                  initial={{ opacity: 0, x: -16 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, amount: 0.4 }}
+                  transition={{ duration: 0.5, delay: i * 0.08, ease }}
+                  className="relative"
+                >
+                  <div className="absolute -left-[2.5rem] top-0">
+                    <div className="relative w-10 h-10 rounded-full bg-card border-2 border-primary/40 flex items-center justify-center">
+                      <s.icon className="w-4 h-4 text-primary" />
+                      <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-primary text-primary-foreground text-[9px] font-heading font-black flex items-center justify-center tabular-nums">
+                        {i + 1}
+                      </span>
+                    </div>
+                  </div>
+                  <h3 className="font-heading font-bold text-base text-foreground mb-0.5 leading-tight">{s.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <Reveal delay={0.4}>
+          <div className="text-center mt-12">
+            <Link href="/obsluga-kampanii" className="inline-flex items-center gap-2 text-sm font-heading font-semibold text-primary hover:text-primary/80 transition-colors">
+              Zobacz pełny proces krok po kroku
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -789,34 +877,37 @@ function ProcessTimeline() {
 /* ═══════ BENEFITS ═══════ */
 function BenefitsSection() {
   const benefits = [
-    { icon: Award, text: "25+ lat doświadczenia w reklamie zewnętrznej" },
-    { icon: TrendingUp, text: "2500 kampanii reklamowych rocznie" },
-    { icon: Globe, text: "Nośniki w całej Polsce - 16 województw" },
-    { icon: Layers, text: "Kompleksowa obsługa: projekt → druk → montaż → demontaż" },
-    { icon: Camera, text: "Dokumentacja fotograficzna każdej realizacji" },
-    { icon: Zap, text: "Wycena i rezerwacja w ciągu 24 godzin" },
+    { icon: Zap, text: "Rezerwacja billboardu w 30 sekund - zautomatyzowany system online." },
+    { icon: Shield, text: "Automatyczny preflight zatrzymuje błędne pliki, zanim trafią do druku." },
+    { icon: Layers, text: "System Kaizen w codziennej pracy - każdy proces ciągle udoskonalany." },
+    { icon: Camera, text: "Raporty fotograficzne z montażu wysyłane automatycznie do skrzynki klienta." },
+    { icon: BarChart3, text: "Każdy nośnik opisany precyzyjnie - format, wykończenie, dane techniczne." },
+    { icon: Target, text: "Ułatwienia dla klienta i dla nas - mniej maili, mniej telefonów, więcej kampanii." },
   ];
-  const { count, ref: cRef } = useCountUp(2500, 2.5);
+  const { count, ref: cRef } = useCountUp(30, 1.6);
 
   return (
-    <section className="py-16 md:py-24 relative overflow-hidden" aria-label="Korzyści dla Twojej marki">
+    <section className="py-16 md:py-24 relative overflow-hidden" aria-label="Dlaczego my - nowoczesne procesy">
       <div className="absolute inset-0 bg-noise" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
         <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
           <div className="lg:col-span-6">
             <Reveal from="left">
               <span className="text-xs font-semibold tracking-[0.25em] uppercase text-primary/70 font-heading block mb-3">Dlaczego my</span>
-              <h2 className="font-heading font-black text-3xl md:text-4xl text-foreground leading-tight mb-8">Korzyści dla<br />Twojej marki</h2>
+              <h2 className="font-heading font-black text-3xl md:text-4xl lg:text-5xl text-foreground leading-[1.1] mb-6 tracking-tight">Procesy, które działają<br /><span className="text-gradient-brand-bright">za Ciebie.</span></h2>
+              <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-8 max-w-xl">
+                Nie sprzedajemy doświadczenia ani liczb. Sprzedajemy gotowość operacyjną - automatyzację, która ułatwia życie i nam, i naszym klientom.
+              </p>
             </Reveal>
             <ul className="space-y-2">
               {benefits.map((b, i) => (
                 <Reveal key={b.text} delay={i * 0.05} from="left">
-                  <motion.li className="flex items-start gap-3 group p-2.5 -ml-2.5 rounded-xl hover:bg-primary/[0.03] transition-colors duration-300 cursor-default"
+                  <motion.li className="flex items-start gap-3 group p-2.5 -ml-2.5 rounded-xl hover:bg-primary/[0.04] transition-colors duration-300 cursor-default"
                     whileHover={{ x: 4 }} transition={{ type: "spring", stiffness: 400, damping: 25 }}>
-                    <div className="w-7 h-7 rounded-md bg-primary/6 border border-primary/12 flex items-center justify-center shrink-0 mt-0.5 group-hover:border-primary/20 group-hover:shadow-[0_0_12px_oklch(0.58_0.24_25/12%)] transition-all duration-300">
-                      <b.icon className="w-3.5 h-3.5 text-primary/60" />
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 mt-0.5 group-hover:border-primary/40 group-hover:shadow-[0_0_14px_oklch(0.58_0.24_25/15%)] transition-all duration-300">
+                      <b.icon className="w-4 h-4 text-primary" />
                     </div>
-                    <span className="text-[15px] text-muted-foreground group-hover:text-foreground transition-colors">{b.text}</span>
+                    <span className="text-[15px] text-foreground/85 group-hover:text-foreground transition-colors">{b.text}</span>
                   </motion.li>
                 </Reveal>
               ))}
@@ -827,14 +918,15 @@ function BenefitsSection() {
               <TiltCard className="group relative rounded-2xl glass-card p-8 md:p-10 cursor-default" intensity={5}>
                 <div className="relative z-20" ref={cRef}>
                   <div className="absolute -top-6 -left-4 w-36 h-28 rounded-full blur-[50px] bg-primary/8 animate-glow-pulse" />
-                  <div className="font-heading font-black text-6xl md:text-7xl leading-[0.94] pb-4 text-gradient-brand-bright mb-3 tabular-nums text-glow-red relative" style={{ transform: "translateZ(20px)" }}>{count}+</div>
-                  <p className="text-lg text-foreground font-heading font-bold mb-2" style={{ transform: "translateZ(12px)" }}>kampanii rocznie</p>
-                  <p className="text-sm text-muted-foreground leading-relaxed mb-6" style={{ transform: "translateZ(8px)" }}>Zaufanie klientów z całej Polski to nasz największy kapitał.</p>
-                  <div className="pt-5 border-t border-border/15 grid grid-cols-3 gap-4 text-center">
-                    {[{ v: "16", l: "województw" }, { v: "500+", l: "nośników" }, { v: "4", l: "formaty" }].map((s) => (
+                  <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-heading font-bold tracking-[0.2em] uppercase mb-5" style={{ transform: "translateZ(14px)" }}>Automatyzacja</span>
+                  <div className="font-heading font-black text-6xl md:text-7xl leading-[0.94] pb-4 text-gradient-brand-bright mb-1 tabular-nums text-glow-red relative" style={{ transform: "translateZ(20px)" }}>{count}<span className="text-3xl md:text-4xl ml-1 align-top">sek.</span></div>
+                  <p className="text-lg text-foreground font-heading font-bold mb-2" style={{ transform: "translateZ(12px)" }}>na rezerwację billboardu</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-6" style={{ transform: "translateZ(8px)" }}>Bez maili, bez telefonów, bez czekania. Zautomatyzowany system online działa 24/7.</p>
+                  <div className="pt-5 border-t border-border/30 grid grid-cols-3 gap-4 text-center">
+                    {[{ v: "Kaizen", l: "od 2018" }, { v: "Preflight", l: "od 2022" }, { v: "100%", l: "dokumentacja" }].map((s) => (
                       <motion.div key={s.l} whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 400 }} style={{ transform: "translateZ(10px)" }}>
-                        <div className="font-heading font-bold text-xl text-foreground">{s.v}</div>
-                        <div className="text-xs text-muted-foreground">{s.l}</div>
+                        <div className="font-heading font-bold text-base lg:text-lg text-foreground leading-tight">{s.v}</div>
+                        <div className="text-xs text-muted-foreground mt-0.5">{s.l}</div>
                       </motion.div>
                     ))}
                   </div>
@@ -870,12 +962,12 @@ function CTASection() {
           </span>
         </Reveal>
         <Reveal delay={0.1}>
-          <h2 className="font-heading font-black text-3xl md:text-5xl lg:text-6xl text-foreground mb-6 leading-tight">
+          <h2 className="font-heading font-black text-3xl md:text-5xl lg:text-6xl text-foreground mb-6 leading-[1.15] tracking-tight px-2">
             Gotowy na{" "}
-            <span className="text-gradient-brand-bright text-glow-red relative inline-block">
+            <span className="text-gradient-brand-bright text-glow-red relative inline-block pr-2 pb-2 align-baseline">
               wielki format?
-              <motion.span className="absolute -bottom-1.5 left-0 h-0.5 bg-gradient-brand-warm rounded-full"
-                initial={{ width: 0 }} whileInView={{ width: "100%" }} viewport={{ once: true }}
+              <motion.span className="absolute bottom-0 left-2 right-2 h-0.5 bg-gradient-brand-warm rounded-full"
+                initial={{ width: 0 }} whileInView={{ width: "calc(100% - 1rem)" }} viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.3, ease }} />
             </span>
           </h2>
@@ -888,7 +980,7 @@ function CTASection() {
 
         {/* Point 42: Urgency + social proof */}
         <Reveal delay={0.25}>
-          <div className="flex items-center justify-center gap-6 mb-8 text-sm text-muted-foreground/60">
+          <div className="flex items-center justify-center gap-6 mb-8 text-sm text-muted-foreground">
             <span className="flex items-center gap-1.5"><Shield className="w-4 h-4 text-primary/40" /> Bez zobowiązań</span>
             <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-primary/40" /> Odpowiedź w 24h</span>
             <span className="flex items-center gap-1.5"><Star className="w-4 h-4 text-amber-400/60" /> 4.9/5 ocena</span>
@@ -906,7 +998,7 @@ function CTASection() {
           </Link>
         </Reveal>
         <Reveal delay={0.4}>
-          <div className="mt-8 text-sm text-muted-foreground/40 flex items-center justify-center gap-2">
+          <div className="mt-8 text-sm text-muted-foreground/80 flex items-center justify-center gap-2">
             <Phone className="w-4 h-4" /> lub zadzwoń:{" "}
             <a href={COMPANY_PHONE_TEL} aria-label={COMPANY_PHONE_ARIA} className="text-foreground/60 hover:text-primary transition-colors font-medium">{COMPANY_PHONE_DISPLAY}</a>
           </div>
