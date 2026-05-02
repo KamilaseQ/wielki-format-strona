@@ -102,7 +102,7 @@ function HeroSection() {
     <section ref={ref} className="relative min-h-[100vh] flex items-center overflow-hidden -mt-16 lg:-mt-20">
       <motion.div className="absolute inset-0" style={{ y: bgY }}>
         <motion.img
-          src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1920&auto=format&fit=crop&q=80"
+          src="/images/generated/hero-city-billboards.png"
           alt="Panorama miasta nocą z oświetlonymi billboardami reklamowymi"
           className="w-full h-full object-cover"
           style={{ opacity: bgOp, filter: "grayscale(100%) contrast(1.2)" }}
@@ -329,7 +329,7 @@ function EditorialStats() {
             <Reveal delay={0.15} from="right">
               <div className="relative rounded-2xl overflow-hidden aspect-[3/4] border-glow">
                 <Image
-                  src="https://images.unsplash.com/photo-1517292987719-0369a794ec0f?w=400&auto=format&fit=crop&q=70"
+                  src="/images/generated/night-billboard-portrait.png"
                   alt="Nocne miasto z oświetlonymi ulicami i reklamami"
                   width={400}
                   height={533}
@@ -408,9 +408,9 @@ function WhyOutdoor() {
 /* ═══════ SERVICES - Alternating magazine rows ═══════ */
 function ServicesSection() {
   const services = [
-    { icon: Maximize2, title: "Billboardy\nreklamowe", hoverAnim: "group-hover:rotate-12 group-hover:scale-110 transition-transform duration-500 ease-out", desc: "Nośniki od 12 do ponad 100 m² w precyzyjnie dobranych lokalizacjach. Arterie komunikacyjne, centra miast, drogi krajowe.", tag: "12-100+ m²", img: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=700&auto=format&fit=crop&q=70" },
-    { icon: Layers, title: "Druk\nwielkoformatowy", hoverAnim: "group-hover:scale-y-[1.3] group-hover:scale-x-[1.1] transition-transform duration-500 ease-out", desc: "Druk UV i solwentowy na materiałach odpornych na warunki pogodowe. Kolory wierne projektowi przez cały okres ekspozycji.", tag: "pełna gama", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=700&auto=format&fit=crop&q=70" },
-    { icon: Truck, title: "Montaż\ni serwis", hoverAnim: "group-hover:-translate-y-1 group-hover:scale-[1.20] group-hover:-rotate-6 transition-transform duration-500 ease-out", desc: "Własne ekipy na terenie województwa mazowieckiego. Montaż, demontaż, zaklejenie po kampanii. Dokumentacja fotograficzna w standardzie.", tag: "Mazowsze", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=700&auto=format&fit=crop&q=70" },
+    { icon: Maximize2, title: "Billboardy\nreklamowe", hoverAnim: "group-hover:rotate-12 group-hover:scale-110 transition-transform duration-500 ease-out", desc: "Nośniki od 12 do ponad 100 m² w precyzyjnie dobranych lokalizacjach. Arterie komunikacyjne, centra miast, drogi krajowe.", tag: "12-100+ m²", img: "/images/generated/billboard-operator-card.png" },
+    { icon: Layers, title: "Druk\nwielkoformatowy", hoverAnim: "group-hover:scale-y-[1.3] group-hover:scale-x-[1.1] transition-transform duration-500 ease-out", desc: "Druk UV i solwentowy na materiałach odpornych na warunki pogodowe. Kolory wierne projektowi przez cały okres ekspozycji.", tag: "pełna gama", img: "/images/generated/print-workshop-card.png" },
+    { icon: Truck, title: "Montaż\ni serwis", hoverAnim: "group-hover:-translate-y-1 group-hover:scale-[1.20] group-hover:-rotate-6 transition-transform duration-500 ease-out", desc: "Własne ekipy na terenie województwa mazowieckiego. Montaż, demontaż, zaklejenie po kampanii. Dokumentacja fotograficzna w standardzie.", tag: "Mazowsze", img: "/images/generated/billboard-installation-card.png" },
   ];
   return (
     <section className="py-16 md:py-24 relative overflow-hidden" aria-label="Nasze usługi">

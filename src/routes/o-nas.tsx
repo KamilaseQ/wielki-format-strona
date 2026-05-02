@@ -16,8 +16,8 @@ export default function AboutPage() {
       <section className="relative py-20 md:py-28 overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&auto=format&fit=crop&q=60"
-            alt="Biuro firmy Billboard - profesjonalne środowisko pracy"
+            src="/images/generated/campaign-planning-office.png"
+            alt="Biuro firmy Billboard - planowanie kampanii reklamowych"
             fill
             sizes="100vw"
             priority

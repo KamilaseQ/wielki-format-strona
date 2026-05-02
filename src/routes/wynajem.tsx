@@ -17,7 +17,7 @@ export default function RentalPage() {
       <section className="relative py-20 md:py-28 overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1920&auto=format&fit=crop&q=60"
+            src="/images/generated/rental-billboard-hero.png"
             alt="Billboard w centrum miasta - wynajem reklamy wielkoformatowej"
             fill
             sizes="100vw"

@@ -840,12 +840,11 @@
   left: 1.25rem;
   bottom: 1.5rem;
   z-index: 9997;
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
+  width: 56px;
+  height: 56px;
   pointer-events: none;
 }
-.whatsapp-fab-wrap > * {
+.whatsapp-fab-wrap .whatsapp-fab {
   pointer-events: auto;
 }
 @media (max-width: 1023px) {
@@ -855,7 +854,9 @@
   }
 }
 .whatsapp-fab {
-  position: relative;
+  position: absolute;
+  left: 0;
+  bottom: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -892,6 +893,11 @@
   z-index: 0;
 }
 .whatsapp-fab-label {
+  position: absolute;
+  left: calc(100% + 0.75rem);
+  top: 50%;
+  translate: 0 -50%;
+  pointer-events: none;
   display: inline-flex;
   align-items: center;
   padding: 0.55rem 0.875rem;

@@ -29,7 +29,7 @@ const flowSteps = [
     desc: "Przygotowujemy projekt plakatu dopasowany do formatu nośnika. Dbamy o czytelność z dystansu i&nbsp;zgodność z&nbsp;Twoim brandem.",
     deliverable: "Plik gotowy do druku",
     eta: "2-3 dni",
-    img: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=900&auto=format&fit=crop&q=70",
+    img: "/images/generated/design-process.png",
   },
   {
     icon: Printer,
@@ -38,7 +38,7 @@ const flowSteps = [
     desc: "Druk UV i&nbsp;solwentowy na materiałach odpornych na warunki atmosferyczne. Kolory wierne projektowi przez cały okres ekspozycji.",
     deliverable: "Wydrukowane plakaty",
     eta: "1-2 dni",
-    img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=900&auto=format&fit=crop&q=70",
+    img: "/images/generated/print-workshop-card.png",
   },
   {
     icon: Truck,
@@ -47,7 +47,7 @@ const flowSteps = [
     desc: "Zajmiemy się dostarczeniem materiałów na miejsce montażu. Ty nie musisz koordynować nic, co jest poza Twoim biurem.",
     deliverable: "Plakaty na miejscu montażu",
     eta: "1 dzień",
-    img: "https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=900&auto=format&fit=crop&q=70",
+    img: "/images/generated/logistics-process.png",
   },
   {
     icon: Wrench,
@@ -56,7 +56,7 @@ const flowSteps = [
     desc: "Sprawny, profesjonalny montaż przez nasze ekipy w&nbsp;województwie mazowieckim. Realizujemy montaże terminowo i&nbsp;bez chaosu.",
     deliverable: "Aktywna kampania",
     eta: "1-3 dni",
-    img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=900&auto=format&fit=crop&q=70",
+    img: "/images/generated/billboard-installation-card.png",
   },
   {
     icon: Camera,
@@ -65,7 +65,7 @@ const flowSteps = [
     desc: "Po montażu wysyłamy automatycznie zdjęcia każdego nośnika z&nbsp;Twoją reklamą - potwierdzenie realizacji prosto do skrzynki.",
     deliverable: "Raport foto w mailu",
     eta: "auto",
-    img: "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=900&auto=format&fit=crop&q=70",
+    img: "/images/generated/documentation-process.png",
   },
   {
     icon: FileCheck,
@@ -74,7 +74,7 @@ const flowSteps = [
     desc: "Po zakończeniu kampanii demontujemy plakat i&nbsp;zaklejamy nośnik na czysto. Wszystko w&nbsp;ramach usługi - bez doliczanych opłat.",
     deliverable: "Czysty nośnik, zamknięta kampania",
     eta: "1-2 dni",
-    img: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=900&auto=format&fit=crop&q=70",
+    img: "/images/generated/cleanup-process.png",
   },
 ];
 
@@ -84,7 +84,7 @@ export default function CampaignServicePage() {
       <section className="relative py-20 md:py-28 overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1920&auto=format&fit=crop&q=60"
+            src="/images/generated/production-hero.png"
             alt="Profesjonalny druk wielkoformatowy - obsługa kampanii"
             fill
             sizes="100vw"
@@ -201,8 +201,8 @@ export default function CampaignServicePage() {
           </Reveal>
           <Reveal delay={0.1}>
             <BeforeAfterSlider
-              beforeImage="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=900&auto=format&fit=crop&q=70&sat=-100"
-              afterImage="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=900&auto=format&fit=crop&q=70"
+              beforeImage="/images/generated/before-empty-billboard.png"
+              afterImage="/images/generated/after-mounted-billboard.png"
               beforeLabel="Pusty nośnik"
               afterLabel="Z reklamą"
               beforeAlt="Nośnik reklamowy przed montażem plakatu"

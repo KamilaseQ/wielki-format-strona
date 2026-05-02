@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "motion/react";
 import {
   ArrowRight,
   Car,
   ChevronLeft,
   Eye,
-  ImageIcon,
   Layers,
   LocateFixed,
   MapPin,
@@ -29,8 +29,15 @@ interface DetailPanelProps {
   onBack: () => void;
 }
 
+const TYPE_IMAGE_SRC: Record<Carrier["type"], string> = {
+  "SUPER PREMIUM": "/images/generated/hero-city-billboards.png",
+  "PREMIUM": "/images/generated/rental-billboard-hero.png",
+  "STANDARD": "/images/generated/billboard-operator-card.png",
+};
+
 export function DetailPanel({ carrier, onBack }: DetailPanelProps) {
   const cfg = TYPE_CFG[carrier.type];
+  const imageSrc = TYPE_IMAGE_SRC[carrier.type];
 
   return (
     <motion.div
@@ -66,8 +73,14 @@ export function DetailPanel({ carrier, onBack }: DetailPanelProps) {
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        <div className="relative h-44 overflow-hidden bg-gradient-to-br from-primary/10 via-surface to-secondary/40 flex items-center justify-center">
-          <ImageIcon className="w-10 h-10 text-primary/30" />
+        <div className="relative h-44 overflow-hidden bg-gradient-to-br from-primary/10 via-surface to-secondary/40">
+          <Image
+            src={imageSrc}
+            alt={`Nośnik ${carrier.code} - ${carrier.address}, ${carrier.city}`}
+            fill
+            sizes="(max-width: 1024px) 100vw, 400px"
+            className="object-cover"
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent" />
           <div className="absolute bottom-2 left-3 flex gap-1.5 flex-wrap">
             <span className="px-2 py-1 rounded-md bg-card/95 border border-border text-[11px] font-heading font-bold text-primary">

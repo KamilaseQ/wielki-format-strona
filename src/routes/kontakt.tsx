@@ -19,8 +19,8 @@ export default function ContactPage() {
       <section className="relative py-20 md:py-28 overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&auto=format&fit=crop&q=60"
-            alt="Biurowiec w centrum miasta - kontakt z firmą"
+            src="/images/generated/campaign-planning-office.png"
+            alt="Biuro planowania kampanii outdoorowej - kontakt z firmą"
             fill
             sizes="100vw"
             className="object-cover opacity-10"
