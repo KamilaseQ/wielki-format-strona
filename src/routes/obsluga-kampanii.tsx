@@ -197,7 +197,7 @@ export default function CampaignServicePage() {
           <Reveal>
             <span className="text-xs font-semibold tracking-[0.25em] uppercase text-primary/70 font-heading block mb-3 text-center">Efekt</span>
             <h2 className="font-heading font-black text-3xl md:text-4xl text-foreground text-center mb-4 leading-tight">Przed i po montażu</h2>
-            <p className="text-center text-muted-foreground mb-10 max-w-md mx-auto">Przeciągnij suwak, aby zobaczyć różnicę.</p>
+            <p className="text-center text-muted-foreground mb-10 max-w-md mx-auto">Przeciągnij suwak, aby zobaczyć zmianę reklamy na tej samej tablicy.</p>
           </Reveal>
           <Reveal delay={0.1}>
             <BeforeAfterSlider
@@ -281,10 +281,10 @@ function FlowRow({
         </div>
       </motion.div>
 
-      <div className={`md:grid md:grid-cols-2 md:gap-12 lg:gap-16 items-center ${isRight ? "" : ""}`}>
+      <div className={`md:grid md:grid-cols-2 md:gap-20 lg:gap-24 items-center ${isRight ? "" : ""}`}>
         {/* Image side */}
         <motion.div
-          className={`relative rounded-2xl overflow-hidden aspect-[16/10] glass-card group ${
+          className={`relative rounded-2xl overflow-hidden aspect-[16/10] glass-card group mt-4 md:mt-0 ${
             isRight ? "md:order-2" : ""
           }`}
           initial={{ opacity: 0, x: isRight ? 30 : -30 }}
@@ -301,7 +301,7 @@ function FlowRow({
             loading="lazy"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/20 to-transparent" />
-          <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
+          <div className="absolute top-5 left-5 right-5 flex items-center justify-between gap-3">
             <span className="px-3 py-1.5 rounded-lg bg-card/95 backdrop-blur-md border border-border text-[11px] font-heading font-bold text-primary uppercase tracking-[0.18em] flex items-center gap-1.5">
               <Icon className="w-3.5 h-3.5" />
               Krok {step.num}

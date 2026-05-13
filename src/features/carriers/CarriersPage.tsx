@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
@@ -191,21 +191,25 @@ export default function CarriersPage({ carriers }: CarriersPageProps) {
 
   return (
     <div className="h-screen flex flex-col bg-background">
-      <header className="h-14 lg:h-16 bg-card border-b border-border flex items-center px-4 lg:px-5 gap-3 shrink-0 z-50">
+      <header className="min-h-16 bg-card border-b border-border flex flex-wrap lg:flex-nowrap items-center px-4 lg:px-5 gap-3 shrink-0 z-50 py-2">
         <Link href="/" className="flex items-center shrink-0 mr-2 text-muted-foreground hover:text-foreground transition-colors" aria-label="wielkiformat.pl - Strona główna">
-          <span className="font-heading font-bold text-sm hidden md:block">← Mapa nośników</span>
+          <span className="font-heading font-bold text-sm hidden md:block">← Powrót</span>
           <span className="font-heading font-bold text-sm md:hidden">←</span>
         </Link>
         <div className="w-px h-6 bg-border hidden md:block" />
+        <div className="shrink-0 min-w-[9rem]">
+          <h1 className="font-heading font-black text-base lg:text-lg text-foreground leading-tight">Mapa nośników</h1>
+          <p className="hidden sm:block text-xs text-muted-foreground">Wyszukaj lokalizację lub filtruj formaty.</p>
+        </div>
 
-        <div className="flex-1 max-w-md relative">
+        <div className="flex-1 min-w-[220px] max-w-md relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <label htmlFor="carrier-search" className="sr-only">Wyszukaj nośnik</label>
           <input id="carrier-search" value={query} onChange={(event) => handleSearch(event.target.value)} placeholder="Szukaj miasta, adresu lub kodu…" className="w-full h-10 pl-9 pr-8 rounded-lg bg-input border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all" />
           {query && <button type="button" onClick={() => handleSearch("")} className="absolute right-1 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer w-8 h-8 flex items-center justify-center rounded-md" aria-label="Wyczyść wyszukiwanie"><X className="w-4 h-4" /></button>}
         </div>
 
-        <button type="button" onClick={() => setFiltersOpen((current) => !current)} className={`flex items-center gap-1.5 px-3 h-10 rounded-lg text-sm font-medium border transition-all cursor-pointer ${filtersOpen ? "bg-primary/10 text-primary border-primary/30" : "bg-secondary/60 text-foreground border-border hover:bg-secondary"}`} aria-label="Pokaż filtry" aria-expanded={filtersOpen}>
+        <button type="button" onClick={() => setFiltersOpen((current) => !current)} className={`flex items-center gap-2 px-3.5 h-10 rounded-lg text-sm font-medium border transition-all cursor-pointer ${filtersOpen ? "bg-primary/10 text-primary border-primary/30" : "bg-secondary/60 text-foreground border-border hover:bg-secondary"}`} aria-label="Pokaż filtry" aria-expanded={filtersOpen}>
           <SlidersHorizontal className="w-4 h-4" />
           <span className="hidden sm:inline">Filtry</span>
           {hasFilters && <span className="w-1.5 h-1.5 rounded-full bg-primary" />}
@@ -219,7 +223,7 @@ export default function CarriersPage({ carriers }: CarriersPageProps) {
           <span className="text-muted-foreground">miast</span>
         </div>
 
-        <button type="button" onClick={() => setMobileView(mobileView === "map" ? "list" : "map")} className="lg:hidden flex items-center gap-1.5 px-3 h-10 rounded-lg text-sm font-medium bg-secondary/60 border border-border cursor-pointer" aria-label={mobileView === "map" ? "Pokaż listę nośników" : "Pokaż mapę"}>
+        <button type="button" onClick={() => setMobileView(mobileView === "map" ? "list" : "map")} className="lg:hidden flex items-center gap-2 px-3.5 h-10 rounded-lg text-sm font-medium bg-secondary/60 border border-border cursor-pointer" aria-label={mobileView === "map" ? "Pokaż listę nośników" : "Pokaż mapę"}>
           {mobileView === "map" ? <><List className="w-4 h-4" /> Lista</> : <><MapIcon className="w-4 h-4" /> Mapa</>}
         </button>
       </header>

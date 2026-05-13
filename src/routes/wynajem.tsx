@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { LeadForm } from "@/components/LeadForm";
 import { PricingCalculator } from "@/components/PricingCalculator";
 import { motion } from "motion/react";
-import { ArrowRight, Calendar, CheckCircle, MapPin, Maximize2, Star, Shield, Clock, ChevronDown } from "lucide-react";
+import { ArrowRight, Calendar, CheckCircle, MapPin, Maximize2, Shield, Clock, ChevronDown } from "lucide-react";
 import { useState } from "react";
 
 import { Reveal } from "@/components/Reveal";
@@ -156,11 +156,11 @@ export default function RentalPage() {
           </Reveal>
           <div className="space-y-3">
             {[
-              { q: "Jaki jest minimalny okres wynajmu billboardu?", a: "Minimalny okres wynajmu to 2 tygodnie. Oferujemy korzystniejsze stawki przy dłuższych kampaniach - od 1 miesiąca wzwyż." },
-              { q: "Czy mogę wynająć billboard w dowolnym mieście Mazowsza?", a: "Tak, dysponujemy ponad 1400 nośnikami w województwie mazowieckim. Największa koncentracja nośników to Warszawa i jej obwarzanek, Otwock, Józefów, Marki, Pruszków, Płock, Radom, Siedlce i Ostrołęka." },
-              { q: "Co obejmuje cena wynajmu?", a: "Cena wynajmu obejmuje ekspozycję na nośniku. Druk, montaż, demontaż i dokumentację fotograficzną wyceniamy w ramach kompleksowej oferty - często w pakiecie." },
-              { q: "Jak szybko mogę uruchomić kampanię?", a: "Od momentu akceptacji oferty do montażu potrzebujemy zazwyczaj 5-7 dni roboczych. W trybie ekspresowym - nawet 3 dni." },
-              { q: "Czy otrzymam potwierdzenie montażu?", a: "Tak. Po zamontowaniu plakatu wysyłamy dokumentację fotograficzną każdego nośnika - to nasz standard przy każdej kampanii." },
+              { q: "Jaki jest minimalny okres wynajmu billboardu", a: "Minimalny okres wynajmu to 2 tygodnie. Oferujemy korzystniejsze stawki przy dłuższych kampaniach - od 1 miesiąca wzwyż." },
+              { q: "Czy mogę wynająć billboard w dowolnym mieście Mazowsza", a: "Tak, dysponujemy ponad 1400 nośnikami w województwie mazowieckim. Największa koncentracja nośników to Warszawa i jej obwarzanek, Otwock, Józefów, Marki, Pruszków, Płock, Radom, Siedlce i Ostrołęka." },
+              { q: "Co obejmuje cena wynajmu", a: "Cena wynajmu obejmuje ekspozycję na nośniku. Druk, montaż, demontaż i dokumentację fotograficzną wyceniamy w ramach kompleksowej oferty - często w pakiecie." },
+              { q: "Jak szybko mogę uruchomić kampanię", a: "Od momentu akceptacji oferty do montażu potrzebujemy zazwyczaj 5-7 dni roboczych. W trybie ekspresowym - nawet 3 dni." },
+              { q: "Czy otrzymam potwierdzenie montażu", a: "Tak. Po zamontowaniu plakatu wysyłamy dokumentację fotograficzną każdego nośnika - to nasz standard przy każdej kampanii." },
             ].map((item, i) => (
               <Reveal key={i} delay={i * 0.06}>
                 <FAQItem question={item.q} answer={item.a} />
@@ -177,14 +177,13 @@ export default function RentalPage() {
         <div className="relative mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
           <Reveal>
             <h2 className="font-heading font-black text-3xl md:text-4xl lg:text-5xl text-foreground mb-6 leading-[1.18] tracking-tight px-2">
-              Gotowy do <span className="text-gradient-brand-bright text-glow-red inline-block pr-2 pb-1">rezerwacji?</span>
+              Gotowy do <span className="text-gradient-brand-bright text-glow-red inline-block pr-2 pb-1">rezerwacji</span>
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
             <div className="flex items-center justify-center gap-6 mb-8 text-sm text-muted-foreground/60">
               <span className="flex items-center gap-1.5"><Shield className="w-4 h-4 text-primary/40" /> Bez zobowiązań</span>
               <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-primary/40" /> Wycena w 24h</span>
-              <span className="flex items-center gap-1.5"><Star className="w-4 h-4 text-amber-400/60" /> 4.9/5</span>
             </div>
           </Reveal>
           <Reveal delay={0.2}>
@@ -246,7 +245,7 @@ function FormatTable() {
   return (
     <>
       {/* Desktop: real table */}
-      <div className="hidden md:block rounded-2xl glass-card overflow-hidden">
+      <div className="hidden md:block rounded-2xl glass-card format-table-strong overflow-hidden">
         <table className="w-full text-left">
           <thead>
             <tr className="bg-secondary/40 border-b border-border">
@@ -284,36 +283,39 @@ function FormatTable() {
         </table>
       </div>
 
-      {/* Mobile: stacked cards */}
-      <div className="md:hidden space-y-3">
-        {FORMATS.map((f) => (
-          <div
-            key={f.name}
-            className={`rounded-2xl glass-card p-5 ${f.popular ? "ring-2 ring-primary/30" : ""}`}
-          >
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <h3 className="font-heading font-bold text-lg text-foreground">{f.name}</h3>
-                {f.popular && (
-                  <span className="px-2 py-0.5 rounded text-[9px] font-heading font-bold text-primary bg-primary/10 border border-primary/30 uppercase tracking-wider">
-                    Popularny
-                  </span>
-                )}
-              </div>
-              <span className="font-heading font-black text-xl text-gradient-brand-bright">{f.area}</span>
-            </div>
-            <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-              <dt className="text-muted-foreground">Wymiar</dt>
-              <dd className="text-foreground font-medium">{f.size}</dd>
-              <dt className="text-muted-foreground">Min. okres</dt>
-              <dd className="text-foreground font-medium">{f.minPeriod}</dd>
-              <dt className="text-muted-foreground">Dla kogo</dt>
-              <dd className="text-foreground font-medium">{f.bestFor}</dd>
-              <dt className="text-muted-foreground">Dostępność</dt>
-              <dd className="text-foreground font-medium">{f.available}</dd>
-            </dl>
-          </div>
-        ))}
+      {/* Mobile: compact comparison table */}
+      <div className="md:hidden rounded-2xl glass-card format-table-strong overflow-x-auto">
+        <table className="min-w-[720px] w-full text-left">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="px-4 py-3 text-[10px] font-heading font-bold tracking-[0.16em] uppercase">Format</th>
+              <th className="px-4 py-3 text-[10px] font-heading font-bold tracking-[0.16em] uppercase">Wymiar</th>
+              <th className="px-4 py-3 text-[10px] font-heading font-bold tracking-[0.16em] uppercase">Pow.</th>
+              <th className="px-4 py-3 text-[10px] font-heading font-bold tracking-[0.16em] uppercase">Min.</th>
+              <th className="px-4 py-3 text-[10px] font-heading font-bold tracking-[0.16em] uppercase">Dla kogo</th>
+              <th className="px-4 py-3 text-[10px] font-heading font-bold tracking-[0.16em] uppercase">Dostępność</th>
+            </tr>
+          </thead>
+          <tbody>
+            {FORMATS.map((f) => (
+              <tr key={f.name} className="border-b border-border/50 last:border-b-0">
+                <td className="px-4 py-4 text-sm font-heading font-bold text-foreground whitespace-nowrap">
+                  {f.name}
+                  {f.popular && (
+                    <span className="ml-2 px-1.5 py-0.5 rounded text-[8px] font-heading font-bold text-primary bg-primary/10 border border-primary/30 uppercase">
+                      Popularny
+                    </span>
+                  )}
+                </td>
+                <td className="px-4 py-4 text-sm whitespace-nowrap">{f.size}</td>
+                <td className="px-4 py-4 text-sm font-heading font-black text-primary whitespace-nowrap">{f.area}</td>
+                <td className="px-4 py-4 text-sm whitespace-nowrap">{f.minPeriod}</td>
+                <td className="px-4 py-4 text-sm min-w-[180px]">{f.bestFor}</td>
+                <td className="px-4 py-4 text-sm min-w-[150px]">{f.available}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </>
   );

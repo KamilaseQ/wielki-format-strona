@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Reveal } from "@/components/Reveal";
 import { LeadForm } from "@/components/LeadForm";
 import { Button } from "@/components/ui/button";
-import { MapPin, Phone, Mail, Clock, Shield, Star, CheckCircle } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Shield, CheckCircle } from "lucide-react";
 import { motion } from "motion/react";
 import {
   COMPANY_PHONE_ARIA,
@@ -46,7 +46,7 @@ export default function ContactPage() {
               </Reveal>
               <Reveal delay={0.16}>
                 <p className="text-lg text-muted-foreground leading-relaxed mb-10">
-                  Wyślij zapytanie przez formularz lub skontaktuj się bezpośrednio. Odpowiadamy na każde zapytanie w ciągu 24 godzin.
+                  Wyślij zapytanie przez formularz lub skontaktuj się bezpośrednio. Zazwyczaj wracamy z odpowiedzią w 24h.
                 </p>
               </Reveal>
 
@@ -79,27 +79,10 @@ export default function ContactPage() {
                 ))}
               </div>
 
-              {/* Trust badges */}
               <Reveal delay={0.3}>
                 <div className="mt-8 flex flex-wrap gap-4 text-xs text-muted-foreground/50">
                   <span className="flex items-center gap-1.5"><Shield className="w-3.5 h-3.5 text-primary/40" /> Bez zobowiązań</span>
-                  <span className="flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-primary/40" /> Odpowiedź w 24h</span>
-                  <span className="flex items-center gap-1.5"><Star className="w-3.5 h-3.5 text-amber-400/50" /> 4.9/5 od klientów</span>
-                </div>
-              </Reveal>
-
-              {/* Company info */}
-              <Reveal delay={0.35} from="left">
-                <div className="mt-8 p-5 rounded-xl glass-card">
-                  <h3 className="font-heading font-bold text-foreground text-sm mb-2">Dane firmowe</h3>
-                  <div className="text-sm text-muted-foreground/70 space-y-1">
-                    <p className="font-medium text-muted-foreground">Billboard Sp. z o.o.</p>
-                    <p>Al. Marszałka Józefa Piłsudskiego 55A, 05-270 Marki</p>
-                    <p>NIP: 5322051052 | REGON: 361032049</p>
-                    <p>KRS: 0000547439</p>
-                    <p className="pt-2">Bank PKO BP S.A.:</p>
-                    <p>17 1020 1127 0000 1102 0248 2073</p>
-                  </div>
+                  <span className="flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-primary/40" /> Zazwyczaj w 24h</span>
                 </div>
               </Reveal>
             </div>
@@ -109,6 +92,19 @@ export default function ContactPage() {
               <LeadForm />
             </Reveal>
           </div>
+          <Reveal delay={0.2}>
+            <div className="mt-10 p-5 rounded-xl glass-card max-w-3xl">
+              <h3 className="font-heading font-bold text-foreground text-sm mb-3">Dane firmowe</h3>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-1 text-sm text-muted-foreground/70">
+                <p className="font-medium text-muted-foreground">Billboard Sp. z o.o.</p>
+                <p>Al. Marszałka Józefa Piłsudskiego 55A, 05-270 Marki</p>
+                <p>NIP: 5322051052<br />REGON: 361032049</p>
+                <p>KRS: 0000547439</p>
+                <p>Bank PKO BP S.A.</p>
+                <p>17 1020 1127 0000 1102 0248 2073</p>
+              </div>
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -119,12 +115,12 @@ export default function ContactPage() {
         <div className="relative mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
           <Reveal>
             <h2 className="font-heading font-black text-3xl md:text-4xl lg:text-5xl text-foreground mb-6 leading-tight">
-              Wycena <span className="text-gradient-brand-bright text-glow-red">w 24 godziny</span>
+              Porozmawiajmy o <span className="text-gradient-brand-bright text-glow-red">kampanii</span>
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="text-lg text-muted-foreground mb-8">
-              Wyślij zapytanie - oddzwonimy lub odpiszemy jeszcze tego samego dnia.
+              Wyślij zapytanie - skontaktujemy się, aby omówić lokalizacje, format i termin.
             </p>
           </Reveal>
           <Reveal delay={0.2}>

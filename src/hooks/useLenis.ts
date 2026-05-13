@@ -16,10 +16,11 @@ export function useLenis(enabled: boolean = true) {
     }
 
     const lenis = new Lenis({
-      duration: 0.9,
+      duration: 0.75,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      touchMultiplier: 1,
+      wheelMultiplier: 1.05,
+      touchMultiplier: 1.1,
     });
 
     let rafId: number;

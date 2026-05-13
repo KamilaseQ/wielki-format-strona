@@ -27,15 +27,6 @@ const KonamiEasterEgg = dynamic(
   () => import("@/components/KonamiEasterEgg").then((m) => m.KonamiEasterEgg),
   { ssr: false }
 );
-const LoadingSplash = dynamic(
-  () => import("@/components/LoadingSplash").then((m) => m.LoadingSplash),
-  { ssr: false }
-);
-const StickyMobileCTA = dynamic(
-  () => import("@/components/StickyMobileCTA").then((m) => m.StickyMobileCTA),
-  { ssr: false }
-);
-
 export function SiteShell({ children }: PropsWithChildren) {
   const pathname = usePathname();
   const shouldReduceMotion = useReducedMotion();
@@ -43,11 +34,10 @@ export function SiteShell({ children }: PropsWithChildren) {
 
   return (
     <ThemeProvider>
-      <LoadingSplash />
       <ScrollProgress />
       <CustomCursor />
       <Header />
-      <main id="main-content" className="min-h-screen pt-16 pb-24 sm:pb-28 lg:pt-20 lg:pb-0">
+      <main id="main-content" className="min-h-screen pt-16 lg:pt-20">
         {shouldReduceMotion ? (
           <div key={pathname}>{children}</div>
         ) : (
@@ -63,7 +53,6 @@ export function SiteShell({ children }: PropsWithChildren) {
       </main>
       <Footer />
       <BackToTop />
-      <StickyMobileCTA />
       <CookieConsent />
       <KonamiEasterEgg />
     </ThemeProvider>

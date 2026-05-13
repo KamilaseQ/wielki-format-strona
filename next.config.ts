@@ -16,6 +16,7 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
   },
   poweredByHeader: false,
+  devIndicators: false,
   // Enable gzip/brotli compression
   compress: true,
   // Optimize production builds

@@ -1,6 +1,7 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { Calculator, MapPin, Calendar, Maximize2, ArrowRight } from "lucide-react";
@@ -60,16 +61,16 @@ export function PricingCalculator() {
             <Calculator className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <h3 className="font-heading font-bold text-base text-foreground">Szacowanie ceny kampanii</h3>
-            <p className="text-xs text-muted-foreground">Orientacyjnie, bez zobowiązań · Mazowsze</p>
+            <h3 className="font-heading font-bold text-lg text-foreground">Szacowanie ceny kampanii</h3>
+            <p className="text-sm text-muted-foreground">Orientacyjnie, bez zobowiązań · Mazowsze</p>
           </div>
         </div>
 
         <div className="space-y-5">
           {/* Format */}
           <div>
-            <label htmlFor="format-selector" className="text-[11px] font-heading font-semibold text-muted-foreground uppercase tracking-[0.18em] mb-2 flex items-center gap-1.5">
-              <Maximize2 className="w-3 h-3" /> Format nośnika
+            <label htmlFor="format-selector" className="text-xs font-heading font-semibold text-foreground uppercase tracking-[0.12em] mb-2.5 flex items-center gap-2">
+              <Maximize2 className="w-4 h-4 text-primary" /> Format nośnika
             </label>
             <div id="format-selector" role="group" aria-label="Wybierz format nośnika" className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {formats.map((f, i) => (
@@ -78,14 +79,14 @@ export function PricingCalculator() {
                   type="button"
                   onClick={() => setFormatIdx(i)}
                   aria-pressed={i === formatIdx}
-                  className={`px-3 py-2.5 rounded-lg text-xs font-heading font-semibold transition-all cursor-pointer min-h-[44px] ${
+                  className={`px-3.5 py-3 rounded-lg text-sm font-heading font-semibold transition-all cursor-pointer min-h-[48px] ${
                     i === formatIdx
-                      ? "bg-primary/15 border border-primary/30 text-primary"
-                      : "bg-card/30 border border-border/30 text-muted-foreground hover:border-border/50"
+                      ? "bg-primary/15 border border-primary/50 text-primary"
+                      : "bg-card/60 border border-border text-foreground hover:border-primary/30"
                   }`}
                 >
                   <div>{f.name}</div>
-                  <div className="text-[10px] opacity-60 mt-0.5">{f.area}</div>
+                  <div className="text-xs opacity-75 mt-0.5">{f.area}</div>
                 </button>
               ))}
             </div>
@@ -93,8 +94,8 @@ export function PricingCalculator() {
 
           {/* City */}
           <div>
-            <label htmlFor="city-selector" className="text-[11px] font-heading font-semibold text-muted-foreground uppercase tracking-[0.18em] mb-2 flex items-center gap-1.5">
-              <MapPin className="w-3 h-3" /> Lokalizacja (woj. mazowieckie)
+            <label htmlFor="city-selector" className="text-xs font-heading font-semibold text-foreground uppercase tracking-[0.12em] mb-2.5 flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-primary" /> Lokalizacja (woj. mazowieckie)
             </label>
             <div id="city-selector" role="group" aria-label="Wybierz lokalizację w mazowieckim" className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {cities.map((c, i) => (
@@ -103,10 +104,10 @@ export function PricingCalculator() {
                   type="button"
                   onClick={() => setCityIdx(i)}
                   aria-pressed={i === cityIdx}
-                  className={`px-3 py-2.5 rounded-lg text-sm font-heading font-medium transition-all cursor-pointer min-h-[44px] ${
+                  className={`px-3.5 py-3 rounded-lg text-sm font-heading font-medium transition-all cursor-pointer min-h-[48px] ${
                     i === cityIdx
-                      ? "bg-primary/15 border border-primary/30 text-primary"
-                      : "bg-card/30 border border-border/30 text-muted-foreground hover:border-border/50 hover:text-foreground"
+                      ? "bg-primary/15 border border-primary/50 text-primary"
+                      : "bg-card/60 border border-border text-foreground hover:border-primary/30"
                   }`}
                 >
                   {c.name}
@@ -117,8 +118,8 @@ export function PricingCalculator() {
 
           {/* Period */}
           <div>
-            <label htmlFor="period-selector" className="text-[11px] font-heading font-semibold text-muted-foreground uppercase tracking-[0.18em] mb-2 flex items-center gap-1.5">
-              <Calendar className="w-3 h-3" /> Okres wynajmu
+            <label htmlFor="period-selector" className="text-xs font-heading font-semibold text-foreground uppercase tracking-[0.12em] mb-2.5 flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-primary" /> Okres wynajmu
             </label>
             <div id="period-selector" role="group" aria-label="Wybierz okres wynajmu" className="flex flex-wrap gap-2">
               {periods.map((p, i) => (
@@ -127,10 +128,10 @@ export function PricingCalculator() {
                   type="button"
                   onClick={() => setPeriodIdx(i)}
                   aria-pressed={i === periodIdx}
-                  className={`px-3.5 py-2.5 rounded-lg text-sm font-heading font-medium transition-all cursor-pointer min-h-[44px] ${
+                  className={`px-3.5 py-3 rounded-lg text-sm font-heading font-medium transition-all cursor-pointer min-h-[48px] ${
                     i === periodIdx
-                      ? "bg-primary/15 border border-primary/30 text-primary"
-                      : "bg-card/30 border border-border/30 text-muted-foreground hover:border-border/50 hover:text-foreground"
+                      ? "bg-primary/15 border border-primary/50 text-primary"
+                      : "bg-card/60 border border-border text-foreground hover:border-primary/30"
                   }`}
                 >
                   {p.name}
@@ -145,10 +146,10 @@ export function PricingCalculator() {
           {/* Count */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label htmlFor="carrier-count" className="text-[11px] font-heading font-semibold text-muted-foreground uppercase tracking-[0.18em]">
+              <label htmlFor="carrier-count" className="text-xs font-heading font-semibold text-foreground uppercase tracking-[0.12em]">
                 Liczba nośników
               </label>
-              <span className="text-[11px] text-muted-foreground">jeden wystarczy do startu</span>
+              <span className="text-xs text-muted-foreground">jeden wystarczy do startu</span>
             </div>
             <div className="flex items-center gap-3">
               <input
@@ -158,7 +159,8 @@ export function PricingCalculator() {
                 max={50}
                 value={count}
                 onChange={(e) => setCount(Number(e.target.value))}
-                className="flex-1 h-2 rounded-full appearance-none bg-border/40 accent-primary cursor-pointer"
+                className="range-strong flex-1 appearance-none cursor-pointer"
+                style={{ "--range-progress": `${((count - 1) / 49) * 100}%` } as CSSProperties}
                 aria-valuemin={1}
                 aria-valuemax={50}
                 aria-valuenow={count}
@@ -183,7 +185,7 @@ export function PricingCalculator() {
               </div>
             </div>
             <div className="text-right">
-              <div className="text-[11px] text-muted-foreground">netto / cały okres</div>
+              <div className="text-xs text-muted-foreground">netto / cały okres</div>
               <div className="text-xs text-muted-foreground">
                 {pricePerUnit.toLocaleString("pl")} zł / nośnik / 2 tyg.
               </div>

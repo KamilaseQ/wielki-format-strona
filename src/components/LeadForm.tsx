@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "motion/react";
-import { Send, CheckCircle, AlertCircle, Star, Shield, Clock } from "lucide-react";
+import { Send, CheckCircle, AlertCircle, Shield, Clock } from "lucide-react";
 
 interface FieldState {
   value: string;
@@ -58,7 +58,7 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
         </motion.div>
         <h3 className="font-heading font-bold text-xl text-foreground mb-2">Dziękujemy!</h3>
         <p className="text-sm text-muted-foreground mb-1">Twoje zapytanie zostało wysłane.</p>
-        <p className="text-sm text-muted-foreground">Twój opiekun kampanii skontaktuje się w ciągu <span className="text-foreground font-semibold">24 godzin</span>.</p>
+        <p className="text-sm text-muted-foreground">Twój opiekun kampanii zazwyczaj skontaktuje się z Tobą w 24h.</p>
       </motion.div>
     );
   }
@@ -71,8 +71,8 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
     >
       {!compact && (
         <div className="mb-6">
-          <h3 className="font-heading font-bold text-xl text-foreground mb-1">Otrzymaj wycenę w 24h</h3>
-          <p className="text-sm text-muted-foreground">Bez zobowiązań. Odpowiadamy na każde zapytanie.</p>
+          <h3 className="font-heading font-bold text-xl text-foreground mb-1">Otrzymaj wycenę kampanii</h3>
+          <p className="text-sm text-muted-foreground">Bez zobowiązań. Zazwyczaj wracamy z odpowiedzią w 24h.</p>
         </div>
       )}
       <div className={`grid gap-4 ${compact ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"}`}>
@@ -155,8 +155,7 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
       {/* Social proof */}
       <div className="mt-4 flex flex-wrap items-center justify-center gap-4 text-[11px] text-muted-foreground/40">
         <span className="flex items-center gap-1"><Shield className="w-3 h-3" /> Dane bezpieczne</span>
-        <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> Odpowiedź w 24h</span>
-        <span className="flex items-center gap-1"><Star className="w-3 h-3 text-amber-400/50" /> 4.9/5</span>
+        <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> Zazwyczaj w 24h</span>
       </div>
     </form>
   );

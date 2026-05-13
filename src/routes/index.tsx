@@ -20,15 +20,16 @@ import {
   Star, Quote, Shield,
 } from "lucide-react";
 
-/* ═══════ CORE UTILS ═══════ */
+/* â•â•â•â•â•â•â• CORE UTILS â•â•â•â•â•â•â• */
 const ease = [0.25, 0.46, 0.45, 0.94] as const;
 
 function useCountUp(target: number, dur = 2) {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(target);
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.5 });
   useEffect(() => {
     if (!inView) return;
+    setCount(0);
     const c = animate(0, target, { duration: dur, ease, onUpdate: (v) => setCount(Math.round(v)) });
     return () => c.stop();
   }, [inView, target, dur]);
@@ -50,7 +51,7 @@ function AmbientGlow() {
   );
 }
 
-/* ═══════ PAGE ═══════ */
+/* â•â•â•â•â•â•â• PAGE â•â•â•â•â•â•â• */
 export default function HomePage() {
   return (
     <>
@@ -71,9 +72,6 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[oklch(0.58_0.04_25/3%)] to-transparent pointer-events-none" />
           <ServicesSection />
         </div>
-        <LightDivider />
-        <TestimonialsSection />
-        <LightDivider />
         <ClientShowcase />
         <LightDivider />
         <div className="relative">
@@ -89,31 +87,31 @@ export default function HomePage() {
   );
 }
 
-/* ═══════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    HERO
-   ═══════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 function HeroSection() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const bgY = useTransform(scrollYProgress, [0, 1], [0, 120]);
-  const bgOp = useTransform(scrollYProgress, [0, 0.6], [0.3, 0.05]);
+  const bgOp = useTransform(scrollYProgress, [0, 0.6], [0.46, 0.14]);
 
   return (
-    <section ref={ref} className="relative min-h-[100vh] flex items-center overflow-hidden -mt-16 lg:-mt-20">
+    <section ref={ref} className="relative min-h-[92vh] flex items-center overflow-hidden -mt-16 lg:-mt-20">
       <motion.div className="absolute inset-0" style={{ y: bgY }}>
         <motion.img
           src="/images/generated/hero-city-billboards.png"
           alt="Panorama miasta nocą z oświetlonymi billboardami reklamowymi"
-          className="w-full h-full object-cover"
-          style={{ opacity: bgOp, filter: "grayscale(100%) contrast(1.2)" }}
+          className="hero-bg-image w-full h-full object-cover object-[64%_center] md:object-center"
+          style={{ opacity: bgOp }}
           loading="eager"
           fetchPriority="high"
           width={1920}
           height={1080}
         />
       </motion.div>
-      <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/60 to-background" />
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-primary/6 rounded-full blur-[150px] animate-glow-pulse animate-gradient-morph" />
+      <div className="hero-tone-overlay absolute inset-0" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[520px] h-[260px] bg-primary/4 rounded-full blur-[130px] animate-glow-pulse animate-gradient-morph" />
       <div className="absolute inset-0 bg-noise" />
 
       <div className="relative z-10 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 pt-32 pb-24">
@@ -164,34 +162,6 @@ function HeroSection() {
               </MagneticButton>
             </div>
           </Reveal>
-          <Reveal delay={0.32}>
-            <div className="flex flex-wrap gap-8 md:gap-12 mt-14">
-              {[{ val: "od 1998", label: "lat na rynku" }, { val: "2 500+", label: "kampanii / rok" }, { val: "1400+", label: "nośników na Mazowszu" }].map((s, i) => (
-                <motion.div
-                  key={s.label}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 + i * 0.2, duration: 0.5, ease }}
-                >
-                  <div className="font-heading font-black text-2xl md:text-3xl text-foreground">{s.val}</div>
-                  <div className="text-sm text-muted-foreground mt-0.5">{s.label}</div>
-                </motion.div>
-              ))}
-            </div>
-          </Reveal>
-          {/* Social proof under stats */}
-          <Reveal delay={0.4}>
-            <div className="mt-8 flex items-center gap-3">
-              <div className="flex items-center gap-0.5">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <Star key={i} className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-                ))}
-              </div>
-              <span className="text-sm text-muted-foreground">
-                <span className="text-foreground font-semibold">4.9 / 5</span> - opinie klientów
-              </span>
-            </div>
-          </Reveal>
         </div>
       </div>
 
@@ -203,12 +173,11 @@ function HeroSection() {
             transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }} />
         </div>
       </motion.div>
-      <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-background to-transparent" />
     </section>
   );
 }
 
-/* ═══════ BRAND TICKER ═══════ */
+/* â•â•â•â•â•â•â• BRAND TICKER â•â•â•â•â•â•â• */
 const brands = [
   "AVON",
   "Euro 2012 - Stadion Narodowy",
@@ -259,14 +228,14 @@ function BrandTicker() {
   );
 }
 
-/* ═══════ EDITORIAL STATS ═══════ */
+/* â•â•â•â•â•â•â• EDITORIAL STATS â•â•â•â•â•â•â• */
 function EditorialStats() {
   const c1 = useCountUp(2500, 2.5);
   const c2 = useCountUp(new Date().getFullYear() - 1998);
   const c3 = useCountUp(1400);
   const statsRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: statsScroll } = useScroll({ target: statsRef, offset: ["start end", "end start"] });
-  const rightColY = useTransform(statsScroll, [0, 1], [30, -30]);
+  const rightColY = useTransform(statsScroll, [0, 1], [10, -10]);
 
   // Masking text reveal - clip-path driven by scroll
   const maskRef = useRef<HTMLDivElement>(null);
@@ -284,10 +253,10 @@ function EditorialStats() {
     <section ref={statsRef} className="py-16 md:py-24 relative overflow-visible" aria-label="Statystyki firmy">
       <div className="absolute inset-0 bg-noise" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-        <div className="grid lg:grid-cols-12 gap-8 lg:gap-6 items-end">
+        <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
           <div className="lg:col-span-5">
             <Reveal from="left">
-              <div ref={c1.ref} className="pb-4 md:pb-6">
+              <div ref={c1.ref}>
                 <div
                   ref={maskRef}
                   className="relative inline-block overflow-visible pr-2 pb-[0.14em] md:pb-[0.18em]"
@@ -311,9 +280,9 @@ function EditorialStats() {
               </div>
             </Reveal>
           </div>
-          <motion.div className="lg:col-span-3 lg:col-start-8" style={{ y: rightColY }}>
+          <motion.div className="lg:col-span-3 lg:col-start-6 self-center" style={{ y: rightColY }}>
             <Reveal delay={0.1}>
-              <div ref={c2.ref} className="mb-10 lg:mb-12">
+              <div ref={c2.ref} className="mb-8 lg:mb-10">
                 <div className="font-heading font-black text-5xl md:text-6xl text-foreground tabular-nums">{c2.count}</div>
                 <div className="text-sm text-muted-foreground mt-1">lat doświadczenia (od 1998)</div>
               </div>
@@ -325,18 +294,17 @@ function EditorialStats() {
               </div>
             </Reveal>
           </motion.div>
-          <div className="lg:col-span-3 lg:col-start-11 hidden lg:block">
+          <div className="lg:col-span-4 lg:col-start-9 hidden lg:block self-center">
             <Reveal delay={0.15} from="right">
-              <div className="relative rounded-2xl overflow-hidden aspect-[3/4] border-glow">
+              <div className="relative rounded-2xl overflow-hidden aspect-[4/5] max-h-[560px] border-glow">
                 <Image
                   src="/images/generated/night-billboard-portrait.png"
                   alt="Nocne miasto z oświetlonymi ulicami i reklamami"
-                  width={400}
-                  height={533}
-                  className="w-full h-full object-cover opacity-50"
+                  width={520}
+                  height={650}
+                  className="w-full h-full object-cover"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
               </div>
             </Reveal>
           </div>
@@ -346,7 +314,7 @@ function EditorialStats() {
   );
 }
 
-/* ═══════ WHY OUTDOOR ═══════ */
+/* â•â•â•â•â•â•â• WHY OUTDOOR â•â•â•â•â•â•â• */
 function WhyOutdoor() {
   return (
     <section className="py-16 md:py-24 relative overflow-hidden bg-problem-dark" aria-label="Dlaczego reklama outdoorowa">
@@ -405,7 +373,7 @@ function WhyOutdoor() {
   );
 }
 
-/* ═══════ SERVICES - Alternating magazine rows ═══════ */
+/* â•â•â•â•â•â•â• SERVICES - Alternating magazine rows â•â•â•â•â•â•â• */
 function ServicesSection() {
   const services = [
     { icon: Maximize2, title: "Billboardy\nreklamowe", hoverAnim: "group-hover:rotate-12 group-hover:scale-110 transition-transform duration-500 ease-out", desc: "Nośniki od 12 do ponad 100 m² w precyzyjnie dobranych lokalizacjach. Arterie komunikacyjne, centra miast, drogi krajowe.", tag: "12-100+ m²", img: "/images/generated/billboard-operator-card.png" },
@@ -440,8 +408,6 @@ function ServicesSection() {
                       className="w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03]"
                       loading="lazy"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-r from-background/40 via-transparent to-transparent pointer-events-none" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent pointer-events-none" />
                     <div className="absolute top-4 left-4 px-3 py-1.5 rounded-lg glass text-[11px] font-heading font-bold text-primary uppercase tracking-wider">{s.tag}</div>
                   </motion.div>
                 </Reveal>
@@ -454,7 +420,7 @@ function ServicesSection() {
                           <div className="w-11 h-11 rounded-xl bg-primary/6 border border-primary/15 flex items-center justify-center" style={{ transform: "translateZ(12px)" }}>
                             <s.icon className={`w-5 h-5 text-primary ${s.hoverAnim || "icon-spin-hover"}`} />
                           </div>
-                          <span className="font-heading font-black text-4xl text-primary/8" style={{ transform: "translateZ(8px)" }}>0{i + 1}</span>
+                          <span className="font-heading font-black text-4xl text-primary/28" style={{ transform: "translateZ(8px)" }}>0{i + 1}</span>
                         </div>
                         <h3 className="font-heading font-black text-2xl md:text-3xl text-foreground mb-3 whitespace-pre-line leading-tight">{s.title}</h3>
                         <p className="text-muted-foreground leading-relaxed">{s.desc}</p>
@@ -471,9 +437,9 @@ function ServicesSection() {
   );
 }
 
-/* ═══════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    TESTIMONIALS - Social proof section
-   ═══════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 function TestimonialParallaxCard({ children, offset }: { children: React.ReactNode; offset: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
@@ -537,8 +503,8 @@ function TestimonialsSection() {
                   ))}
                 </div>
                 <div>
-                  <div className="font-heading font-bold text-lg text-foreground">4.9 / 5</div>
-                  <div className="text-xs text-muted-foreground">Średnia ocena klientów</div>
+                  <div className="font-heading font-bold text-lg text-foreground">Opinie klientów</div>
+                  <div className="text-xs text-muted-foreground">Potwierdzona jakość obsługi</div>
                 </div>
               </div>
             </Reveal>
@@ -582,9 +548,9 @@ function TestimonialsSection() {
   );
 }
 
-/* ═══════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    CLIENT SHOWCASE - Horizontal scroll on desktop
-   ═══════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 function ClientShowcase() {
   const clients = [
     { name: "KFC", category: "Kampania reklamowa", scope: "Najpopularniejsza sieć restauracji założona przez Harlanda Sandersa.", img: "/clients/new_kfc.png" },
@@ -601,7 +567,7 @@ function ClientShowcase() {
 
   return (
     <>
-      {/* Mobile: Standard cards grid */}
+      {/* Mobile: horizontal scroll */}
       <section className="lg:hidden relative overflow-hidden py-16 md:py-24" aria-label="Realizacje dla klientów">
         <div className="absolute inset-0 bg-surface/20" />
         <div className="absolute inset-0 bg-noise" />
@@ -613,13 +579,12 @@ function ClientShowcase() {
               <span className="text-muted-foreground/40">dla największych marek.</span>
             </h2>
           </Reveal>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <div className="-mx-4 overflow-x-auto px-4 pb-3 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            <div className="flex gap-4">
             {clients.map((c, i) => (
               <Reveal key={c.name} delay={i * 0.08}>
                 <motion.div
-                  className={`group relative rounded-2xl glass-card overflow-hidden aspect-[4/3] cursor-pointer ${
-                    i === clients.length - 1 ? "col-span-2 sm:col-span-1" : ""
-                  }`}
+                  className="group relative rounded-2xl glass-card overflow-hidden aspect-[4/3] cursor-pointer shrink-0 w-[72vw] max-w-[280px]"
                   whileHover={{ y: -4 }}
                   transition={{ type: "spring", stiffness: 300, damping: 25 }}
                 >
@@ -634,7 +599,7 @@ function ClientShowcase() {
                       alt={`Logo marki: ${c.name}`}
                       width={240}
                       height={140}
-                      className="object-contain max-w-[80%] max-h-[80%] transition-all duration-700 group-hover:scale-[1.06] grayscale group-hover:grayscale-0"
+                      className="object-contain max-w-[80%] max-h-[80%] transition-all duration-700 group-hover:scale-[1.06]"
                       loading="lazy"
                     />
                   </div>
@@ -645,6 +610,7 @@ function ClientShowcase() {
                 </motion.div>
               </Reveal>
             ))}
+            </div>
           </div>
           <Reveal delay={0.2}>
             <div className="mt-10 text-center">
@@ -659,7 +625,7 @@ function ClientShowcase() {
       </section>
 
       {/* Desktop: Horizontal scroll with slow vertical drift */}
-      <div ref={sectionRef} className="hidden lg:block relative" style={{ height: "400vh" }} aria-label="Realizacje dla klientów">
+      <div ref={sectionRef} className="hidden lg:block relative" style={{ height: "280vh" }} aria-label="Realizacje dla klientów">
         <div className="sticky top-0 h-screen overflow-hidden">
           <div className="absolute inset-0 bg-background" />
           <div className="absolute inset-0 bg-surface/20" />
@@ -691,57 +657,37 @@ function ClientShowcase() {
                 {clients.map((c, i) => (
                   <motion.div
                     key={c.name}
-                    className="group relative rounded-3xl glass-card overflow-hidden cursor-pointer shrink-0 w-[460px] aspect-[4/3]"
-                    whileHover={{ y: -8, scale: 1.01 }}
-                    transition={{ type: "spring", stiffness: 280, damping: 26 }}
+                    className="group relative rounded-2xl glass-card overflow-hidden cursor-pointer shrink-0 w-[280px] aspect-[4/3] lg:w-[360px] lg:aspect-[4/3]"
+                    whileHover={{ y: -4 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
                   >
-                    {/* Index marker */}
-                    <div className="absolute top-5 right-6 z-30 font-heading font-black text-3xl text-primary/15 tabular-nums tracking-tight pointer-events-none select-none">
-                      0{i + 1}
-                    </div>
-
-                    {/* Logo plate - jasna podkładka pod logo */}
-                    <div className="absolute inset-5 bottom-24 rounded-2xl client-logo-plate z-10" aria-hidden="true" />
-
-                    {/* Brand glow on hover */}
-                    <div className="absolute -top-12 -left-12 w-64 h-64 bg-primary/10 rounded-full blur-[80px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-0" />
-                    <div className="absolute -bottom-10 -right-10 w-56 h-56 bg-primary/[0.07] rounded-full blur-[70px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-0" />
-
-                    {/* Logo */}
-                    <div className="absolute inset-x-0 top-0 bottom-24 flex items-center justify-center p-12 z-20 pointer-events-none">
+                    <div className="absolute inset-3 bottom-10 rounded-xl client-logo-plate z-10" aria-hidden="true" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.06] via-transparent to-primary/[0.04] opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-15" />
+                    <div className="absolute inset-x-0 top-0 bottom-10 flex items-center justify-center px-5 py-5 z-20 pointer-events-none">
                       <Image
                         src={c.img}
                         alt={`Logo marki: ${c.name}`}
-                        width={400}
-                        height={240}
-                        className="object-contain max-w-[80%] max-h-[78%] transition-all duration-700 group-hover:scale-[1.05] grayscale group-hover:grayscale-0"
+                        width={240}
+                        height={140}
+                        className="object-contain max-w-[80%] max-h-[80%] transition-all duration-700 group-hover:scale-[1.06]"
                         loading="lazy"
                       />
                     </div>
-
-                    {/* Top accent line */}
-                    <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-30" />
-
-                    {/* Footer */}
-                    <div className="absolute inset-x-0 bottom-0 z-20 px-7 py-5 border-t border-border/40 bg-gradient-to-t from-background/80 via-background/40 to-transparent">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="w-2 h-2 rounded-full bg-primary animate-pulse-dot" />
-                        <span className="text-[10px] font-heading font-semibold tracking-[0.18em] uppercase text-primary/80">Klient</span>
-                      </div>
-                      <h3 className="font-heading font-bold text-xl text-foreground mb-1 transition-transform duration-500 group-hover:translate-x-1">{c.name}</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2 max-w-[88%]">{c.scope}</p>
+                    <div className="absolute bottom-3 left-3 right-3 z-20 flex items-center justify-between">
+                      <h3 className="font-heading font-bold text-xs text-foreground/85 tracking-wide">{c.name}</h3>
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary/60" />
                     </div>
                   </motion.div>
                 ))}
                 {/* End CTA card */}
-                <div className="shrink-0 w-[480px] aspect-[4/3] rounded-2xl glass-card flex flex-col items-center justify-center text-center p-8">
-                  <div className="w-14 h-14 rounded-2xl bg-primary/8 border border-primary/15 flex items-center justify-center mb-5">
-                    <ArrowRight className="w-6 h-6 text-primary" />
+                <div className="shrink-0 w-[280px] aspect-[4/3] lg:w-[360px] lg:aspect-[4/3] rounded-2xl glass-card flex flex-col items-center justify-center text-center p-6">
+                  <div className="w-11 h-11 rounded-xl bg-primary/8 border border-primary/15 flex items-center justify-center mb-4">
+                    <ArrowRight className="w-5 h-5 text-primary" />
                   </div>
-                  <h3 className="font-heading font-bold text-xl text-foreground mb-2">Twoja kampania?</h3>
-                  <p className="text-sm text-muted-foreground mb-6">Porozmawiajmy o Twoich celach.</p>
+                  <h3 className="font-heading font-bold text-lg text-foreground mb-1.5">Twoja kampania</h3>
+                  <p className="text-sm text-muted-foreground mb-4">Porozmawiajmy o Twoich celach.</p>
                   <Link href="/kontakt">
-                    <Button variant="cta" className="group min-h-[44px]">
+                    <Button variant="cta" className="group min-h-[44px] px-5">
                       Wyślij zapytanie <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </Link>
@@ -756,7 +702,7 @@ function ClientShowcase() {
   );
 }
 
-/* ═══════ PROCESS — compact horizontal/vertical pipeline ═══════ */
+/* â•â•â•â•â•â•â• PROCESS — compact horizontal/vertical pipeline â•â•â•â•â•â•â• */
 function ProcessTimeline() {
   const steps = [
     { icon: Target, title: "Briefing", desc: "Cele, grupa, budżet." },
@@ -824,7 +770,7 @@ function ProcessTimeline() {
 
         {/* Mobile: vertical pipeline */}
         <div className="md:hidden">
-          <div className="relative pl-12">
+          <div className="relative pl-14">
             <div className="absolute left-5 top-3 bottom-3 w-px bg-border/40" aria-hidden="true">
               <motion.div
                 className="w-full bg-gradient-to-b from-primary/50 via-primary to-primary/50"
@@ -845,15 +791,15 @@ function ProcessTimeline() {
                   transition={{ duration: 0.5, delay: i * 0.08, ease }}
                   className="relative"
                 >
-                  <div className="absolute -left-[2.5rem] top-0">
-                    <div className="relative w-10 h-10 rounded-full bg-card border-2 border-primary/40 flex items-center justify-center">
+                  <div className="absolute -left-[3rem] top-0">
+                    <div className="relative w-9 h-9 rounded-full bg-card border-2 border-primary/40 flex items-center justify-center">
                       <s.icon className="w-4 h-4 text-primary" />
                       <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-primary text-primary-foreground text-[9px] font-heading font-black flex items-center justify-center tabular-nums">
                         {i + 1}
                       </span>
                     </div>
                   </div>
-                  <h3 className="font-heading font-bold text-base text-foreground mb-0.5 leading-tight">{s.title}</h3>
+                  <h3 className="font-heading font-bold text-base text-foreground mb-1 leading-tight">{s.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
                 </motion.div>
               ))}
@@ -874,7 +820,7 @@ function ProcessTimeline() {
   );
 }
 
-/* ═══════ BENEFITS ═══════ */
+/* â•â•â•â•â•â•â• BENEFITS â•â•â•â•â•â•â• */
 function BenefitsSection() {
   const benefits = [
     { icon: Zap, text: "Rezerwacja billboardu w 30 sekund - zautomatyzowany system online." },
@@ -921,7 +867,7 @@ function BenefitsSection() {
                   <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-heading font-bold tracking-[0.2em] uppercase mb-5" style={{ transform: "translateZ(14px)" }}>Automatyzacja</span>
                   <div className="font-heading font-black text-6xl md:text-7xl leading-[0.94] pb-4 text-gradient-brand-bright mb-1 tabular-nums text-glow-red relative" style={{ transform: "translateZ(20px)" }}>{count}<span className="text-3xl md:text-4xl ml-1 align-top">sek.</span></div>
                   <p className="text-lg text-foreground font-heading font-bold mb-2" style={{ transform: "translateZ(12px)" }}>na rezerwację billboardu</p>
-                  <p className="text-sm text-muted-foreground leading-relaxed mb-6" style={{ transform: "translateZ(8px)" }}>Bez maili, bez telefonów, bez czekania. Zautomatyzowany system online działa 24/7.</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-6" style={{ transform: "translateZ(8px)" }}>Tyle czasu wystarczy, abyśmy mogli wspólnie rozpocząć przygodę z Twoją kampanią.</p>
                   <div className="pt-5 border-t border-border/30 grid grid-cols-3 gap-4 text-center">
                     {[{ v: "Kaizen", l: "od 2018" }, { v: "Preflight", l: "od 2022" }, { v: "100%", l: "dokumentacja" }].map((s) => (
                       <motion.div key={s.l} whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 400 }} style={{ transform: "translateZ(10px)" }}>
@@ -940,7 +886,7 @@ function BenefitsSection() {
   );
 }
 
-/* ═══════ CTA ═══════ */
+/* â•â•â•â•â•â•â• CTA â•â•â•â•â•â•â• */
 function CTASection() {
   const ctaRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ctaRef, offset: ["start end", "end start"] });
@@ -948,12 +894,13 @@ function CTASection() {
   const glowScale = useTransform(scrollYProgress, [0, 0.5], [0.8, 1.2]);
   return (
     <section ref={ctaRef} className="relative py-24 md:py-32 overflow-hidden" aria-label="Zacznij współpracę">
-      <div className="absolute inset-0 bg-noise" />
+      <div className="absolute inset-0 cta-clean-bg" />
+      <div className="absolute inset-0 bg-noise opacity-60" />
       <motion.div
-        className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-primary rounded-full blur-[150px]"
-        style={{ opacity: glowOpacity, scale: glowScale }}
+        className="absolute left-1/2 top-16 h-px w-[min(760px,86vw)] -translate-x-1/2 bg-gradient-to-r from-transparent via-primary/25 to-transparent"
+        style={{ opacity: glowOpacity, scaleX: glowScale }}
       />
-      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[200px] bg-primary/4 rounded-full blur-[120px] animate-glow-pulse" style={{ animationDelay: "1.5s" }} />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
       <div className="relative mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
         <Reveal>
@@ -965,7 +912,7 @@ function CTASection() {
           <h2 className="font-heading font-black text-3xl md:text-5xl lg:text-6xl text-foreground mb-6 leading-[1.15] tracking-tight px-2">
             Gotowy na{" "}
             <span className="text-gradient-brand-bright text-glow-red relative inline-block pr-2 pb-2 align-baseline">
-              wielki format?
+              wielki format
               <motion.span className="absolute bottom-0 left-2 right-2 h-0.5 bg-gradient-brand-warm rounded-full"
                 initial={{ width: 0 }} whileInView={{ width: "calc(100% - 1rem)" }} viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.3, ease }} />
@@ -974,16 +921,14 @@ function CTASection() {
         </Reveal>
         <Reveal delay={0.2}>
           <p className="text-lg text-muted-foreground mb-10 max-w-xl mx-auto">
-            Sprawdź dostępność nośników i otrzymaj wycenę w&nbsp;ciągu <span className="text-foreground font-semibold">24 godzin</span>. Bez zobowiązań.
+            Sprawdź dostępność nośników i rozpocznijmy wycenę kampanii. Bez zobowiązań.
           </p>
         </Reveal>
 
-        {/* Point 42: Urgency + social proof */}
         <Reveal delay={0.25}>
           <div className="flex items-center justify-center gap-6 mb-8 text-sm text-muted-foreground">
             <span className="flex items-center gap-1.5"><Shield className="w-4 h-4 text-primary/40" /> Bez zobowiązań</span>
-            <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-primary/40" /> Odpowiedź w 24h</span>
-            <span className="flex items-center gap-1.5"><Star className="w-4 h-4 text-amber-400/60" /> 4.9/5 ocena</span>
+            <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-primary/40" /> Sprawny kontakt</span>
           </div>
         </Reveal>
 

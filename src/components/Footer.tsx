@@ -58,7 +58,7 @@ export function Footer() {
                   Mazowsze
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  1400+ nośników w regionie
+                  Kampanie outdoorowe w regionie
                 </div>
               </div>
             </div>
@@ -150,7 +150,8 @@ export function Footer() {
               <p className="font-medium text-muted-foreground">
                 Billboard Sp. z o.o.
               </p>
-              <p>NIP: 5322051052 | REGON: 361032049</p>
+              <p>NIP: 5322051052</p>
+              <p>REGON: 361032049</p>
               <p>KRS: 0000547439</p>
               <p className="pt-1 text-xs">Bank PKO BP S.A.:</p>
               <p className="text-xs">17 1020 1127 0000 1102 0248 2073</p>
