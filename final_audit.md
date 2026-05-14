@@ -12,14 +12,14 @@ Strona technicznie kompiluje się i główne podstrony renderują się poprawnie
 Najważniejsze blokery przed pierwszym publicznym release:
 
 - [ ] Zaktualizować podatne zależności: `npm audit --omit=dev` wykazał podatności `high` dla `next` oraz `moderate` dla `postcss`.
-- [ ] Usunąć wszystkie kanonikalne, OG, Twitter, robots i sitemap URL-e wskazujące na `https://wielki-format-strona.vercel.app`.
+- [x] Usunąć wszystkie kanonikalne, OG, Twitter, robots i sitemap URL-e wskazujące na `https://wielki-format-strona.vercel.app`.
 - [ ] Ustalić strategię preview: preview musi mieć `noindex` albo być zabezpieczone przed indeksacją.
-- [ ] Naprawić linki 404 w stopce: `/polityka-prywatnosci` i `/regulamin`.
+- [x] Naprawić linki 404 w stopce: `/polityka-prywatnosci` i `/regulamin`. (Strony utworzone; treść do weryfikacji prawnej.)
 - [ ] Podłączyć realną wysyłkę formularza; obecnie formularz tylko symuluje sukces.
 - [ ] Dodać klauzule RODO, politykę prywatności, cookies i podstawowe dokumenty prawne.
 - [ ] Rozwiązać migrację obecnie zaindeksowanych URL-i na `wielkiformat.pl`, zwłaszcza stron lokalnych.
 - [ ] Naprawić niespójność danych: strona komunikuje `1400+ nośników`, a mapa ma 10 rekordów, w tym `Piotrków Trybunalski` poza Mazowszem.
-- [ ] Dodać podstawowe nagłówki bezpieczeństwa i wymusić HTTPS/canonical host po stronie hostingu.
+- [x] Dodać podstawowe nagłówki bezpieczeństwa (HSTS, nosniff, frame-options, referrer, permissions) w `next.config.ts`. HTTPS/canonical host nadal po stronie hostingu.
 
 ## Wyniki techniczne
 
@@ -61,12 +61,12 @@ Najważniejsze blokery przed pierwszym publicznym release:
 
 ### Metadata, canonical, sitemap, robots
 
-- [ ] Zmienić `metadataBase` z `https://wielki-format-strona.vercel.app` na docelowy URL produkcyjny.
-- [ ] Zmienić wszystkie `alternates.canonical` na `https://wielkiformat.pl/...`.
+- [x] Zmienić `metadataBase` z `https://wielki-format-strona.vercel.app` na docelowy URL produkcyjny.
+- [x] Zmienić wszystkie `alternates.canonical` na `https://wielkiformat.pl/...`.
 - [ ] Zmienić `openGraph.url` per podstrona; obecnie większość podstron dziedziczy URL strony głównej.
-- [ ] Zmienić `og:image` i `twitter:image` z preview URL na produkcyjny URL.
-- [ ] Zmienić `src/app/robots.ts`, bo sitemap wskazuje obecnie `https://wielki-format-strona.vercel.app/sitemap.xml`.
-- [ ] Zmienić `src/app/sitemap.ts`, bo wszystkie `<loc>` wskazują obecnie preview.
+- [x] Zmienić `og:image` i `twitter:image` z preview URL na produkcyjny URL.
+- [x] Zmienić `src/app/robots.ts`, bo sitemap wskazuje obecnie `https://wielki-format-strona.vercel.app/sitemap.xml`.
+- [x] Zmienić `src/app/sitemap.ts`, bo wszystkie `<loc>` wskazują obecnie preview.
 - [ ] Poprawić `lastModified` w sitemap: teraz `new Date()` ustawia datę builda dla wszystkich stron. Google zaleca używać `lastmod` tylko wtedy, gdy odzwierciedla znaczącą zmianę treści.
 - [ ] Dodać per-page OG/Twitter:
   - [ ] `/` - oferta główna i region.
@@ -78,8 +78,8 @@ Najważniejsze blokery przed pierwszym publicznym release:
 
 ### Linki 404
 
-- [ ] Utworzyć `/polityka-prywatnosci`.
-- [ ] Utworzyć `/regulamin` albo zmienić link na realny dokument OWU/RODO.
+- [x] Utworzyć `/polityka-prywatnosci`. (Treść do weryfikacji prawnej.)
+- [x] Utworzyć `/regulamin` albo zmienić link na realny dokument OWU/RODO. (Treść do weryfikacji prawnej.)
 - [ ] Po wdrożeniu sprawdzić link checkerem wszystkie `href`.
 - [ ] Dodać sensowną mapę przekierowań ze starych URL-i, zamiast pozwolić im przejść na 404.
 
@@ -161,23 +161,23 @@ Zaobserwowane istniejące URL-e:
 
 Decyzja przed wdrożeniem:
 
-- [ ] Odtworzyć najważniejsze landing pages lokalne w nowej wersji, albo
-- [ ] przygotować 301 z każdego starego URL-a do najbliższego odpowiednika.
+- [x] Odtworzyć najważniejsze landing pages lokalne w nowej wersji (otwock, piaseczno, pruszkow, lomianki, legionowo, zabki, wolomin, minsk-mazowiecki, grodzisk-mazowiecki, marki, jozefow, warszawa, radom, plock, siedlce, ostroleka) — dynamiczna trasa `(site)/[city]` + dane w [src/lib/cities.ts](src/lib/cities.ts).
+- [ ] przygotować 301 z każdego starego URL-a do najbliższego odpowiednika (po stronie hostingu/Vercel).
 
 Minimalna mapa przekierowań:
 
 - [ ] `/home1` -> `/`
 - [ ] `/kontakt` -> `/kontakt`
-- [ ] `/otwock` -> nowa strona lokalna `/otwock` albo `/nosniki?city=Otwock`
-- [ ] `/piaseczno` -> nowa strona lokalna `/piaseczno` albo `/wynajem`
-- [ ] `/pruszkow` -> nowa strona lokalna `/pruszkow` albo `/wynajem`
-- [ ] `/legionowo` -> nowa strona lokalna `/legionowo` albo `/wynajem`
-- [ ] `/lomianki` -> nowa strona lokalna `/lomianki` albo `/wynajem`
-- [ ] `/ząbki` -> nowa strona lokalna `/zabki` albo `/wynajem`
-- [ ] `/wołomin` -> nowa strona lokalna `/wolomin` albo `/wynajem`
-- [ ] `/minsk-mazowiecki` -> nowa strona lokalna `/minsk-mazowiecki` albo `/wynajem`
-- [ ] `/grodzisk-mazowiecki` -> nowa strona lokalna `/grodzisk-mazowiecki` albo `/wynajem`
-- [ ] `/reklamy-wolnostojace` -> `/obsluga-kampanii` albo dedykowana strona oferty.
+- [x] `/otwock` — utworzona dedykowana strona lokalna.
+- [x] `/piaseczno` — utworzona dedykowana strona lokalna.
+- [x] `/pruszkow` — utworzona dedykowana strona lokalna.
+- [x] `/legionowo` — utworzona dedykowana strona lokalna.
+- [x] `/lomianki` — utworzona dedykowana strona lokalna.
+- [x] `/ząbki` — utworzona dedykowana strona `/zabki` (slug bez polskich znaków, audit polecał ten wariant).
+- [x] `/wołomin` — utworzona dedykowana strona `/wolomin`.
+- [x] `/minsk-mazowiecki` — utworzona dedykowana strona lokalna.
+- [x] `/grodzisk-mazowiecki` — utworzona dedykowana strona lokalna.
+- [ ] `/reklamy-wolnostojace` -> `/obsluga-kampanii` albo dedykowana strona oferty (do decyzji - na razie najlepszy fit to 301 → `/wynajem` lub `/obsluga-kampanii`).
 
 Nie przekierowywać wszystkich starych stron hurtowo na homepage, jeśli mają inny intent. To zwykle pogarsza UX i może wyglądać jak soft 404.
 
@@ -193,16 +193,16 @@ Wyniki wyszukiwania dla niszy billboardów i reklamy wielkoformatowej pokazują 
 
 Najbardziej potrzebne działania SEO przed pierwszym release:
 
-- [ ] Utrzymać albo odtworzyć landing pages lokalne, bo obecna domena już takie posiada.
+- [x] Utrzymać albo odtworzyć landing pages lokalne — utworzono 16 dedykowanych podstron przez dynamic route `[city]`.
 - [ ] Dodać realne, unikalne dane lokalne: miasta, ulice, formaty, zdjęcia, ruch, kierunek ekspozycji.
-- [ ] Dodać stronę "Cennik / ile kosztuje billboard" z jasnym wyjaśnieniem czynników ceny.
-- [ ] Dodać stronę "Dla grafików / specyfikacja plików" albo PDF, bo stara domena miała ten intent w nawigacji.
-- [ ] Dodać stronę "Druk i montaż reklamy" jako osobny target SEO, jeśli to realnie ważna usługa.
+- [x] Dodać stronę "Cennik / ile kosztuje billboard" z jasnym wyjaśnieniem czynników ceny.
+- [x] Dodać stronę "Dla grafików / specyfikacja plików" — utworzona [src/app/(site)/dla-grafikow/page.tsx](src/app/(site)/dla-grafikow/page.tsx).
+- [x] Dodać stronę "Druk i montaż reklamy" jako osobny target SEO.
 - [ ] Dodać case studies albo realizacje z prawdziwymi zdjęciami.
 - [ ] Zoptymalizować Google Business Profile: NAP, kategorie, opis, zdjęcia, usługi, opinie.
 - [ ] Ujednolicić NAP na stronie, GBP, katalogach i danych strukturalnych.
 - [ ] Dodać `LocalBusiness`/`AdvertisingAgency` schema z prawidłowym adresem, geo i `sameAs`.
-- [ ] Dodać `BreadcrumbList` schema na podstronach.
+- [x] Dodać `BreadcrumbList` schema na podstronach (wynajem, obsluga-kampanii, kontakt, o-nas, galeria, cennik, druk-i-montaz-reklamy, dla-grafikow, [city]).
 - [ ] Zachować widoczne FAQ na stronach, ale nie opierać strategii na FAQ rich results w Google.
 
 ### Frazy priorytetowe
@@ -240,19 +240,19 @@ Minimum:
 
 Rekomendowane jeszcze przed przepięciem domeny, jeśli zależy nam na utrzymaniu SEO:
 
-- [ ] `/otwock`
-- [ ] `/piaseczno`
-- [ ] `/pruszkow`
-- [ ] `/legionowo`
-- [ ] `/lomianki`
-- [ ] `/zabki`
-- [ ] `/wolomin`
-- [ ] `/minsk-mazowiecki`
-- [ ] `/grodzisk-mazowiecki`
-- [ ] `/reklamy-wolnostojace`
-- [ ] `/druk-i-montaz-reklamy`
-- [ ] `/dla-grafikow`
-- [ ] `/cennik`
+- [x] `/otwock`
+- [x] `/piaseczno`
+- [x] `/pruszkow`
+- [x] `/legionowo`
+- [x] `/lomianki`
+- [x] `/zabki`
+- [x] `/wolomin`
+- [x] `/minsk-mazowiecki`
+- [x] `/grodzisk-mazowiecki`
+- [ ] `/reklamy-wolnostojace` (do decyzji — czy potrzebna osobna strona oferty czy 301 → /obsluga-kampanii)
+- [x] `/druk-i-montaz-reklamy`
+- [x] `/dla-grafikow`
+- [x] `/cennik`
 
 Każda strona lokalna powinna mieć unikalne treści, nie kopię z podmienioną nazwą miasta:
 
@@ -283,7 +283,7 @@ Każda strona lokalna powinna mieć unikalne treści, nie kopię z podmienioną 
 
 Cel: WCAG 2.2 AA jako standard praktyczny na 2026 oraz potencjalny wymóg, jeśli usługa online podpada pod Polski Akt o Dostępności.
 
-- [ ] Dodać skip link do `#main-content`.
+- [x] Dodać skip link do `#main-content`.
 - [ ] Sprawdzić pełną obsługę klawiaturą:
   - [ ] menu desktop;
   - [ ] menu mobile;
@@ -330,12 +330,12 @@ Standard na maj 2026: Core Web Vitals na 75. percentylu: LCP <= 2,5 s, INP <= 20
 Lokalne odpowiedzi produkcyjne nie pokazały podstawowych nagłówków bezpieczeństwa poza cache.
 
 - [ ] Dodać lub skonfigurować:
-  - [ ] `X-Content-Type-Options: nosniff`
-  - [ ] `Referrer-Policy: strict-origin-when-cross-origin`
-  - [ ] `X-Frame-Options: SAMEORIGIN` albo CSP `frame-ancestors 'self'`
-  - [ ] `Permissions-Policy` ograniczający m.in. geolocation/camera/microphone.
+  - [x] `X-Content-Type-Options: nosniff`
+  - [x] `Referrer-Policy: strict-origin-when-cross-origin`
+  - [x] `X-Frame-Options: SAMEORIGIN` albo CSP `frame-ancestors 'self'`
+  - [x] `Permissions-Policy` ograniczający m.in. geolocation/camera/microphone.
   - [ ] `Content-Security-Policy` najpierw w trybie report-only, potem enforce.
-  - [ ] `Strict-Transport-Security` po poprawnym HTTPS na produkcji.
+  - [x] `Strict-Transport-Security` po poprawnym HTTPS na produkcji.
 - [ ] Uważać na CSP, bo aplikacja ma inline script do motywu i JSON-LD; trzeba użyć nonce/hash albo polityki świadomie dopasowanej do Next.
 - [ ] Ustalić, czy geolokalizacja na mapie jest potrzebna. Obecny przycisk prosi o uprawnienie, ale nie pokazuje lokalizacji użytkownika.
 - [ ] Dodać monitoring błędów, np. Sentry, ale dopiero po spięciu consent/privacy.

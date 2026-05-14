@@ -89,9 +89,9 @@ export default function CampaignServicePage() {
             fill
             sizes="100vw"
             priority
-            className="object-cover opacity-12"
+            className="object-cover opacity-30"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/80 to-background" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/55 via-background/65 to-background" />
         </div>
         <div className="absolute inset-0 bg-noise" />
 
@@ -300,13 +300,12 @@ function FlowRow({
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
             loading="lazy"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/20 to-transparent" />
           <div className="absolute top-5 left-5 right-5 flex items-center justify-between gap-3">
-            <span className="px-3 py-1.5 rounded-lg bg-card/95 backdrop-blur-md border border-border text-[11px] font-heading font-bold text-primary uppercase tracking-[0.18em] flex items-center gap-1.5">
+            <span className="px-3 py-1.5 rounded-lg bg-card/95 backdrop-blur-md border border-border text-[11px] font-heading font-bold text-primary uppercase tracking-[0.18em] flex items-center gap-1.5 shadow-lg">
               <Icon className="w-3.5 h-3.5" />
               Krok {step.num}
             </span>
-            <span className="px-3 py-1.5 rounded-lg bg-card/95 backdrop-blur-md border border-border text-[11px] font-heading font-bold text-foreground flex items-center gap-1.5">
+            <span className="px-3 py-1.5 rounded-lg bg-card/95 backdrop-blur-md border border-border text-[11px] font-heading font-bold text-foreground flex items-center gap-1.5 shadow-lg">
               <Clock className="w-3.5 h-3.5 text-primary" />
               {step.eta}
             </span>

@@ -5,7 +5,9 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
+      disallow: ["/api/"],
     },
-    sitemap: "https://wielki-format-strona.vercel.app/sitemap.xml",
+    host: "https://wielkiformat.pl",
+    sitemap: "https://wielkiformat.pl/sitemap.xml",
   };
 }

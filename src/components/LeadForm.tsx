@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "motion/react";
 import { Send, CheckCircle, AlertCircle, Shield, Clock } from "lucide-react";
@@ -21,24 +21,50 @@ function useField(validator?: (v: string) => boolean) {
 export function LeadForm({ compact = false }: { compact?: boolean }) {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const startedAtRef = useRef<number>(Date.now());
 
   const name = useField((v) => v.trim().length >= 2);
   const email = useField((v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v));
-  const phone = useField(); // Optional
-  const city = useField(); // Optional
+  const phone = useField();
+  const city = useField();
   const [message, setMessage] = useState("");
+  const [consent, setConsent] = useState(false);
+  const [website, setWebsite] = useState(""); // honeypot
 
-  const isValid = name.valid && email.valid;
+  const isValid = name.valid && email.valid && consent;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isValid) return;
+    if (!isValid || submitting) return;
     setSubmitting(true);
-    // Simulate submission
-    setTimeout(() => {
-      setSubmitting(false);
+    setError(null);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name.value,
+          email: email.value,
+          phone: phone.value,
+          city: city.value,
+          message,
+          consent,
+          website,
+          startedAt: startedAtRef.current,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data?.ok) {
+        setError(data?.error || "Coś poszło nie tak. Spróbuj ponownie.");
+        setSubmitting(false);
+        return;
+      }
       setSubmitted(true);
-    }, 1200);
+    } catch {
+      setError("Brak połączenia. Spróbuj ponownie lub zadzwoń.");
+      setSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -58,7 +84,7 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
         </motion.div>
         <h3 className="font-heading font-bold text-xl text-foreground mb-2">Dziękujemy!</h3>
         <p className="text-sm text-muted-foreground mb-1">Twoje zapytanie zostało wysłane.</p>
-        <p className="text-sm text-muted-foreground">Twój opiekun kampanii zazwyczaj skontaktuje się z Tobą w 24h.</p>
+        <p className="text-sm text-muted-foreground">Wysłaliśmy też potwierdzenie na Twój adres e-mail. Zazwyczaj odpowiadamy w 24h.</p>
       </motion.div>
     );
   }
@@ -78,6 +104,8 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
       <div className={`grid gap-4 ${compact ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"}`}>
         <FormField
           type="text"
+          name="name"
+          autoComplete="name"
           placeholder="Imię i nazwisko *"
           required
           value={name.value}
@@ -89,6 +117,8 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
         />
         <FormField
           type="email"
+          name="email"
+          autoComplete="email"
           placeholder="Adres e-mail *"
           required
           value={email.value}
@@ -100,6 +130,8 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
         />
         <FormField
           type="tel"
+          name="phone"
+          autoComplete="tel"
           placeholder="Numer telefonu"
           value={phone.value}
           onChange={phone.onChange}
@@ -109,6 +141,8 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
         />
         <FormField
           type="text"
+          name="city"
+          autoComplete="address-level2"
           placeholder="Miasto / region"
           value={city.value}
           onChange={city.onChange}
@@ -119,11 +153,57 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
       </div>
       <textarea
         placeholder="Opisz krótko swoje potrzeby..."
+        aria-label="Opisz krótko swoje potrzeby"
         rows={3}
         value={message}
         onChange={(e) => setMessage(e.target.value)}
+        maxLength={2000}
         className="w-full mt-4 px-4 py-3 rounded-lg bg-input border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all resize-none"
       />
+
+      {/* Honeypot — niewidoczny dla ludzi, atrakcyjny dla botów */}
+      <div aria-hidden="true" style={{ position: "absolute", left: "-10000px", top: "auto", width: 1, height: 1, overflow: "hidden" }}>
+        <label>
+          Strona WWW
+          <input
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            value={website}
+            onChange={(e) => setWebsite(e.target.value)}
+          />
+        </label>
+      </div>
+
+      <label className="mt-4 flex items-start gap-2.5 text-xs text-muted-foreground cursor-pointer select-none">
+        <input
+          type="checkbox"
+          checked={consent}
+          onChange={(e) => setConsent(e.target.checked)}
+          className="mt-0.5 w-4 h-4 accent-primary shrink-0"
+          required
+        />
+        <span>
+          Wyrażam zgodę na przetwarzanie podanych danych przez Billboard Sp. z o.o. w celu odpowiedzi na zapytanie. Administratorem danych jest Billboard Sp. z o.o. z siedzibą w Markach. Więcej w{" "}
+          <a href="/polityka-prywatnosci" className="underline hover:text-primary">polityce prywatności</a>.
+        </span>
+      </label>
+
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            className="mt-3 flex items-start gap-2 text-sm text-red-400"
+            role="alert"
+          >
+            <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
+            <span>{error}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <Button
         type="submit"
         variant="cta"
@@ -152,7 +232,6 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
         )}
       </Button>
 
-      {/* Social proof */}
       <div className="mt-4 flex flex-wrap items-center justify-center gap-4 text-[11px] text-muted-foreground/40">
         <span className="flex items-center gap-1"><Shield className="w-3 h-3" /> Dane bezpieczne</span>
         <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> Zazwyczaj w 24h</span>
@@ -162,9 +241,9 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
 }
 
 function FormField({
-  type, placeholder, required, value, onChange, onBlur, touched, valid, error,
+  type, name, autoComplete, placeholder, required, value, onChange, onBlur, touched, valid, error,
 }: {
-  type: string; placeholder: string; required?: boolean;
+  type: string; name?: string; autoComplete?: string; placeholder: string; required?: boolean;
   value: string; onChange: (v: string) => void; onBlur: () => void;
   touched: boolean; valid: boolean; error?: string;
 }) {
@@ -175,11 +254,15 @@ function FormField({
     <div className="relative">
       <input
         type={type}
+        name={name}
+        autoComplete={autoComplete}
         placeholder={placeholder}
+        aria-label={placeholder.replace(/\s*\*\s*$/, "")}
         required={required}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onBlur={onBlur}
+        maxLength={160}
         className={`w-full h-11 px-4 pr-10 rounded-lg bg-input border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 transition-all ${
           showError
             ? "border-red-400/50 focus:ring-red-400/30"
@@ -189,7 +272,6 @@ function FormField({
         }`}
         aria-invalid={showError ? "true" : undefined}
       />
-      {/* Validation icon */}
       <AnimatePresence>
         {showValid && (
           <motion.div
@@ -212,7 +294,6 @@ function FormField({
           </motion.div>
         )}
       </AnimatePresence>
-      {/* Error message */}
       <AnimatePresence>
         {showError && (
           <motion.p

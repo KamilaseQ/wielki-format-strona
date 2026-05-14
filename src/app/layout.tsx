@@ -26,7 +26,7 @@ const dmSerifDisplay = DM_Serif_Display({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://wielki-format-strona.vercel.app"),
+  metadataBase: new URL("https://wielkiformat.pl"),
   title: {
     default: "wielkiformat.pl | Reklama wielkoformatowa i billboardy",
     template: "%s | wielkiformat.pl",
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "pl_PL",
-    url: "https://wielki-format-strona.vercel.app",
+    url: "https://wielkiformat.pl",
     siteName: "wielkiformat.pl",
     title: "wielkiformat.pl | Reklama wielkoformatowa i billboardy",
     description:
@@ -73,7 +73,7 @@ export const metadata: Metadata = {
     images: ["/og-image.jpg"],
   },
   alternates: {
-    canonical: "https://wielki-format-strona.vercel.app",
+    canonical: "https://wielkiformat.pl",
   },
 };
 
@@ -109,7 +109,7 @@ const localBusinessJsonLd = {
   url: "https://wielkiformat.pl",
   telephone: COMPANY_PHONE_E164,
   email: "info@wielkiformat.pl",
-  image: "https://wielki-format-strona.vercel.app/og-image.jpg",
+  image: "https://wielkiformat.pl/og-image.jpg",
   description:
     "Billboardy i reklama wielkoformatowa w województwie mazowieckim. Działamy od 1998 roku.",
   address: {
@@ -134,6 +134,17 @@ const localBusinessJsonLd = {
   ],
   priceRange: "$$",
   sameAs: [],
+};
+
+/* ── Schema.org: WebSite ── */
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": "https://wielkiformat.pl/#website",
+  url: "https://wielkiformat.pl",
+  name: "wielkiformat.pl",
+  inLanguage: "pl-PL",
+  publisher: { "@id": "https://wielkiformat.pl/#business" },
 };
 
 /* ── Schema.org: Service (point 28) ── */
@@ -195,6 +206,12 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(serviceJsonLd),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteJsonLd),
           }}
         />
       </body>

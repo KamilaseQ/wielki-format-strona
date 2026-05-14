@@ -6,10 +6,27 @@ export const metadata: Metadata = {
   description:
     "Poznaj Billboard Sp. z o.o. - działamy od 1998 roku w reklamie wielkoformatowej i billboardach.",
   alternates: {
-    canonical: "https://wielki-format-strona.vercel.app/o-nas",
+    canonical: "https://wielkiformat.pl/o-nas",
   },
 };
 
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Strona główna", item: "https://wielkiformat.pl" },
+    { "@type": "ListItem", position: 2, name: "O nas", item: "https://wielkiformat.pl/o-nas" },
+  ],
+};
+
 export default function Page() {
-  return <AboutPage />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <AboutPage />
+    </>
+  );
 }

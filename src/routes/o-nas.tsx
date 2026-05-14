@@ -217,11 +217,12 @@ export default function AboutPage() {
 
 function CounterCard({ target, suffix, label }: { target: number; suffix: string; label: string }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.5 });
-  const [count, setCount] = useState(0);
+  const inView = useInView(ref, { once: true, amount: 0.2 });
+  const [count, setCount] = useState(target);
 
   useEffect(() => {
     if (!inView) return;
+    setCount(0);
     const c = animate(0, target, {
       duration: 2,
       ease: [0.25, 0.46, 0.45, 0.94],

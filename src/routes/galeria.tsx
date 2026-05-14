@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Camera, X, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { Camera, X, ArrowRight, ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/Reveal";
 
@@ -18,8 +18,13 @@ interface GaleriaPageProps {
   items: GalleryItem[];
 }
 
+const PAGE_SIZE = 12;
+
 export default function GaleriaPage({ items }: GaleriaPageProps) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const visibleItems = items.slice(0, visibleCount);
+  const hasMore = visibleCount < items.length;
 
   const close = () => setLightboxIndex(null);
   const next = () =>
@@ -59,44 +64,67 @@ export default function GaleriaPage({ items }: GaleriaPageProps) {
         </div>
       </section>
 
-      <section className="pb-16 md:pb-24 relative overflow-hidden" aria-label="Galeria zrealizowanych nośników">
+      <section className="pb-12 md:pb-16 relative overflow-hidden" aria-label="Galeria zrealizowanych nośników">
         <div className="absolute inset-0 bg-noise" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {items.map((item, i) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {visibleItems.map((item, i) => (
               <Reveal key={item.src} delay={(i % 6) * 0.05} from="bottom">
-                <button
-                  type="button"
-                  onClick={() => setLightboxIndex(i)}
-                  className="group relative block w-full overflow-hidden rounded-2xl glass-card aspect-[4/3] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
-                  aria-label={`Powiększ zdjęcie: ${item.title}`}
-                >
-                  <Image
-                    src={item.src}
-                    alt={`Realizacja nośnika reklamowego: ${item.title}`}
-                    fill
-                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/10 to-transparent opacity-90 group-hover:opacity-100 transition-opacity" />
-                  <div className="absolute bottom-0 inset-x-0 p-4">
-                    <p className="font-heading font-bold text-sm md:text-base text-foreground leading-tight line-clamp-2">
+                <figure className="flex flex-col">
+                  <button
+                    type="button"
+                    onClick={() => setLightboxIndex(i)}
+                    className="group relative block w-full overflow-hidden rounded-2xl bg-card/40 border border-border/40 aspect-[4/3] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 hover:border-primary/30 transition-colors"
+                    aria-label={`Powiększ zdjęcie: ${item.title}`}
+                  >
+                    <Image
+                      src={item.src}
+                      alt={`Realizacja nośnika reklamowego: ${item.title}`}
+                      fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                      loading={i < 6 ? "eager" : "lazy"}
+                    />
+                  </button>
+                  <figcaption className="mt-3 px-1">
+                    <p className="font-heading font-bold text-sm md:text-base text-foreground leading-snug">
                       {item.title}
                     </p>
                     {item.location && (
-                      <p className="mt-1 text-xs text-muted-foreground line-clamp-1">
+                      <p className="mt-1 text-xs text-muted-foreground">
                         {item.location}
                       </p>
                     )}
-                  </div>
-                </button>
+                  </figcaption>
+                </figure>
               </Reveal>
             ))}
           </div>
 
-          <Reveal delay={0.2}>
-            <div className="mt-16 text-center">
+          {hasMore && (
+            <div className="mt-12 md:mt-16 flex flex-col items-center gap-3">
+              <p className="text-xs text-muted-foreground">
+                Pokazano {visibleItems.length} z {items.length} realizacji
+              </p>
+              <Button
+                variant="heroOutline"
+                size="lg"
+                onClick={() => setVisibleCount((c) => Math.min(c + PAGE_SIZE, items.length))}
+                className="group min-h-[44px]"
+              >
+                <Plus className="w-4 h-4 transition-transform group-hover:rotate-90" />
+                Załaduj więcej
+              </Button>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className="py-20 md:py-28 border-t border-border/30 relative overflow-hidden" aria-label="Zapytaj o nośnik">
+        <div className="absolute inset-0 bg-noise" />
+        <div className="relative mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <Reveal>
+            <div className="text-center">
               <p className="text-muted-foreground mb-6">
                 Chcesz zobaczyć nośnik z bliska albo sprawdzić dostępność?
               </p>

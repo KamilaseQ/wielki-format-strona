@@ -13,7 +13,7 @@ export const metadata: Metadata = {
       "Zrealizowane kampanie i nośniki reklamowe w województwie mazowieckim.",
   },
   alternates: {
-    canonical: "https://wielki-format-strona.vercel.app/galeria",
+    canonical: "https://wielkiformat.pl/galeria",
   },
 };
 
@@ -57,7 +57,24 @@ async function loadGallery(): Promise<GalleryItem[]> {
     });
 }
 
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Strona główna", item: "https://wielkiformat.pl" },
+    { "@type": "ListItem", position: 2, name: "Galeria realizacji", item: "https://wielkiformat.pl/galeria" },
+  ],
+};
+
 export default async function Page() {
   const items = await loadGallery();
-  return <GaleriaPage items={items} />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <GaleriaPage items={items} />
+    </>
+  );
 }

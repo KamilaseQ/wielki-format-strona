@@ -26,7 +26,7 @@ const ease = [0.25, 0.46, 0.45, 0.94] as const;
 function useCountUp(target: number, dur = 2) {
   const [count, setCount] = useState(target);
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.5 });
+  const inView = useInView(ref, { once: true, amount: 0.2 });
   useEffect(() => {
     if (!inView) return;
     setCount(0);

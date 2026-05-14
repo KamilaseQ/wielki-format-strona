@@ -9,6 +9,7 @@ import {
   COMPANY_PHONE_DISPLAY,
   COMPANY_PHONE_TEL,
 } from "@/lib/contact";
+import { cities } from "@/lib/cities";
 
 export function Footer() {
   const footerRef = useRef<HTMLElement>(null);
@@ -161,8 +162,51 @@ export function Footer() {
           </motion.div>
         </div>
 
+        {/* Local landing pages (SEO) */}
+        <div className="mt-12 pt-8 border-t border-border/30">
+          <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 mb-4">
+            <h4 className="font-heading font-semibold text-sm text-foreground">
+              Billboardy w miastach Mazowsza
+            </h4>
+            <ul className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground/80">
+              <li>
+                <Link href="/cennik" className="hover:text-primary transition-colors">
+                  Cennik
+                </Link>
+              </li>
+              <li aria-hidden="true" className="text-muted-foreground/30">·</li>
+              <li>
+                <Link href="/druk-i-montaz-reklamy" className="hover:text-primary transition-colors">
+                  Druk i montaż
+                </Link>
+              </li>
+              <li aria-hidden="true" className="text-muted-foreground/30">·</li>
+              <li>
+                <Link href="/dla-grafikow" className="hover:text-primary transition-colors">
+                  Dla grafików
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <ul className="flex flex-wrap items-center gap-y-2 text-xs text-muted-foreground">
+            {cities.map((c, i) => (
+              <li key={c.slug} className="flex items-center">
+                <Link
+                  href={`/${c.slug}`}
+                  className="hover:text-primary transition-colors whitespace-nowrap"
+                >
+                  Billboardy&nbsp;{c.name}
+                </Link>
+                {i < cities.length - 1 && (
+                  <span aria-hidden="true" className="mx-3 text-muted-foreground/30">·</span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+
         {/* Bottom bar */}
-        <div className="mt-14 pt-8 border-t border-border/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="mt-10 pt-8 border-t border-border/30 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-muted-foreground">
             © {new Date().getFullYear()} Billboard Sp. z o.o. Wszelkie prawa
             zastrzeżone.
