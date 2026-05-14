@@ -201,8 +201,8 @@ export default function CampaignServicePage() {
           </Reveal>
           <Reveal delay={0.1}>
             <BeforeAfterSlider
-              beforeImage="/images/generated/before-empty-billboard.png"
-              afterImage="/images/generated/after-mounted-billboard.png"
+              beforeImage="/images/generated/bez_nosnika.png"
+              afterImage="/images/generated/z_nosnikiem.jpg"
               beforeLabel="Pusty nośnik"
               afterLabel="Z reklamą"
               beforeAlt="Nośnik reklamowy przed montażem plakatu"

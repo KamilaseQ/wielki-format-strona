@@ -12,6 +12,12 @@ export type MapMarker = {
   color: string;
   label: string;
   selected?: boolean;
+  count?: number;
+};
+
+export type MapPoint = {
+  lat: number;
+  lng: number;
 };
 
 export type MapViewport = {
@@ -26,6 +32,8 @@ interface LeafletMapProps {
   onMarkerClick?: (id: string) => void;
   onViewportChange?: (viewport: MapViewport) => void;
   autoFitKey?: string;
+  fitPoints?: MapPoint[];
+  locateSignal?: number;
   className?: string;
 }
 
@@ -38,6 +46,8 @@ export function LeafletMap({
   onMarkerClick,
   onViewportChange,
   autoFitKey,
+  fitPoints,
+  locateSignal = 0,
   className = "",
 }: LeafletMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -50,14 +60,21 @@ export function LeafletMap({
   const initialBoundsFitDoneRef = useRef(false);
   const previousAutoFitKeyRef = useRef<string | undefined>(undefined);
   const markersDataRef = useRef<MapMarker[]>(markers);
+  const fitPointsRef = useRef<MapPoint[]>(fitPoints ?? []);
+  const userLocationRef = useRef<Layer | null>(null);
   const [mapReady, setMapReady] = useState(false);
   const [streetViewArmed, setStreetViewArmed] = useState(false);
+  const [locateMessage, setLocateMessage] = useState<string | null>(null);
 
   // Keep a ref to the latest markers so effects that shouldn't re-run on
   // marker updates can still read current positions when they fire.
   useEffect(() => {
     markersDataRef.current = markers;
   }, [markers]);
+
+  useEffect(() => {
+    fitPointsRef.current = fitPoints ?? [];
+  }, [fitPoints]);
 
   // Keep callback ref updated without re-running effects
   useEffect(() => {
@@ -71,6 +88,7 @@ export function LeafletMap({
   // Initialize map once
   useEffect(() => {
     let cancelled = false;
+    const resizeTimers: number[] = [];
 
     async function init() {
       if (!containerRef.current || mapRef.current) return;
@@ -135,7 +153,15 @@ export function LeafletMap({
       setMapReady(true);
 
       // Force resize after mount
-      requestAnimationFrame(() => map.invalidateSize());
+      requestAnimationFrame(() => {
+        if (!cancelled && mapRef.current) mapRef.current.invalidateSize();
+      });
+      [120, 360, 900].forEach((delay) => {
+        const timer = window.setTimeout(() => {
+          if (!cancelled && mapRef.current) mapRef.current.invalidateSize();
+        }, delay);
+        resizeTimers.push(timer);
+      });
     }
 
     void init();
@@ -147,6 +173,9 @@ export function LeafletMap({
       leafletRef.current = null;
       rendererRef.current = null;
       markersRef.current = [];
+      userLocationRef.current?.remove();
+      userLocationRef.current = null;
+      resizeTimers.forEach((timer) => window.clearTimeout(timer));
     };
   }, []);
 
@@ -161,6 +190,46 @@ export function LeafletMap({
     markersRef.current = [];
 
     markers.forEach((m) => {
+      if (m.count && m.count > 1) {
+        const size = Math.min(36, Math.max(24, 22 + Math.log(m.count) * 3.5));
+        const cluster = L.marker([m.lat, m.lng], {
+          icon: L.divIcon({
+            className: "bg-transparent border-0",
+            iconSize: [size, size],
+            iconAnchor: [size / 2, size / 2],
+            html: `<div style="
+              width:${size}px;
+              height:${size}px;
+              border-radius:9999px;
+              display:flex;
+              align-items:center;
+              justify-content:center;
+              color:#fff;
+              font-weight:800;
+              font-size:11px;
+              border:2px solid rgba(255,255,255,0.92);
+              background:${m.color};
+              box-shadow:0 6px 12px ${m.color}3a, 0 0 0 4px ${m.color}1a;
+            ">${m.count}</div>`,
+          }),
+        }).addTo(map);
+
+        cluster.bindTooltip(m.label, {
+          className: "leaflet-dark-tooltip",
+          direction: "top",
+          offset: [0, -18],
+        });
+        cluster.on("click", () => {
+          map.flyTo([m.lat, m.lng], Math.min(map.getZoom() + 2, 14), {
+            animate: true,
+            duration: 0.45,
+          });
+        });
+
+        markersRef.current.push(cluster);
+        return;
+      }
+
       const isSelected = m.id === selectedId;
       // Larger, higher-contrast pin: outer ring + inner solid dot
       const outerRadius = isSelected ? 15 : 10;
@@ -198,6 +267,22 @@ export function LeafletMap({
       dot.on("click", () => {
         onMarkerClickRef.current?.(m.id);
       });
+      ring.on("mouseover", () => {
+        ring.setRadius(outerRadius + 4);
+        dot.setRadius(innerRadius + 2);
+      });
+      ring.on("mouseout", () => {
+        ring.setRadius(outerRadius);
+        dot.setRadius(innerRadius);
+      });
+      dot.on("mouseover", () => {
+        ring.setRadius(outerRadius + 4);
+        dot.setRadius(innerRadius + 2);
+      });
+      dot.on("mouseout", () => {
+        ring.setRadius(outerRadius);
+        dot.setRadius(innerRadius);
+      });
 
       // Animated pulse ring for selected marker
       if (isSelected) {
@@ -220,7 +305,16 @@ export function LeafletMap({
       markersRef.current.push(dot);
     });
 
-    requestAnimationFrame(() => map.invalidateSize());
+    const rafId = requestAnimationFrame(() => {
+      if (mapRef.current) mapRef.current.invalidateSize();
+    });
+    const resizeTimer = window.setTimeout(() => {
+      if (mapRef.current) mapRef.current.invalidateSize();
+    }, 180);
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.clearTimeout(resizeTimer);
+    };
   }, [markers, selectedId, mapReady]);
 
   // Fly to selected carrier — runs ONLY when selectedId changes.
@@ -252,23 +346,71 @@ export function LeafletMap({
       autoFitKey !== previousAutoFitKeyRef.current;
     if (!needsFit) return;
 
-    const points = markersDataRef.current.map(
-      (marker) => [marker.lat, marker.lng] as [number, number]
-    );
+    const sourcePoints =
+      fitPointsRef.current.length > 0 ? fitPointsRef.current : markersDataRef.current;
+    const points = sourcePoints.map((point) => [point.lat, point.lng] as [number, number]);
 
-    requestAnimationFrame(() => {
-      map.invalidateSize();
+    const rafId = requestAnimationFrame(() => {
+      const current = mapRef.current;
+      if (!current) return;
+      current.invalidateSize();
       if (points.length === 0) {
-        map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
+        current.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
       } else if (points.length === 1) {
-        map.setView(points[0], 13);
+        current.setView(points[0], 13);
       } else {
-        map.fitBounds(points, { padding: [48, 48], maxZoom: 10 });
+        current.fitBounds(points, { padding: [48, 48], maxZoom: 10 });
       }
       initialBoundsFitDoneRef.current = true;
       previousAutoFitKeyRef.current = autoFitKey;
     });
+    return () => cancelAnimationFrame(rafId);
   }, [autoFitKey, mapReady, markers]);
+
+  useEffect(() => {
+    const L = leafletRef.current;
+    const map = mapRef.current;
+    if (!map || !L || !mapReady || locateSignal <= 0) return;
+
+    if (!("geolocation" in navigator)) {
+      setLocateMessage("Ta przeglądarka nie obsługuje lokalizacji.");
+      window.setTimeout(() => setLocateMessage(null), 2600);
+      return;
+    }
+
+    setLocateMessage("Ustalanie lokalizacji...");
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const latlng: [number, number] = [
+          position.coords.latitude,
+          position.coords.longitude,
+        ];
+
+        userLocationRef.current?.remove();
+        userLocationRef.current = L.circleMarker(latlng, {
+          radius: 9,
+          fillColor: "#10b981",
+          color: "#ffffff",
+          weight: 3,
+          opacity: 1,
+          fillOpacity: 0.95,
+          renderer: rendererRef.current ?? undefined,
+        }).addTo(map);
+
+        map.flyTo(latlng, Math.max(map.getZoom(), 13), {
+          animate: true,
+          duration: 0.55,
+        });
+        setLocateMessage("Pokazano Twoją lokalizację.");
+        window.setTimeout(() => setLocateMessage(null), 2200);
+      },
+      () => {
+        setLocateMessage("Nie udało się pobrać lokalizacji.");
+        window.setTimeout(() => setLocateMessage(null), 2600);
+      },
+      { enableHighAccuracy: true, timeout: 7000, maximumAge: 60000 }
+    );
+  }, [locateSignal, mapReady]);
 
   // Re-invalidate on container resize
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
@@ -325,7 +467,7 @@ export function LeafletMap({
       <div
         ref={containerRef}
         className={`absolute inset-0 ${className}`}
-        role="application"
+        role="region"
         aria-label="Interaktywna mapa nośników reklamowych"
       />
 
@@ -340,7 +482,7 @@ export function LeafletMap({
         title={
           streetViewArmed
             ? "Kliknij miejsce na mapie, aby otworzyć Street View (Esc aby anulować)"
-            : "Street View – kliknij, potem wybierz punkt na mapie"
+            : "Street View - kliknij, potem wybierz punkt na mapie"
         }
         aria-label="Tryb Street View"
         aria-pressed={streetViewArmed}
@@ -360,6 +502,12 @@ export function LeafletMap({
           >
             <X className="w-3.5 h-3.5" />
           </button>
+        </div>
+      )}
+
+      {locateMessage && (
+        <div className="absolute bottom-16 right-3 z-[1000] max-w-[220px] rounded-lg border border-border bg-card/95 px-3 py-2 text-xs text-foreground shadow-lg backdrop-blur-md">
+          {locateMessage}
         </div>
       )}
     </div>

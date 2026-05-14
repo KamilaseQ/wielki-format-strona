@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { motion } from "motion/react";
 import {
   ArrowRight,
   Car,
+  CheckCircle2,
   ChevronLeft,
   Eye,
+  ExternalLink,
   Layers,
   LocateFixed,
   MapPin,
@@ -15,9 +16,11 @@ import {
   PersonStanding,
   Ruler,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { CarrierImage } from "@/features/carriers/CarrierImage";
 import type { Carrier } from "@/features/carriers/data";
-import { TYPE_CFG } from "@/features/carriers/data";
+import { AVAILABILITY_CFG, TYPE_CFG } from "@/features/carriers/data";
 import {
   COMPANY_PHONE_ARIA,
   COMPANY_PHONE_DISPLAY,
@@ -27,159 +30,163 @@ import {
 interface DetailPanelProps {
   carrier: Carrier;
   onBack: () => void;
+  flow?: boolean;
 }
 
-const TYPE_IMAGE_SRC: Record<Carrier["type"], string> = {
-  "SUPER PREMIUM": "/images/generated/hero-city-billboards.png",
-  "PREMIUM": "/images/generated/rental-billboard-hero.png",
-  "STANDARD": "/images/generated/billboard-operator-card.png",
-};
-
-export function DetailPanel({ carrier, onBack }: DetailPanelProps) {
+export function DetailPanel({ carrier, onBack, flow = false }: DetailPanelProps) {
   const cfg = TYPE_CFG[carrier.type];
-  const imageSrc = TYPE_IMAGE_SRC[carrier.type];
+  const availability = AVAILABILITY_CFG[carrier.availability];
+  const streetViewUrl = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${carrier.lat},${carrier.lng}`;
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: 20 }}
+      initial={{ opacity: 0, x: 18 }}
       animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 20 }}
-      transition={{ duration: 0.25 }}
-      className="flex flex-col h-full"
+      exit={{ opacity: 0, x: 18 }}
+      transition={{ duration: 0.22 }}
+      className={flow ? "flex flex-col bg-card" : "flex h-full min-h-0 flex-col bg-card"}
     >
-      <div className="px-4 py-3 border-b border-border flex items-center gap-3 shrink-0">
-        <button
-          type="button"
-          onClick={onBack}
-          className="min-w-[40px] min-h-[40px] w-10 h-10 rounded-lg bg-secondary/60 flex items-center justify-center text-foreground hover:bg-secondary hover:text-primary transition-colors cursor-pointer"
-          aria-label="Wróć do listy nośników"
-        >
-          <ChevronLeft className="w-4 h-4" />
-        </button>
-        <div className="flex-1 min-w-0">
-          <h3 className="font-heading font-bold text-base text-foreground">
-            {carrier.code}
-          </h3>
-          <p className="text-xs text-muted-foreground truncate">
-            {carrier.city}, woj. {carrier.region.toLowerCase()}
-          </p>
+      <div className="shrink-0 border-b border-border px-4 py-3">
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={onBack}
+            className="flex h-10 w-10 min-w-[40px] min-h-[40px] items-center justify-center rounded-lg border border-border bg-secondary/65 text-foreground transition-colors cursor-pointer hover:border-primary/35 hover:text-primary"
+            aria-label="Wróć do listy nośników"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2">
+              <h3 className="truncate font-heading text-base font-bold text-foreground">
+                {carrier.code}
+              </h3>
+              <span className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ring-1 ${availability.pill}`}>
+                <span className={`h-1.5 w-1.5 rounded-full ${availability.dot}`} />
+                {availability.label}
+              </span>
+            </div>
+            <p className="mt-0.5 truncate text-xs text-muted-foreground">
+              {carrier.city}, woj. {carrier.region.toLowerCase()}
+            </p>
+          </div>
         </div>
-        <span
-          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold ring-1 ${cfg.pill}`}
-        >
-          <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
-          {cfg.label}
-        </span>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
-        <div className="relative h-44 overflow-hidden bg-gradient-to-br from-primary/10 via-surface to-secondary/40">
-          <Image
-            src={imageSrc}
-            alt={`Nośnik ${carrier.code} - ${carrier.address}, ${carrier.city}`}
-            fill
-            sizes="(max-width: 1024px) 100vw, 400px"
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent" />
-          <div className="absolute bottom-2 left-3 flex gap-1.5 flex-wrap">
-            <span className="px-2 py-1 rounded-md bg-card/95 border border-border text-[11px] font-heading font-bold text-primary">
+      <div className={flow ? "" : "min-h-0 flex-1 overflow-y-auto overscroll-contain"}>
+        <CarrierImage
+          carrier={carrier}
+          priority
+          className="h-48 border-b border-border sm:h-56 lg:h-52"
+        />
+
+        <div className="border-b border-border px-4 py-3">
+          <div className="mb-2 flex flex-wrap items-center gap-1.5">
+            <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold ring-1 ${cfg.pill}`}>
+              <span className={`h-1.5 w-1.5 rounded-full ${cfg.dot}`} />
               {cfg.label}
             </span>
-            <span className="px-2 py-1 rounded-md bg-card/95 border border-border text-[11px] text-foreground">
+            <span className="inline-flex items-center gap-1 rounded-full bg-secondary/70 px-2.5 py-1 text-[11px] font-medium text-muted-foreground ring-1 ring-border">
+              <Ruler className="h-3 w-3" />
               {carrier.format}
             </span>
-            {carrier.zip && (
-              <span className="px-2 py-1 rounded-md bg-card/95 border border-border text-[11px] text-muted-foreground">
-                {carrier.zip}
-              </span>
-            )}
+            <span className="inline-flex items-center gap-1 rounded-full bg-secondary/70 px-2.5 py-1 text-[11px] font-medium text-muted-foreground ring-1 ring-border">
+              <CheckCircle2 className="h-3 w-3 text-emerald-500" />
+              Import XML
+            </span>
           </div>
-        </div>
 
-        <div className="px-4 py-3 border-b border-border flex items-start gap-3">
-          <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 mt-0.5">
-            <MapPin className="w-4 h-4 text-primary" />
-          </div>
-          <div>
-            <div className="text-sm font-semibold text-foreground">
-              {carrier.address}
+          <div className="flex items-start gap-3">
+            <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-primary/20 bg-primary/10">
+              <MapPin className="h-4 w-4 text-primary" />
             </div>
-            <div className="text-xs text-muted-foreground mt-0.5">
-              {carrier.city}, woj. {carrier.region.toLowerCase()}
+            <div className="min-w-0">
+              <div className="text-sm font-semibold text-foreground">
+                {carrier.address}
+              </div>
+              <div className="mt-0.5 text-xs text-muted-foreground">
+                {carrier.city}
+                {carrier.zip ? `, ${carrier.zip}` : ""}
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="px-4 py-4 border-b border-border space-y-3">
-          <div className="text-[11px] tracking-[0.18em] uppercase text-muted-foreground font-heading mb-2">
-            Parametry
+        <div className="border-b border-border px-4 py-4">
+          <div className="mb-3 font-heading text-[11px] uppercase tracking-label text-muted-foreground">
+            Parametry robocze
           </div>
-          <ProgressRow
-            icon={Car}
-            label="Ruch dzienny (szac.)"
-            value={`~${carrier.traffic.toLocaleString()} poj.`}
-            pct={Math.min((carrier.traffic / 80000) * 100, 100)}
-            color="from-primary/60 to-primary"
-          />
-          <ProgressRow
-            icon={Eye}
-            label="Widoczność"
-            value={`${carrier.visibility}%`}
-            pct={carrier.visibility}
-            color="from-emerald-500/60 to-emerald-400"
-          />
+          <div className="space-y-3">
+            <ProgressRow
+              icon={Car}
+              label="Ruch dzienny (szac.)"
+              value={`~${carrier.traffic.toLocaleString("pl-PL")} poj.`}
+              pct={Math.min((carrier.traffic / 80000) * 100, 100)}
+            />
+            <ProgressRow
+              icon={Eye}
+              label="Widoczność"
+              value={`${carrier.visibility}%`}
+              pct={carrier.visibility}
+              tone="emerald"
+            />
+          </div>
         </div>
 
-        <div className="px-4 py-4 border-b border-border">
-          <div className="text-[11px] tracking-[0.18em] uppercase text-muted-foreground font-heading mb-2">
+        <div className="border-b border-border px-4 py-4">
+          <div className="mb-3 font-heading text-[11px] uppercase tracking-label text-muted-foreground">
             Szczegóły
           </div>
           <div className="grid grid-cols-2 gap-2">
             <SpecBox icon={Ruler} value={carrier.format} label="Format" />
-            <SpecBox icon={Layers} value={cfg.label} label="Segment" />
+            <SpecBox icon={Layers} value={cfg.label} label="Klasa" />
             <SpecBox
               icon={LocateFixed}
               value={`${((carrier.traffic * 30) / 1000).toFixed(0)}k`}
               label="Kontakty/mies."
             />
-            <SpecBox icon={MapPin} value={carrier.zip || "—"} label="Kod poczt." />
+            <SpecBox icon={MapPin} value={carrier.zip || "-"} label="Kod poczt." />
           </div>
         </div>
 
         {carrier.description && (
-          <div className="px-4 py-4 border-b border-border">
-            <div className="text-[11px] tracking-[0.18em] uppercase text-muted-foreground font-heading mb-2">
+          <div className="border-b border-border px-4 py-4">
+            <div className="mb-2 font-heading text-[11px] uppercase tracking-label text-muted-foreground">
               Opis lokalizacji
             </div>
-            <p className="text-sm leading-relaxed text-foreground/90 whitespace-pre-line">
+            <p className="text-sm leading-relaxed text-foreground/90">
               {carrier.description}
             </p>
           </div>
         )}
+      </div>
 
-        <div className="px-4 py-4">
-          <Link href="/kontakt">
-            <Button variant="cta" className="w-full group" size="default">
-              Zapytaj o ten nośnik{" "}
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </Link>
+      <div className="shrink-0 border-t border-border bg-card/95 px-4 py-3 shadow-[0_-12px_30px_rgba(0,0,0,0.12)]">
+        <Link href={`/kontakt?nosnik=${encodeURIComponent(carrier.code)}`}>
+          <Button variant="cta" className="w-full group" size="default">
+            Zapytaj o ten nośnik
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Button>
+        </Link>
+
+        <div className="mt-2 grid grid-cols-2 gap-2">
           <a
-            href={`https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${carrier.lat},${carrier.lng}`}
+            href={streetViewUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-2 flex items-center justify-center gap-2 rounded-lg border border-border bg-secondary/40 py-2.5 text-sm font-medium text-foreground hover:bg-secondary hover:text-primary transition-colors"
+            className="flex min-h-[44px] items-center justify-center gap-2 rounded-lg border border-border bg-secondary/55 px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-primary/35 hover:text-primary"
           >
-            <PersonStanding className="w-4 h-4" />
-            Zobacz w Street View
+            <PersonStanding className="h-4 w-4" />
+            Street View
+            <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
           </a>
           <a
             href={COMPANY_PHONE_TEL}
             aria-label={COMPANY_PHONE_ARIA}
-            className="mt-3 flex items-center justify-center gap-2 rounded-lg border border-primary/30 bg-primary/5 py-3 text-base font-heading font-bold text-foreground hover:bg-primary/10 hover:text-primary transition-colors"
+            className="flex min-h-[44px] items-center justify-center gap-2 rounded-lg border border-primary/30 bg-primary/10 px-3 py-2 text-sm font-heading font-bold text-foreground transition-colors hover:bg-primary/15 hover:text-primary"
           >
-            <Phone className="w-4 h-4 text-primary" />
+            <Phone className="h-4 w-4 text-primary" />
             {COMPANY_PHONE_DISPLAY}
           </a>
         </div>
@@ -193,31 +200,36 @@ function ProgressRow({
   label,
   value,
   pct,
-  color,
+  tone = "primary",
 }: {
-  icon: React.ComponentType<{ className?: string }>;
+  icon: LucideIcon;
   label: string;
   value: string;
   pct: number;
-  color: string;
+  tone?: "primary" | "emerald";
 }) {
+  const barClass =
+    tone === "emerald"
+      ? "bg-gradient-to-r from-emerald-500/70 to-emerald-400"
+      : "bg-gradient-to-r from-primary/65 to-primary";
+
   return (
     <div>
-      <div className="flex items-center justify-between mb-1">
-        <span className="text-xs text-muted-foreground flex items-center gap-1.5">
-          <Icon className="w-3.5 h-3.5 text-primary" />
-          {label}
+      <div className="mb-1 flex items-center justify-between gap-3">
+        <span className="flex min-w-0 items-center gap-1.5 text-xs text-muted-foreground">
+          <Icon className="h-3.5 w-3.5 shrink-0 text-primary" />
+          <span className="truncate">{label}</span>
         </span>
-        <span className="text-sm font-heading font-bold text-foreground">
+        <span className="shrink-0 font-heading text-sm font-bold text-foreground">
           {value}
         </span>
       </div>
-      <div className="h-2 bg-secondary rounded-full overflow-hidden">
+      <div className="h-2 overflow-hidden rounded-full bg-secondary">
         <motion.div
-          className={`h-full bg-gradient-to-r ${color} rounded-full`}
+          className={`h-full rounded-full ${barClass}`}
           initial={{ width: 0 }}
           animate={{ width: `${pct}%` }}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.75, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
         />
       </div>
     </div>
@@ -229,17 +241,17 @@ function SpecBox({
   value,
   label,
 }: {
-  icon: React.ComponentType<{ className?: string }>;
+  icon: LucideIcon;
   value: string;
   label: string;
 }) {
   return (
-    <div className="rounded-lg bg-secondary/40 border border-border p-3">
-      <Icon className="w-4 h-4 text-primary mb-1.5" />
-      <div className="text-sm font-heading font-bold text-foreground">
+    <div className="rounded-lg border border-border bg-secondary/45 p-3">
+      <Icon className="mb-1.5 h-4 w-4 text-primary" />
+      <div className="truncate font-heading text-sm font-bold text-foreground">
         {value}
       </div>
-      <div className="text-xs text-muted-foreground mt-0.5">{label}</div>
+      <div className="mt-0.5 text-xs text-muted-foreground">{label}</div>
     </div>
   );
 }

@@ -1,0 +1,63 @@
+import type { Metadata } from "next";
+import { promises as fs } from "node:fs";
+import path from "node:path";
+import GaleriaPage, { type GalleryItem } from "@/routes/galeria";
+
+export const metadata: Metadata = {
+  title: "Galeria realizacji - billboardy i nośniki reklamowe",
+  description:
+    "Nasze realizacje - billboardy, citylighty i powierzchnie wielkoformatowe w Warszawie i na Mazowszu. Zobacz przykładowe nośniki reklamowe z naszego portfolio.",
+  openGraph: {
+    title: "Galeria realizacji - wielkiformat.pl",
+    description:
+      "Zrealizowane kampanie i nośniki reklamowe w województwie mazowieckim.",
+  },
+  alternates: {
+    canonical: "https://wielki-format-strona.vercel.app/galeria",
+  },
+};
+
+const EXCLUDED = new Set(["billboardy.jpg", "montaz.jpg", "z nosnikiem.jpg"]);
+
+function titleFromFilename(name: string): { title: string; location?: string } {
+  const base = name.replace(/\.[^.]+$/, "").trim();
+  const cleaned = base
+    .replace(/_/g, " ")
+    .replace(/\s+\(\d+\)\s*$/, "")
+    .replace(/\.+$/, "")
+    .trim();
+
+  const match = cleaned.match(/^([0-9A-Za-z]+)\.?\s+(.+)$/);
+  if (match && /\d/.test(match[1])) {
+    return { title: match[2].trim(), location: `Nośnik ${match[1]}` };
+  }
+  return { title: cleaned };
+}
+
+async function loadGallery(): Promise<GalleryItem[]> {
+  const dir = path.join(process.cwd(), "public", "z");
+  let entries: string[] = [];
+  try {
+    entries = await fs.readdir(dir);
+  } catch {
+    return [];
+  }
+
+  return entries
+    .filter((name) => /\.(jpe?g|png|webp)$/i.test(name))
+    .filter((name) => !EXCLUDED.has(name.toLowerCase()))
+    .sort((a, b) => a.localeCompare(b, "pl"))
+    .map((name) => {
+      const { title, location } = titleFromFilename(name);
+      return {
+        src: `/z/${encodeURIComponent(name)}`,
+        title,
+        location,
+      };
+    });
+}
+
+export default async function Page() {
+  const items = await loadGallery();
+  return <GaleriaPage items={items} />;
+}

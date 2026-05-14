@@ -78,6 +78,7 @@ export function Footer() {
                 { href: "/nosniki", label: "Nośniki i mapa" },
                 { href: "/wynajem", label: "Wynajem" },
                 { href: "/obsluga-kampanii", label: "Obsługa kampanii" },
+                { href: "/galeria", label: "Galeria" },
                 { href: "/kontakt", label: "Kontakt" },
               ].map((l) => (
                 <li key={l.href}>

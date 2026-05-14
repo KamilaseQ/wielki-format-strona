@@ -1,7 +1,8 @@
 import type { MapViewport } from "@/components/LeafletMap";
 
 export type CarrierType = "SUPER PREMIUM" | "PREMIUM" | "STANDARD";
-export type SortKey = "city" | "type" | "traffic";
+export type CarrierAvailability = "available" | "reserved" | "unavailable";
+export type SortKey = "relevance" | "city" | "type" | "traffic";
 
 export interface Carrier {
   id: string;
@@ -18,15 +19,34 @@ export interface Carrier {
   visibility: number;
   image: string | null;
   zip: string;
+  availability: CarrierAvailability;
 }
 
 export const LIST_PAGE_SIZE = 12;
 export const MAP_PANEL_PAGE_SIZE = 6;
 
 export const TYPE_CFG: Record<CarrierType, { dot: string; pill: string; label: string; color: string }> = {
-  "SUPER PREMIUM": { dot: "bg-rose-400", pill: "bg-rose-400/10 text-rose-300 ring-rose-400/20", label: "Super Premium", color: "#fb7185" },
-  "PREMIUM": { dot: "bg-amber-400", pill: "bg-amber-400/10 text-amber-300 ring-amber-400/20", label: "Premium", color: "#fbbf24" },
-  "STANDARD": { dot: "bg-sky-400", pill: "bg-sky-400/10 text-sky-300 ring-sky-400/20", label: "Standard", color: "#38bdf8" },
+  "SUPER PREMIUM": { dot: "bg-rose-500", pill: "bg-rose-500/10 text-rose-700 dark:text-rose-200 ring-rose-500/25", label: "Super Premium", color: "#e11d48" },
+  "PREMIUM": { dot: "bg-amber-500", pill: "bg-amber-500/12 text-amber-800 dark:text-amber-200 ring-amber-500/25", label: "Premium", color: "#d97706" },
+  "STANDARD": { dot: "bg-sky-500", pill: "bg-sky-500/12 text-sky-800 dark:text-sky-200 ring-sky-500/25", label: "Standard", color: "#0284c7" },
+};
+
+export const AVAILABILITY_CFG: Record<CarrierAvailability, { label: string; dot: string; pill: string }> = {
+  available: {
+    label: "Dostępny",
+    dot: "bg-emerald-500",
+    pill: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-200 ring-emerald-500/25",
+  },
+  reserved: {
+    label: "Rezerwacja",
+    dot: "bg-amber-500",
+    pill: "bg-amber-500/12 text-amber-800 dark:text-amber-200 ring-amber-500/25",
+  },
+  unavailable: {
+    label: "Niedostępny",
+    dot: "bg-muted-foreground",
+    pill: "bg-secondary text-muted-foreground ring-border",
+  },
 };
 
 const SEGMENT_DEFAULTS: Record<CarrierType, { traffic: number; visibility: number }> = {
@@ -56,11 +76,54 @@ const ZIP_REGION: Array<[number, number, string]> = [
   [90, 99, "Łódzkie"],
 ];
 
+const MAZOWIECKIE_TOWN_HINTS = [
+  "WARSZAWA",
+  "OTWOCK",
+  "JOZEFOW",
+  "JÓZEFÓW",
+  "PIASECZNO",
+  "PRUSZKOW",
+  "PRUSZKÓW",
+  "LEGIONOWO",
+  "MARKI",
+  "ZABKI",
+  "ZĄBKI",
+  "WOLOMIN",
+  "WOŁOMIN",
+  "GRODZISK MAZOWIECKI",
+  "MILANOWEK",
+  "MILANÓWEK",
+  "NOWY DWOR MAZOWIECKI",
+  "NOWY DWÓR MAZOWIECKI",
+  "MINSK MAZOWIECKI",
+  "MIŃSK MAZOWIECKI",
+  "SIEDLCE",
+  "RADOM",
+  "PLOCK",
+  "PŁOCK",
+];
+
+function normalizeRegionHint(value: string): string {
+  return value
+    .toLocaleUpperCase("pl-PL")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/Ł/g, "L");
+}
+
 function regionFromZip(zip: string): string {
   const prefix = Number(zip.slice(0, 2));
   if (Number.isNaN(prefix)) return "Polska";
   const hit = ZIP_REGION.find(([lo, hi]) => prefix >= lo && prefix <= hi);
   return hit ? hit[2] : "Polska";
+}
+
+function regionFromTownAndZip(town: string, zip: string): string {
+  const normalizedTown = normalizeRegionHint(town);
+  if (MAZOWIECKIE_TOWN_HINTS.some((hint) => normalizedTown.includes(normalizeRegionHint(hint)))) {
+    return "Mazowieckie";
+  }
+  return regionFromZip(zip);
 }
 
 function titleCase(value: string): string {
@@ -96,6 +159,40 @@ function normalizeSegment(raw: string): CarrierType {
   return "STANDARD";
 }
 
+function normalizeAvailability(raw?: string): CarrierAvailability {
+  const value = (raw ?? "").trim().toLowerCase();
+  if (["reserved", "rezerwacja", "zarezerwowany", "booked"].includes(value)) return "reserved";
+  if (["unavailable", "niedostepny", "niedostępny", "inactive", "wylaczony", "wyłączony"].includes(value)) {
+    return "unavailable";
+  }
+  return "available";
+}
+
+export function normalizeSearchValue(value: string): string {
+  return value
+    .toLocaleLowerCase("pl-PL")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/ł/g, "l")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export function carrierSearchText(carrier: Carrier): string {
+  return normalizeSearchValue(
+    [
+      carrier.code,
+      carrier.city,
+      carrier.address,
+      carrier.region,
+      carrier.zip,
+      carrier.type,
+      carrier.format,
+      carrier.description,
+    ].join(" ")
+  );
+}
+
 export function parseBillboardsXml(xml: string): Carrier[] {
   const rows = xml.matchAll(/<row\b([\s\S]*?)\/>/g);
   const carriers: Carrier[] = [];
@@ -122,7 +219,7 @@ export function parseBillboardsXml(xml: string): Carrier[] {
       code: attrs.BillboardNbr || attrs.BillboardID,
       city,
       address,
-      region: regionFromZip(zip),
+      region: regionFromTownAndZip(townRaw, zip),
       type,
       format: formatFromDimensions(attrs),
       description: (attrs.Description ?? "").trim(),
@@ -132,6 +229,7 @@ export function parseBillboardsXml(xml: string): Carrier[] {
       visibility: defaults.visibility,
       image: attrs.Image ? attrs.Image.trim() : null,
       zip,
+      availability: normalizeAvailability(attrs.Availability ?? attrs.Status ?? attrs.Available),
     });
   }
 
@@ -142,7 +240,9 @@ export function deriveFilterOptions(carriers: Carrier[]) {
   const cities = [...new Set(carriers.map((carrier) => carrier.city))].sort((a, b) => a.localeCompare(b, "pl"));
   const typeSet = new Set(carriers.map((carrier) => carrier.type));
   const types = (["SUPER PREMIUM", "PREMIUM", "STANDARD"] as CarrierType[]).filter((type) => typeSet.has(type));
-  return { cities, types };
+  const availabilitySet = new Set(carriers.map((carrier) => carrier.availability));
+  const availability = (["available", "reserved", "unavailable"] as CarrierAvailability[]).filter((status) => availabilitySet.has(status));
+  return { cities, types, availability };
 }
 
 export function getMarkerBudget(zoom: number) {

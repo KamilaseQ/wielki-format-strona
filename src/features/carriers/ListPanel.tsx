@@ -1,9 +1,10 @@
 "use client";
 
 import { motion } from "motion/react";
-import { ChevronRight, Search } from "lucide-react";
+import { ChevronRight, MapPin, Ruler, Search, TrendingUp } from "lucide-react";
+import { CarrierImage } from "@/features/carriers/CarrierImage";
 import type { Carrier } from "@/features/carriers/data";
-import { TYPE_CFG } from "@/features/carriers/data";
+import { AVAILABILITY_CFG, TYPE_CFG } from "@/features/carriers/data";
 
 interface ListPanelProps {
   carriers: Carrier[];
@@ -12,6 +13,10 @@ interface ListPanelProps {
   onLoadMore: () => void;
   onSelect: (carrier: Carrier) => void;
   subtitle: string;
+  selectedId?: string | null;
+  compact?: boolean;
+  flow?: boolean;
+  showHeader?: boolean;
 }
 
 export function ListPanel({
@@ -21,75 +26,111 @@ export function ListPanel({
   onLoadMore,
   onSelect,
   subtitle,
+  selectedId,
+  compact = false,
+  flow = false,
+  showHeader = true,
 }: ListPanelProps) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex flex-col h-full"
+      className={flow ? "flex min-h-0 flex-col" : "flex h-full min-h-0 flex-col"}
     >
-      <div className="px-4 py-3 border-b border-border shrink-0">
-        <h2 className="font-heading font-bold text-base text-foreground">
-          Lista nośników
-        </h2>
-        <p className="text-xs text-muted-foreground mt-0.5">
-          {subtitle}
-        </p>
-      </div>
+      {showHeader && (
+        <div className="shrink-0 border-b border-border px-4 py-3">
+          <h2 className="font-heading text-base font-bold text-foreground">
+            Lista nośników
+          </h2>
+          <p className="mt-0.5 text-xs text-muted-foreground">{subtitle}</p>
+        </div>
+      )}
 
-      <div className="flex-1 overflow-y-auto p-3 space-y-2">
+      <div className={`${flow ? "space-y-2 p-3 pb-[calc(1rem+env(safe-area-inset-bottom))]" : "min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-contain p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]"}`}>
         {carriers.map((carrier, index) => {
           const cfg = TYPE_CFG[carrier.type];
+          const availability = AVAILABILITY_CFG[carrier.availability];
+          const selected = selectedId === carrier.id;
 
           return (
             <motion.button
               key={carrier.id}
               type="button"
               onClick={() => onSelect(carrier)}
-              className="w-full text-left p-3.5 rounded-xl border transition-all group cursor-pointer bg-card border-border hover:border-primary/40 hover:shadow-md min-h-[44px]"
+              aria-pressed={selected}
+              className={`group relative grid w-full min-h-[44px] gap-3 rounded-lg border text-left transition-all cursor-pointer ${
+                compact ? "grid-cols-[74px_minmax(0,1fr)] p-2 pr-8" : "grid-cols-[92px_minmax(0,1fr)] p-2.5 pr-8"
+              } ${
+                selected
+                  ? "border-primary/55 bg-primary/10 shadow-[0_0_0_1px_var(--brand-glow)]"
+                  : "border-border bg-card hover:border-primary/35 hover:bg-secondary/35"
+              }`}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: Math.min(index * 0.025, 0.2) }}
-              whileHover={{ x: 3 }}
             >
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2 mb-1 flex-wrap">
-                    <span className="font-heading font-bold text-sm text-foreground">
-                      {carrier.code}
-                    </span>
-                    <span
-                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ring-1 ${cfg.pill}`}
-                    >
-                      <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
-                      {cfg.label}
-                    </span>
-                  </div>
-                  <div className="text-sm text-foreground truncate">
-                    {carrier.city}
-                  </div>
-                  <div className="text-xs text-muted-foreground truncate mt-0.5">
-                    {carrier.address}
-                  </div>
-                  <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground flex-wrap">
-                    <span className="font-medium">{carrier.format}</span>
-                    <span>·</span>
-                    <span>~{(carrier.traffic / 1000).toFixed(0)}k/dzień</span>
-                  </div>
+              <CarrierImage
+                carrier={carrier}
+                compact
+                className={`h-full rounded-md border border-border/70 ${compact ? "min-h-[72px]" : "min-h-[82px]"}`}
+              />
+
+              <div className="min-w-0 self-center">
+                <div className="mb-1 flex min-w-0 items-center gap-2">
+                  <span className="truncate font-heading text-sm font-bold text-foreground">
+                    {carrier.code}
+                  </span>
+                  <span className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ring-1 ${availability.pill}`}>
+                    <span className={`h-1.5 w-1.5 rounded-full ${availability.dot}`} />
+                    {availability.label}
+                  </span>
                 </div>
-                <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary mt-1 transition-colors shrink-0" />
+
+                <div className="flex min-w-0 items-center gap-1.5 text-sm font-semibold text-foreground">
+                  <MapPin className="h-3.5 w-3.5 shrink-0 text-primary" />
+                  <span className="truncate">{carrier.city}</span>
+                </div>
+                <div className="mt-0.5 truncate text-xs text-muted-foreground">
+                  {carrier.address}
+                </div>
+
+                <div className="mt-2 flex items-end justify-between gap-2">
+                  <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+                  <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ring-1 ${cfg.pill}`}>
+                    <span className={`h-1.5 w-1.5 rounded-full ${cfg.dot}`} />
+                    {cfg.label}
+                  </span>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-secondary/70 px-2 py-0.5 text-[10px] font-medium text-muted-foreground ring-1 ring-border">
+                    <Ruler className="h-3 w-3" />
+                    {carrier.format}
+                  </span>
+                  {!compact && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-secondary/70 px-2 py-0.5 text-[10px] font-medium text-muted-foreground ring-1 ring-border">
+                      <TrendingUp className="h-3 w-3" />
+                      ~{(carrier.traffic / 1000).toFixed(0)}k/dzień
+                    </span>
+                  )}
+                  </div>
+                  {!compact && (
+                    <span className="inline-flex shrink-0 items-center justify-center rounded-md bg-primary px-3 py-2 text-xs font-bold text-primary-foreground shadow-sm">
+                      Zapytaj
+                    </span>
+                  )}
+                </div>
               </div>
+
+              <ChevronRight className="absolute right-2 top-3 h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
             </motion.button>
           );
         })}
 
         {carriers.length === 0 && (
           <div className="py-10 text-center">
-            <div className="w-12 h-12 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-3">
-              <Search className="w-5 h-5 text-primary" />
+            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-lg border border-primary/20 bg-primary/10">
+              <Search className="h-5 w-5 text-primary" />
             </div>
-            <p className="text-base text-foreground font-heading font-semibold mb-1">
+            <p className="mb-1 font-heading text-base font-semibold text-foreground">
               Brak wyników
             </p>
             <p className="text-sm text-muted-foreground">
@@ -102,9 +143,9 @@ export function ListPanel({
           <button
             type="button"
             onClick={onLoadMore}
-            className="w-full min-h-[44px] rounded-xl border border-border bg-secondary/40 px-4 py-3 text-sm font-medium text-foreground hover:text-primary hover:border-primary/40 transition-colors cursor-pointer"
+            className="w-full min-h-[44px] whitespace-normal rounded-lg border border-border bg-secondary/50 px-3 py-3 text-sm font-medium leading-snug text-foreground transition-colors cursor-pointer hover:border-primary/40 hover:text-primary"
           >
-            Pokaż więcej nośników ({carriers.length} / {totalCount})
+            {compact ? "Pokaż więcej" : "Pokaż więcej nośników"} ({carriers.length} / {totalCount})
           </button>
         )}
       </div>

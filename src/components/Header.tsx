@@ -19,6 +19,7 @@ const navLinks = [
   { href: "/nosniki", label: "Nośniki i mapa" },
   { href: "/wynajem", label: "Wynajem" },
   { href: "/obsluga-kampanii", label: "Obsługa kampanii" },
+  { href: "/galeria", label: "Galeria" },
   { href: "/kontakt", label: "Kontakt" },
 ] as const;
 

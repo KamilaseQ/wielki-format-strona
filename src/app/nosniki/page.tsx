@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import CarriersPage from "@/features/carriers/CarriersPage";
 import { parseBillboardsXml, type Carrier } from "@/features/carriers/data";
 
@@ -19,12 +20,27 @@ export const metadata: Metadata = {
 };
 
 async function loadCarriers(): Promise<Carrier[]> {
-  const xmlPath = path.join(process.cwd(), "public", "data", "billboards.xml");
-  const xml = await fs.readFile(xmlPath, "utf8");
+  const dataFile = process.env.CARRIERS_DATA_FILE ?? "billboards-sample-200.xml";
+  const xmlPath = path.isAbsolute(dataFile)
+    ? dataFile
+    : path.join(process.cwd(), "public", "data", dataFile);
+
+  let xml: string;
+  try {
+    xml = await fs.readFile(xmlPath, "utf8");
+  } catch {
+    const fallbackPath = path.join(process.cwd(), "public", "data", "billboards.xml");
+    xml = await fs.readFile(fallbackPath, "utf8");
+  }
+
   return parseBillboardsXml(xml);
 }
 
 export default async function Page() {
   const carriers = await loadCarriers();
-  return <CarriersPage carriers={carriers} />;
+  return (
+    <ThemeProvider>
+      <CarriersPage carriers={carriers} />
+    </ThemeProvider>
+  );
 }
