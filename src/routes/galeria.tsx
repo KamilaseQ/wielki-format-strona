@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
@@ -73,17 +72,21 @@ export default function GaleriaPage({ items }: GaleriaPageProps) {
                 <button
                   type="button"
                   onClick={() => setLightboxIndex(i)}
-                  className="group relative block w-full overflow-hidden rounded-2xl bg-card/40 border border-border/40 aspect-[4/3] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 hover:border-primary/30 transition-colors"
+                  className="group relative block w-full overflow-hidden rounded-2xl bg-card/40 border border-border/40 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 hover:border-primary/30 transition-colors"
+                  style={{ aspectRatio: "4 / 3" }}
                   aria-label={`Powiększ zdjęcie: ${item.title}`}
                 >
-                  <Image
+                  {/* Plain <img> on purpose: iOS Chrome/Safari had issues with
+                      next/image optimizer on URLs containing encoded spaces/commas
+                      from the /public/z filenames. Native lazy-loading + explicit
+                      aspect-ratio is the most boring, reliable path. */}
+                  <img
                     src={item.src}
                     alt={`Realizacja nośnika reklamowego: ${item.title}`}
-                    fill
-                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                     loading={i < 3 ? "eager" : "lazy"}
+                    decoding="async"
                     fetchPriority={i < 3 ? "high" : "auto"}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                   />
                 </button>
                 <figcaption className="mt-3 px-1">
@@ -200,14 +203,15 @@ export default function GaleriaPage({ items }: GaleriaPageProps) {
               className="relative w-full max-w-6xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-black">
-                <Image
+              <div
+                className="relative w-full rounded-xl overflow-hidden bg-black"
+                style={{ aspectRatio: "16 / 10" }}
+              >
+                <img
                   src={items[lightboxIndex].src}
                   alt={items[lightboxIndex].title}
-                  fill
-                  sizes="100vw"
-                  className="object-contain"
-                  priority
+                  decoding="async"
+                  className="absolute inset-0 w-full h-full object-contain"
                 />
               </div>
               <div className="mt-3 text-center">
