@@ -261,19 +261,34 @@ function EditorialStats() {
                   ref={maskRef}
                   className="relative inline-block overflow-visible pr-2 pb-[0.14em] md:pb-[0.18em]"
                 >
+                  {/* Desktop only: separate blurred glow layer + scroll-driven clip-path mask.
+                      On mobile, iOS Safari clamps negative clip-path insets and composites
+                      the blur layer separately, which produces a square halo and a ghost
+                      shadow that lags behind the number on scroll. */}
                   <motion.div
                     aria-hidden="true"
-                    className="pointer-events-none absolute left-0 top-0 whitespace-nowrap font-heading font-black text-[80px] md:text-[110px] lg:text-[130px] leading-[0.92] tabular-nums text-primary/85 blur-[18px] md:blur-[22px]"
+                    className="hidden md:block pointer-events-none absolute left-0 top-0 whitespace-nowrap font-heading font-black text-[110px] lg:text-[130px] leading-[0.92] tabular-nums text-primary/85 blur-[22px]"
                     style={{ clipPath: blurClipPath, transform: "translateY(0.06em)" }}
                   >
                     {c1.count}+
                   </motion.div>
                   <motion.div
-                    className="relative whitespace-nowrap font-heading font-black text-[80px] md:text-[110px] lg:text-[130px] leading-[0.92] text-gradient-brand-bright tabular-nums"
+                    className="hidden md:block relative whitespace-nowrap font-heading font-black text-[110px] lg:text-[130px] leading-[0.92] text-gradient-brand-bright tabular-nums"
                     style={{ clipPath }}
                   >
                     {c1.count}+
                   </motion.div>
+                  {/* Mobile: single rasterized layer, text-shadow gives a soft glow
+                      that scrolls with the text without compositor lag. */}
+                  <div
+                    className="md:hidden whitespace-nowrap font-heading font-black text-[80px] leading-[0.92] text-gradient-brand-bright tabular-nums"
+                    style={{
+                      textShadow:
+                        "0 0 24px rgba(220,38,38,0.45), 0 0 48px rgba(220,38,38,0.25)",
+                    }}
+                  >
+                    {c1.count}+
+                  </div>
                 </div>
                 <div className="mt-2 text-lg font-heading font-semibold text-foreground">kampanii rocznie</div>
                 <p className="mt-2 text-base text-muted-foreground max-w-sm leading-relaxed">Każda zakończona dokumentacją fotograficzną. Każda zrealizowana na czas.</p>

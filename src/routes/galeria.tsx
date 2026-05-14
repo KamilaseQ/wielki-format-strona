@@ -69,35 +69,34 @@ export default function GaleriaPage({ items }: GaleriaPageProps) {
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {visibleItems.map((item, i) => (
-              <Reveal key={item.src} delay={(i % 6) * 0.05} from="bottom">
-                <figure className="flex flex-col">
-                  <button
-                    type="button"
-                    onClick={() => setLightboxIndex(i)}
-                    className="group relative block w-full overflow-hidden rounded-2xl bg-card/40 border border-border/40 aspect-[4/3] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 hover:border-primary/30 transition-colors"
-                    aria-label={`Powiększ zdjęcie: ${item.title}`}
-                  >
-                    <Image
-                      src={item.src}
-                      alt={`Realizacja nośnika reklamowego: ${item.title}`}
-                      fill
-                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                      className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                      loading={i < 6 ? "eager" : "lazy"}
-                    />
-                  </button>
-                  <figcaption className="mt-3 px-1">
-                    <p className="font-heading font-bold text-sm md:text-base text-foreground leading-snug">
-                      {item.title}
+              <figure key={item.src} className="flex flex-col">
+                <button
+                  type="button"
+                  onClick={() => setLightboxIndex(i)}
+                  className="group relative block w-full overflow-hidden rounded-2xl bg-card/40 border border-border/40 aspect-[4/3] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 hover:border-primary/30 transition-colors"
+                  aria-label={`Powiększ zdjęcie: ${item.title}`}
+                >
+                  <Image
+                    src={item.src}
+                    alt={`Realizacja nośnika reklamowego: ${item.title}`}
+                    fill
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                    loading={i < 3 ? "eager" : "lazy"}
+                    fetchPriority={i < 3 ? "high" : "auto"}
+                  />
+                </button>
+                <figcaption className="mt-3 px-1">
+                  <p className="font-heading font-bold text-sm md:text-base text-foreground leading-snug">
+                    {item.title}
+                  </p>
+                  {item.location && (
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {item.location}
                     </p>
-                    {item.location && (
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {item.location}
-                      </p>
-                    )}
-                  </figcaption>
-                </figure>
-              </Reveal>
+                  )}
+                </figcaption>
+              </figure>
             ))}
           </div>
 
