@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Polityka prywatności",
   description:
-    "Polityka prywatności serwisu wielkiformat.pl. Informacje o przetwarzaniu danych osobowych zgodnie z RODO.",
+    "Polityka prywatności serwisu Wielkiformat.pl. Informacje o przetwarzaniu danych osobowych zgodnie z RODO.",
   alternates: {
     canonical: "https://wielkiformat.pl/polityka-prywatnosci",
   },

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description:
     "Nasze realizacje - billboardy, citylighty i powierzchnie wielkoformatowe w Warszawie i na Mazowszu. Zobacz przykładowe nośniki reklamowe z naszego portfolio.",
   openGraph: {
-    title: "Galeria realizacji - wielkiformat.pl",
+    title: "Galeria realizacji - Wielkiformat.pl",
     description:
       "Zrealizowane kampanie i nośniki reklamowe w województwie mazowieckim.",
   },

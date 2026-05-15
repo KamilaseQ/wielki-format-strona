@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     "wynajem billboardów mazowieckie",
   ],
   openGraph: {
-    title: "Mapa nośników reklamowych - wielkiformat.pl",
+    title: "Mapa nośników reklamowych - Wielkiformat.pl",
     description:
       "Interaktywna mapa nośników billboardowych w województwie mazowieckim.",
     url: "https://wielkiformat.pl/nosniki",

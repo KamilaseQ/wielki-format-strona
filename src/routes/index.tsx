@@ -472,14 +472,14 @@ function TestimonialsSection() {
       name: "Anna Kowalska",
       role: "Marketing Director",
       company: "Sieć handlowa",
-      text: "Współpracujemy z wielkiformat.pl od 5 lat. Profesjonalizm, terminowość i jakość druku na najwyższym poziomie. Kampania na 120 nośnikach na Mazowszu została zrealizowana bez jednego opóźnienia.",
+      text: "Współpracujemy z Wielkiformat.pl od 5 lat. Profesjonalizm, terminowość i jakość druku na najwyższym poziomie. Kampania na 120 nośnikach na Mazowszu została zrealizowana bez jednego opóźnienia.",
       rating: 5,
     },
     {
       name: "Marcin Nowak",
       role: "Brand Manager",
       company: "Operator telekomunikacyjny",
-      text: "Wybraliśmy wielkiformat.pl ze względu na zasięg i kompleksowość obsługi. Jeden partner do druku, montażu i dokumentacji - to oszczędność czasu i nerwów. Polecam każdemu, kto planuje kampanię outdoor.",
+      text: "Wybraliśmy Wielkiformat.pl ze względu na zasięg i kompleksowość obsługi. Jeden partner do druku, montażu i dokumentacji - to oszczędność czasu i nerwów. Polecam każdemu, kto planuje kampanię outdoor.",
       rating: 5,
     },
     {
@@ -925,7 +925,7 @@ function CTASection() {
           <h2 className="font-heading font-black text-3xl md:text-5xl lg:text-6xl text-foreground mb-6 leading-[1.15] tracking-tight px-2">
             Gotowy na{" "}
             <span className="text-gradient-brand-bright text-glow-red relative inline-block pr-2 pb-2 align-baseline">
-              wielki format
+              Wielki Format
               <motion.span className="absolute bottom-0 left-2 right-2 h-0.5 bg-gradient-brand-warm rounded-full"
                 initial={{ width: 0 }} whileInView={{ width: "calc(100% - 1rem)" }} viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.3, ease }} />

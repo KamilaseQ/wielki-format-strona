@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     canonical: "https://wielkiformat.pl/druk-i-montaz-reklamy",
   },
   openGraph: {
-    title: "Druk i montaż reklamy wielkoformatowej | wielkiformat.pl",
+    title: "Druk i montaż reklamy wielkoformatowej | Wielkiformat.pl",
     description:
       "Druk wielkoformatowy oraz montaż billboardów, banerów i mesh na Mazowszu.",
     url: "https://wielkiformat.pl/druk-i-montaz-reklamy",

@@ -42,7 +42,7 @@ export function Footer() {
                 </span>
               </div>
               <span className="font-heading font-bold text-xl text-foreground group-hover:text-primary transition-colors">
-                wielkiformat<span className="text-primary">.pl</span>
+                Wielkiformat<span className="text-primary">.pl</span>
               </span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed mb-5 max-w-xs">

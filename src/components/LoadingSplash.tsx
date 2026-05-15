@@ -47,7 +47,7 @@ export function LoadingSplash() {
               className="text-center"
             >
               <div className="font-heading font-bold text-lg text-foreground">
-                wielkiformat<span className="text-primary">.pl</span>
+                Wielkiformat<span className="text-primary">.pl</span>
               </div>
               <div className="text-xs text-muted-foreground/40 mt-1 tracking-[0.15em] uppercase font-heading">
                 Reklama wielkoformatowa

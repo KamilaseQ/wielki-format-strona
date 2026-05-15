@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     canonical: "https://wielkiformat.pl/cennik",
   },
   openGraph: {
-    title: "Cennik billboardów | wielkiformat.pl",
+    title: "Cennik billboardów | Wielkiformat.pl",
     description:
       "Orientacyjne ceny wynajmu billboardów na Mazowszu i czynniki wpływające na koszt kampanii outdoorowej.",
     url: "https://wielkiformat.pl/cennik",

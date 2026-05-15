@@ -28,12 +28,12 @@ const dmSerifDisplay = DM_Serif_Display({
 export const metadata: Metadata = {
   metadataBase: new URL("https://wielkiformat.pl"),
   title: {
-    default: "wielkiformat.pl | Reklama wielkoformatowa i billboardy",
-    template: "%s | wielkiformat.pl",
+    default: "Wielkiformat.pl | Reklama wielkoformatowa i billboardy",
+    template: "%s | Wielkiformat.pl",
   },
   description:
     "Billboardy i reklama wielkoformatowa na terenie województwa mazowieckiego. Działamy od 1998 roku, szybka wycena i kompleksowa obsługa kampanii.",
-  applicationName: "wielkiformat.pl",
+  applicationName: "Wielkiformat.pl",
   keywords: [
     "billboardy",
     "reklama wielkoformatowa",
@@ -52,8 +52,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pl_PL",
     url: "https://wielkiformat.pl",
-    siteName: "wielkiformat.pl",
-    title: "wielkiformat.pl | Reklama wielkoformatowa i billboardy",
+    siteName: "Wielkiformat.pl",
+    title: "Wielkiformat.pl | Reklama wielkoformatowa i billboardy",
     description:
       "Billboardy i reklama wielkoformatowa w województwie mazowieckim. Działamy od 1998 roku i kompleksowo obsługujemy kampanie.",
     images: [
@@ -61,13 +61,13 @@ export const metadata: Metadata = {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "wielkiformat.pl - Reklama wielkoformatowa i billboardy w województwie mazowieckim",
+        alt: "Wielkiformat.pl - Reklama wielkoformatowa i billboardy w województwie mazowieckim",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "wielkiformat.pl | Reklama wielkoformatowa i billboardy",
+    title: "Wielkiformat.pl | Reklama wielkoformatowa i billboardy",
     description:
       "Billboardy i reklama wielkoformatowa w województwie mazowieckim. Działamy od 1998 roku i kompleksowo obsługujemy kampanie.",
     images: ["/og-image.jpg"],
@@ -82,7 +82,7 @@ const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "Billboard Sp. z o.o.",
-  alternateName: "wielkiformat.pl",
+  alternateName: "Wielkiformat.pl",
   url: "https://wielkiformat.pl",
   telephone: COMPANY_PHONE_E164,
   email: "info@wielkiformat.pl",
@@ -105,7 +105,7 @@ const localBusinessJsonLd = {
   "@type": "LocalBusiness",
   "@id": "https://wielkiformat.pl/#business",
   name: "Billboard Sp. z o.o.",
-  alternateName: "wielkiformat.pl",
+  alternateName: "Wielkiformat.pl",
   url: "https://wielkiformat.pl",
   telephone: COMPANY_PHONE_E164,
   email: "info@wielkiformat.pl",
@@ -142,7 +142,7 @@ const websiteJsonLd = {
   "@type": "WebSite",
   "@id": "https://wielkiformat.pl/#website",
   url: "https://wielkiformat.pl",
-  name: "wielkiformat.pl",
+  name: "Wielkiformat.pl",
   inLanguage: "pl-PL",
   publisher: { "@id": "https://wielkiformat.pl/#business" },
 };

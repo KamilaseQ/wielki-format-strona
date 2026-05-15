@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     canonical: "https://wielkiformat.pl/dla-grafikow",
   },
   openGraph: {
-    title: "Specyfikacja plików dla grafików | wielkiformat.pl",
+    title: "Specyfikacja plików dla grafików | Wielkiformat.pl",
     description:
       "Wymagania techniczne plików do druku billboardów i reklam wielkoformatowych.",
     url: "https://wielkiformat.pl/dla-grafikow",

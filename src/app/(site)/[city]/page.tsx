@@ -31,7 +31,7 @@ export async function generateMetadata({
       canonical: `https://wielkiformat.pl/${data.slug}`,
     },
     openGraph: {
-      title: `${title} | wielkiformat.pl`,
+      title: `${title} | Wielkiformat.pl`,
       description,
       url: `https://wielkiformat.pl/${data.slug}`,
       type: "website",

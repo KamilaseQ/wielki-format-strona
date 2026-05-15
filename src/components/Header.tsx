@@ -69,10 +69,10 @@ export function Header() {
           <Link
             href="/"
             className="flex items-center group"
-            aria-label="wielkiformat.pl - Strona główna"
+            aria-label="Wielkiformat.pl - Strona główna"
           >
             <span className="font-heading font-bold text-lg text-foreground group-hover:text-primary transition-colors">
-              wielkiformat<span className="text-primary">.pl</span>
+              Wielkiformat<span className="text-primary">.pl</span>
             </span>
           </Link>
 

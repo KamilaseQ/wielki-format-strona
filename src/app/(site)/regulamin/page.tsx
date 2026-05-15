@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Regulamin serwisu",
   description:
-    "Regulamin korzystania z serwisu wielkiformat.pl oraz ogólne warunki świadczenia usług.",
+    "Regulamin korzystania z serwisu Wielkiformat.pl oraz ogólne warunki świadczenia usług.",
   alternates: {
     canonical: "https://wielkiformat.pl/regulamin",
   },
@@ -38,7 +38,7 @@ export default function RegulaminPage() {
             Niniejszy regulamin określa zasady korzystania z serwisu internetowego
             dostępnego pod adresem{" "}
             <a href="https://wielkiformat.pl" className="text-primary hover:underline">
-              wielkiformat.pl
+              Wielkiformat.pl
             </a>
             , prowadzonego przez <strong>Billboard Sp. z o.o.</strong>, z siedzibą
             przy Al. Marszałka Józefa Piłsudskiego 55A, 05-270 Marki (dalej:

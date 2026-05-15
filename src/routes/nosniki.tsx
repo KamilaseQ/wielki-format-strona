@@ -183,7 +183,7 @@ export default function CarriersPage() {
         <Link
           href="/"
           className="flex items-center shrink-0 mr-2"
-          aria-label="wielkiformat.pl - Strona główna"
+          aria-label="Wielkiformat.pl - Strona główna"
         >
           <span className="font-heading font-bold text-sm text-foreground hidden md:block">
             Mapa nośników
