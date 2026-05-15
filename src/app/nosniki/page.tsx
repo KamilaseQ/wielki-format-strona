@@ -44,7 +44,27 @@ async function loadCarriers(): Promise<Carrier[]> {
     xml = await fs.readFile(fallbackPath, "utf8");
   }
 
-  return parseBillboardsXml(xml);
+  const carriers = parseBillboardsXml(xml);
+
+  return Promise.all(
+    carriers.map(async (carrier) => {
+      if (!carrier.image || /^(https?:|data:|blob:)/i.test(carrier.image)) {
+        return carrier;
+      }
+
+      const relativeImagePath = carrier.image
+        .replace(/^\/+/, "")
+        .replace(/^public[\\/]/, "");
+      const imagePath = path.join(process.cwd(), "public", relativeImagePath);
+
+      try {
+        await fs.access(imagePath);
+        return carrier;
+      } catch {
+        return { ...carrier, image: null };
+      }
+    })
+  );
 }
 
 const breadcrumbJsonLd = {

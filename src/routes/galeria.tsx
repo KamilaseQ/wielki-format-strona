@@ -78,7 +78,7 @@ export default function GaleriaPage({ items }: GaleriaPageProps) {
                 >
                   {/* Plain <img> on purpose: iOS Chrome/Safari had issues with
                       next/image optimizer on URLs containing encoded spaces/commas
-                      from the /public/z filenames. Native lazy-loading + explicit
+                      from the /public/Z filenames. Native lazy-loading + explicit
                       aspect-ratio is the most boring, reliable path. */}
                   <img
                     src={item.src}

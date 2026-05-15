@@ -211,7 +211,7 @@ function BrandTicker() {
         <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground/80 font-heading">Zaufali nam</p>
         <div className="h-px w-10 bg-gradient-to-l from-transparent to-primary/20" />
       </div>
-      <div className="relative">
+      <div className="relative overflow-hidden">
         <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
         <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
         {/* Point 32: accessible hidden brand list for screen readers */}

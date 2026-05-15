@@ -187,6 +187,7 @@
 
   html {
     scroll-behavior: auto; /* Lenis handles smooth scroll */
+    overflow-x: hidden;
   }
 
   body {
@@ -300,7 +301,6 @@
     background-position: center;
     opacity: 0.55;
     filter: blur(28px);
-    transform: scale(1.04);
     pointer-events: none;
   }
   .light .bg-noise {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "motion/react";
 import { Send, CheckCircle, AlertCircle, Shield, Clock } from "lucide-react";
@@ -185,7 +186,7 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
         />
         <span>
           Wyrażam zgodę na przetwarzanie podanych danych przez Billboard Sp. z o.o. w celu odpowiedzi na zapytanie. Administratorem danych jest Billboard Sp. z o.o. z siedzibą w Markach. Więcej w{" "}
-          <a href="/polityka-prywatnosci" className="underline hover:text-primary">polityce prywatności</a>.
+          <Link href="/polityka-prywatnosci" className="underline hover:text-primary">polityce prywatności</Link>.
         </span>
       </label>
 

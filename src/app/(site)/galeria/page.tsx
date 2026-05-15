@@ -18,6 +18,7 @@ export const metadata: Metadata = {
 };
 
 const EXCLUDED = new Set(["billboardy.jpg", "montaz.jpg", "z nosnikiem.jpg"]);
+const GALLERY_PUBLIC_DIR = "Z";
 
 function titleFromFilename(name: string): { title: string; location?: string } {
   const base = name.replace(/\.[^.]+$/, "").trim();
@@ -35,7 +36,7 @@ function titleFromFilename(name: string): { title: string; location?: string } {
 }
 
 async function loadGallery(): Promise<GalleryItem[]> {
-  const dir = path.join(process.cwd(), "public", "z");
+  const dir = path.join(process.cwd(), "public", GALLERY_PUBLIC_DIR);
   let entries: string[] = [];
   try {
     entries = await fs.readdir(dir);
@@ -50,7 +51,7 @@ async function loadGallery(): Promise<GalleryItem[]> {
     .map((name) => {
       const { title, location } = titleFromFilename(name);
       return {
-        src: `/z/${encodeURIComponent(name)}`,
+        src: `/${GALLERY_PUBLIC_DIR}/${encodeURIComponent(name)}`,
         title,
         location,
       };
