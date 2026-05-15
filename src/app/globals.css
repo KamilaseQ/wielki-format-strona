@@ -187,7 +187,7 @@
 
   html {
     scroll-behavior: auto; /* Lenis handles smooth scroll */
-    overflow-x: hidden;
+    overflow-x: visible;
   }
 
   body {

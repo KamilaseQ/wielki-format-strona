@@ -460,7 +460,7 @@ function TestimonialParallaxCard({ children, offset }: { children: React.ReactNo
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [offset, -offset]);
   return (
-    <motion.div ref={ref} style={{ y }}>
+    <motion.div ref={ref} className="relative" style={{ y }}>
       {children}
     </motion.div>
   );
@@ -578,7 +578,6 @@ function ClientShowcase() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end end"] });
   const x = useTransform(scrollYProgress, [0.05, 0.95], ["0%", "-65%"]);
-  const sectionY = useTransform(scrollYProgress, [0, 1], [0, -50]);
 
   return (
     <>
@@ -614,7 +613,7 @@ function ClientShowcase() {
                       alt={`Logo marki: ${c.name}`}
                       width={240}
                       height={140}
-                      className="object-contain max-w-[80%] max-h-[80%] transition-all duration-700 group-hover:scale-[1.06]"
+                      className="w-auto h-auto object-contain max-w-[80%] max-h-[80%] transition-all duration-700 group-hover:scale-[1.06]"
                       loading="lazy"
                     />
                   </div>
@@ -639,13 +638,13 @@ function ClientShowcase() {
         </div>
       </section>
 
-      {/* Desktop: Horizontal scroll with slow vertical drift */}
-      <div ref={sectionRef} className="hidden lg:block relative" style={{ height: "280vh" }} aria-label="Realizacje dla klientów">
+      {/* Desktop: scroll-driven horizontal gallery */}
+      <div ref={sectionRef} className="hidden lg:block relative" style={{ height: "400vh" }} aria-label="Realizacje dla klientów">
         <div className="sticky top-0 h-screen overflow-hidden">
           <div className="absolute inset-0 bg-background" />
           <div className="absolute inset-0 bg-surface/20" />
           <div className="absolute inset-0 bg-noise" />
-          <motion.div className="relative z-10" style={{ y: sectionY }}>
+          <div className="relative z-10">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16">
               <div className="grid grid-cols-12 gap-6 mb-10">
                 <div className="col-span-7">
@@ -666,15 +665,14 @@ function ClientShowcase() {
                 </div>
               </div>
             </div>
-            {/* Scrolling cards row - pushed up to leave more space at bottom */}
-            <div className="flex items-start pt-16" style={{ height: "calc(100vh - 280px)" }}>
-              <motion.div className="flex gap-6 pl-[5vw]" style={{ x }}>
-                {clients.map((c, i) => (
+            <div className="flex items-center overflow-visible" style={{ height: "calc(100vh - 280px)" }}>
+              <motion.div className="flex gap-6 pl-[5vw] will-change-transform" style={{ x }}>
+                {clients.map((c) => (
                   <motion.div
                     key={c.name}
-                    className="group relative rounded-2xl glass-card overflow-hidden cursor-pointer shrink-0 w-[280px] aspect-[4/3] lg:w-[360px] lg:aspect-[4/3]"
-                    whileHover={{ y: -4 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                    className="group relative rounded-2xl glass-card overflow-hidden cursor-pointer shrink-0 w-[460px] aspect-[4/3]"
+                    whileHover={{ y: -8, scale: 1.01 }}
+                    transition={{ type: "spring", stiffness: 280, damping: 26 }}
                   >
                     <div className="absolute inset-3 bottom-10 rounded-xl client-logo-plate z-10" aria-hidden="true" />
                     <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.06] via-transparent to-primary/[0.04] opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-15" />
@@ -684,7 +682,7 @@ function ClientShowcase() {
                         alt={`Logo marki: ${c.name}`}
                         width={240}
                         height={140}
-                        className="object-contain max-w-[80%] max-h-[80%] transition-all duration-700 group-hover:scale-[1.06]"
+                        className="w-auto h-auto object-contain max-w-[80%] max-h-[80%] transition-all duration-700 group-hover:scale-[1.06]"
                         loading="lazy"
                       />
                     </div>
@@ -695,12 +693,12 @@ function ClientShowcase() {
                   </motion.div>
                 ))}
                 {/* End CTA card */}
-                <div className="shrink-0 w-[280px] aspect-[4/3] lg:w-[360px] lg:aspect-[4/3] rounded-2xl glass-card flex flex-col items-center justify-center text-center p-6">
-                  <div className="w-11 h-11 rounded-xl bg-primary/8 border border-primary/15 flex items-center justify-center mb-4">
-                    <ArrowRight className="w-5 h-5 text-primary" />
+                <div className="shrink-0 w-[480px] aspect-[4/3] rounded-2xl glass-card flex flex-col items-center justify-center text-center p-8">
+                  <div className="w-14 h-14 rounded-2xl bg-primary/8 border border-primary/15 flex items-center justify-center mb-5">
+                    <ArrowRight className="w-6 h-6 text-primary" />
                   </div>
-                  <h3 className="font-heading font-bold text-lg text-foreground mb-1.5">Twoja kampania</h3>
-                  <p className="text-sm text-muted-foreground mb-4">Porozmawiajmy o Twoich celach.</p>
+                  <h3 className="font-heading font-bold text-xl text-foreground mb-2">Twoja kampania</h3>
+                  <p className="text-sm text-muted-foreground mb-6">Porozmawiajmy o Twoich celach.</p>
                   <Link href="/kontakt">
                     <Button variant="cta" className="group min-h-[44px] px-5">
                       Wyślij zapytanie <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -710,7 +708,7 @@ function ClientShowcase() {
                 <div className="shrink-0 w-[5vw]" />
               </motion.div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </>
