@@ -10,6 +10,7 @@ import {
   COMPANY_PHONE_TEL,
 } from "@/lib/contact";
 import { cities } from "@/lib/cities";
+import { isNavHidden } from "@/lib/nav-visibility";
 
 export function Footer() {
   const footerRef = useRef<HTMLElement>(null);
@@ -74,6 +75,7 @@ export function Footer() {
               Nawigacja
             </h4>
             <ul className="space-y-2.5">
+              {/* Widoczność kontrolowana w src/lib/nav-visibility.ts */}
               {[
                 { href: "/o-nas", label: "O nas" },
                 { href: "/nosniki", label: "Nośniki i mapa" },
@@ -81,7 +83,7 @@ export function Footer() {
                 { href: "/obsluga-kampanii", label: "Obsługa kampanii" },
                 { href: "/galeria", label: "Galeria" },
                 { href: "/kontakt", label: "Kontakt" },
-              ].map((l) => (
+              ].filter((l) => !isNavHidden(l.href)).map((l) => (
                 <li key={l.href}>
                   <Link
                     href={l.href}

@@ -12,8 +12,10 @@ import {
   COMPANY_PHONE_DISPLAY,
   COMPANY_PHONE_TEL,
 } from "@/lib/contact";
+import { isNavHidden } from "@/lib/nav-visibility";
 
-const navLinks = [
+// Widoczność poszczególnych pozycji kontrolowana jest w src/lib/nav-visibility.ts
+const allNavLinks = [
   { href: "/", label: "Strona główna" },
   { href: "/o-nas", label: "O nas" },
   { href: "/nosniki", label: "Nośniki i mapa" },
@@ -22,6 +24,8 @@ const navLinks = [
   { href: "/galeria", label: "Galeria" },
   { href: "/kontakt", label: "Kontakt" },
 ] as const;
+
+const navLinks = allNavLinks.filter((l) => !isNavHidden(l.href));
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
