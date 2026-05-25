@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { TemporarySectionNotice } from "@/components/TemporarySectionNotice";
+import { SHOW_REAL_GALLERY_PAGE } from "@/lib/publication-flags";
 import GaleriaPage, { type GalleryItem } from "@/routes/galeria";
 
-export const metadata: Metadata = {
+const realMetadata: Metadata = {
   title: "Galeria realizacji - billboardy i nośniki reklamowe",
   description:
     "Nasze realizacje - billboardy, citylighty i powierzchnie wielkoformatowe w Warszawie i na Mazowszu. Zobacz przykładowe nośniki reklamowe z naszego portfolio.",
@@ -16,6 +18,29 @@ export const metadata: Metadata = {
     canonical: "https://wielkiformat.pl/galeria",
   },
 };
+
+const temporaryMetadata: Metadata = {
+  title: "Galeria realizacji w aktualizacji",
+  description:
+    "Aktualizujemy galerię realizacji Wielkiformat.pl. W sprawie przykładów realizacji i doboru nośników skontaktuj się z naszym zespołem.",
+  alternates: {
+    canonical: "https://wielkiformat.pl/galeria",
+  },
+  robots: {
+    index: false,
+    follow: true,
+  },
+  openGraph: {
+    title: "Galeria realizacji w aktualizacji - Wielkiformat.pl",
+    description:
+      "Aktualizujemy galerię realizacji. W sprawie przykładów kampanii skontaktuj się z naszym zespołem.",
+    url: "https://wielkiformat.pl/galeria",
+  },
+};
+
+export const metadata: Metadata = SHOW_REAL_GALLERY_PAGE
+  ? realMetadata
+  : temporaryMetadata;
 
 const EXCLUDED = new Set(["billboardy.jpg", "montaz.jpg", "z nosnikiem.jpg"]);
 const GALLERY_PUBLIC_DIR = "Z";
@@ -68,6 +93,37 @@ const breadcrumbJsonLd = {
 };
 
 export default async function Page() {
+  if (!SHOW_REAL_GALLERY_PAGE) {
+    return (
+      <TemporarySectionNotice
+        eyebrow="Galeria realizacji"
+        title="Odświeżamy portfolio realizacji."
+        description="Aktualizujemy zdjęcia nośników i opisy kampanii, żeby galeria pokazywała aktualne, sprawdzone przykłady. Jeśli potrzebujesz referencji do briefu, dobierzemy je bezpośrednio pod branżę i lokalizację."
+        note="To jest tymczasowy widok. Dotychczasowa galeria nadal jest w kodzie i wróci po ustawieniu flagi SHOW_REAL_GALLERY_PAGE=true."
+        links={[
+          {
+            href: "/druk-i-montaz-reklamy",
+            title: "Druk i montaż",
+            description:
+              "Zobacz, jak prowadzimy produkcję, montaż i dokumentację kampanii.",
+          },
+          {
+            href: "/obsluga-kampanii",
+            title: "Obsługa kampanii",
+            description:
+              "Proces od briefu i projektu po montaż, kontrolę oraz raport zdjęciowy.",
+          },
+          {
+            href: "/kontakt",
+            title: "Kontakt",
+            description:
+              "Poproś o przykłady realizacji dopasowane do Twojej kampanii.",
+          },
+        ]}
+      />
+    );
+  }
+
   const items = await loadGallery();
   return (
     <>

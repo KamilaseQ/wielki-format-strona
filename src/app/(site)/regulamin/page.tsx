@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BookOpen, Download, ExternalLink, FileText } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+const OWU_PDF_PATH = "/documents/owu-2024-02-08.pdf";
 
 export const metadata: Metadata = {
-  title: "Regulamin serwisu",
+  title: "Ogólne Warunki Umowy",
   description:
-    "Regulamin korzystania z serwisu Wielkiformat.pl oraz ogólne warunki świadczenia usług.",
+    "Ogólne Warunki Umowy Billboard Sp. z o.o. do otwarcia lub pobrania w formacie PDF.",
   alternates: {
     canonical: "https://wielkiformat.pl/regulamin",
   },
@@ -16,136 +20,155 @@ export const metadata: Metadata = {
 
 export default function RegulaminPage() {
   return (
-    <section className="relative py-20 md:py-28 overflow-hidden">
+    <section className="relative overflow-hidden py-20 md:py-28">
       <div className="absolute inset-0 bg-noise" />
-      <div className="relative mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-primary text-[11px] font-semibold tracking-[0.2em] uppercase mb-6">
-          Dokumenty
-        </span>
-        <h1 className="font-heading font-black text-4xl md:text-5xl text-foreground leading-tight mb-8">
-          Regulamin serwisu
-        </h1>
-
-        <div className="prose prose-invert max-w-none space-y-6 text-muted-foreground leading-relaxed">
-          <p className="text-sm">
-            Data ostatniej aktualizacji: 14 maja 2026 r.
-          </p>
-
-          <h2 className="font-heading text-2xl text-foreground mt-10">
-            §1. Postanowienia ogólne
-          </h2>
-          <p>
-            Niniejszy regulamin określa zasady korzystania z serwisu internetowego
-            dostępnego pod adresem{" "}
-            <a href="https://wielkiformat.pl" className="text-primary hover:underline">
-              Wielkiformat.pl
-            </a>
-            , prowadzonego przez <strong>Billboard Sp. z o.o.</strong>, z siedzibą
-            przy Al. Marszałka Józefa Piłsudskiego 55A, 05-270 Marki (dalej:
-            "Usługodawca").
-          </p>
-
-          <h2 className="font-heading text-2xl text-foreground mt-10">
-            §2. Zakres usług
-          </h2>
-          <p>
-            Serwis stanowi prezentację oferty Usługodawcy w zakresie wynajmu
-            nośników reklamy wielkoformatowej (billboardów) oraz kompleksowej
-            obsługi kampanii reklamowych. Za pośrednictwem serwisu Użytkownik może:
-          </p>
-          <ul className="list-disc list-inside space-y-2">
-            <li>zapoznać się z ofertą i mapą nośników;</li>
-            <li>skontaktować się z Usługodawcą poprzez formularz kontaktowy;</li>
-            <li>poprosić o indywidualną wycenę kampanii.</li>
-          </ul>
-          <p>
-            Wypełnienie formularza kontaktowego nie stanowi oferty handlowej w
-            rozumieniu Kodeksu cywilnego. Warunki realizacji usługi każdorazowo
-            ustalane są w odrębnej umowie.
-          </p>
-
-          <h2 className="font-heading text-2xl text-foreground mt-10">
-            §3. Wymagania techniczne
-          </h2>
-          <p>
-            Do korzystania z serwisu wymagane jest urządzenie z dostępem do
-            Internetu oraz przeglądarka internetowa w aktualnej wersji
-            obsługująca JavaScript i pliki cookies.
-          </p>
-
-          <h2 className="font-heading text-2xl text-foreground mt-10">
-            §4. Zasady korzystania z serwisu
-          </h2>
-          <ul className="list-disc list-inside space-y-2">
-            <li>
-              Użytkownik zobowiązany jest do korzystania z serwisu zgodnie z jego
-              przeznaczeniem, przepisami prawa oraz dobrymi obyczajami.
-            </li>
-            <li>
-              Zabronione jest dostarczanie treści o charakterze bezprawnym,
-              w tym przesyłanie spamu, treści obraźliwych lub naruszających prawa
-              osób trzecich.
-            </li>
-            <li>
-              Usługodawca zastrzega sobie prawo do zablokowania dostępu do
-              formularza kontaktowego użytkownikom naruszającym regulamin
-              (m.in. poprzez rate limiting).
-            </li>
-          </ul>
-
-          <h2 className="font-heading text-2xl text-foreground mt-10">
-            §5. Prawa autorskie
-          </h2>
-          <p>
-            Wszelkie treści zamieszczone w serwisie (teksty, grafiki, zdjęcia,
-            logotypy, układ strony) podlegają ochronie prawnoautorskiej i stanowią
-            własność Usługodawcy lub są wykorzystywane na podstawie odpowiednich
-            licencji. Kopiowanie i wykorzystywanie tych treści bez zgody jest
-            zabronione.
-          </p>
-
-          <h2 className="font-heading text-2xl text-foreground mt-10">
-            §6. Reklamacje
-          </h2>
-          <p>
-            Reklamacje związane z funkcjonowaniem serwisu można zgłaszać na adres{" "}
-            <a
-              href="mailto:info@wielkiformat.pl"
-              className="text-primary hover:underline"
-            >
-              info@wielkiformat.pl
-            </a>
-            . Reklamacje rozpatrywane są w terminie 14 dni roboczych od ich
-            otrzymania.
-          </p>
-
-          <h2 className="font-heading text-2xl text-foreground mt-10">
-            §7. Dane osobowe
-          </h2>
-          <p>
-            Zasady przetwarzania danych osobowych opisane są w{" "}
-            <Link href="/polityka-prywatnosci" className="text-primary hover:underline">
-              Polityce prywatności
-            </Link>
-            .
-          </p>
-
-          <h2 className="font-heading text-2xl text-foreground mt-10">
-            §8. Postanowienia końcowe
-          </h2>
-          <p>
-            Usługodawca zastrzega sobie prawo do zmiany regulaminu z ważnych
-            powodów (m.in. zmiany przepisów prawa, zmiany zakresu usług). Aktualna
-            wersja regulaminu publikowana jest na tej stronie. W sprawach
-            nieuregulowanych mają zastosowanie przepisy prawa polskiego.
-          </p>
-
-          <p className="mt-12">
-            <Link href="/" className="text-primary hover:underline">
-              ← Powrót na stronę główną
-            </Link>
+      <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-10 max-w-3xl">
+          <span className="mb-6 inline-flex items-center gap-2 rounded-full glass px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-primary">
+            Dokument dla klientów
+          </span>
+          <h1 className="mb-5 font-heading text-4xl font-black leading-tight text-foreground md:text-5xl">
+            Ogólne Warunki Umowy
+          </h1>
+          <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
+            Aktualne OWU możesz otworzyć w przeglądarce albo pobrać jako plik
+            PDF. To dokument, do którego odsyłamy klientów przy ustalaniu
+            warunków współpracy.
           </p>
         </div>
+
+        <section id="owu" className="mb-14 scroll-mt-24">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
+            <div className="overflow-hidden rounded-lg border border-primary/35 bg-card/50 shadow-xl shadow-primary/5">
+              <div className="flex items-center gap-3 border-b border-border bg-secondary/30 px-4 py-3">
+                <FileText className="h-4 w-4 text-primary" />
+                <div>
+                  <p className="text-sm font-semibold text-foreground">
+                    OWU z dnia 08.02.2024 r.
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Format PDF, ok. 661 KB
+                  </p>
+                </div>
+              </div>
+              <iframe
+                src={OWU_PDF_PATH}
+                title="Podgląd Ogólnych Warunków Umowy"
+                className="h-[72vh] min-h-[560px] w-full bg-background"
+              />
+            </div>
+
+            <aside className="h-fit rounded-lg border border-primary/35 bg-card/50 p-5 shadow-lg shadow-primary/5">
+              <h2 className="mb-3 font-heading text-xl font-bold text-foreground">
+                Pobierz dokument
+              </h2>
+              <p className="mb-5 text-sm leading-relaxed text-muted-foreground">
+                Jeśli podgląd PDF nie wyświetla się w Twojej przeglądarce, użyj
+                bezpośredniego otwarcia lub pobierz plik.
+              </p>
+              <div className="flex flex-col gap-3">
+                <Button asChild variant="cta" className="w-full">
+                  <a href={OWU_PDF_PATH} target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="h-4 w-4" />
+                    Otwórz OWU
+                  </a>
+                </Button>
+                <Button asChild variant="outline" className="w-full">
+                  <a href={OWU_PDF_PATH} download>
+                    <Download className="h-4 w-4" />
+                    Pobierz OWU
+                  </a>
+                </Button>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section
+          id="regulamin-serwisu"
+          className="scroll-mt-24 border-t border-border/40 pt-8"
+        >
+          <details className="group rounded-lg border border-border bg-card/30">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4">
+              <span className="flex items-center gap-3">
+                <BookOpen className="h-4 w-4 text-muted-foreground" />
+                <span>
+                  <span className="block font-heading text-base font-semibold text-foreground">
+                    Regulamin serwisu
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    Zasady korzystania ze strony internetowej
+                  </span>
+                </span>
+              </span>
+              <span className="text-sm text-muted-foreground transition-transform group-open:rotate-180">
+                ↓
+              </span>
+            </summary>
+
+            <div className="border-t border-border px-5 py-5 text-sm leading-relaxed text-muted-foreground">
+              <div className="space-y-5">
+                <div>
+                  <h2 className="mb-2 font-heading text-lg font-bold text-foreground">
+                    Charakter serwisu
+                  </h2>
+                  <p>
+                    Serwis ma charakter informacyjny i służy do prezentacji
+                    oferty oraz umożliwienia kontaktu z operatorem serwisu.
+                    Informacje opublikowane na stronie nie stanowią oferty w
+                    rozumieniu przepisów prawa cywilnego.
+                  </p>
+                </div>
+
+                <div>
+                  <h2 className="mb-2 font-heading text-lg font-bold text-foreground">
+                    Korzystanie ze strony
+                  </h2>
+                  <p>
+                    Użytkownik powinien korzystać z serwisu zgodnie z prawem,
+                    dobrymi obyczajami i jego przeznaczeniem. Zabronione jest
+                    dostarczanie treści bezprawnych, spamu oraz działań
+                    zakłócających prawidłowe funkcjonowanie strony.
+                  </p>
+                </div>
+
+                <div>
+                  <h2 className="mb-2 font-heading text-lg font-bold text-foreground">
+                    Treści i prawa
+                  </h2>
+                  <p>
+                    Materiały dostępne w serwisie podlegają ochronie prawnej.
+                    Ich kopiowanie lub wykorzystywanie poza dozwolonym użytkiem
+                    wymaga zgody uprawnionego podmiotu.
+                  </p>
+                </div>
+
+                <div>
+                  <h2 className="mb-2 font-heading text-lg font-bold text-foreground">
+                    Dane osobowe i kontakt
+                  </h2>
+                  <p>
+                    Zasady przetwarzania danych osobowych opisuje{" "}
+                    <Link
+                      href="/polityka-prywatnosci"
+                      className="text-primary hover:underline"
+                    >
+                      polityka prywatności
+                    </Link>
+                    . Uwagi dotyczące działania serwisu można kierować na adres{" "}
+                    <a
+                      href="mailto:info@wielkiformat.pl"
+                      className="text-primary hover:underline"
+                    >
+                      info@wielkiformat.pl
+                    </a>
+                    .
+                  </p>
+                </div>
+              </div>
+            </div>
+          </details>
+        </section>
       </div>
     </section>
   );

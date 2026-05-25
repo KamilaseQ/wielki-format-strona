@@ -224,7 +224,7 @@ export function Footer() {
               href="/regulamin"
               className="hover:text-foreground transition-colors"
             >
-              Regulamin
+              Regulamin i OWU
             </Link>
           </div>
         </div>
