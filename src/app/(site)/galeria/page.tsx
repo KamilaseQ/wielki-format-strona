@@ -99,7 +99,7 @@ export default async function Page() {
         eyebrow="Galeria realizacji"
         title="Odświeżamy portfolio realizacji."
         description="Aktualizujemy zdjęcia nośników i opisy kampanii, żeby galeria pokazywała aktualne, sprawdzone przykłady. Jeśli potrzebujesz referencji do briefu, dobierzemy je bezpośrednio pod branżę i lokalizację."
-        note="To jest tymczasowy widok. Dotychczasowa galeria nadal jest w kodzie i wróci po ustawieniu flagi SHOW_REAL_GALLERY_PAGE=true."
+        note="Do czasu zakończenia aktualizacji możemy wysłać przykłady realizacji dobrane pod branżę, format i planowany region kampanii."
         links={[
           {
             href: "/druk-i-montaz-reklamy",

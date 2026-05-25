@@ -39,18 +39,19 @@ export function TemporarySectionNotice({
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
             {description}
           </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link href="/">
-              <Button variant="hero" size="lg" className="min-h-[44px] glow-red">
-                <Home className="h-4 w-4" />
-                Strona główna
-              </Button>
-            </Link>
+          <div className="mt-8">
             <Link href="/kontakt">
-              <Button variant="heroOutline" size="lg" className="min-h-[44px]">
+              <Button variant="hero" size="lg" className="min-h-[44px] glow-red">
                 <Mail className="h-4 w-4" />
                 Zapytaj o wycenę
               </Button>
+            </Link>
+            <Link
+              href="/"
+              className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground transition-colors hover:text-primary"
+            >
+              <Home className="h-4 w-4" />
+              Wróć na stronę główną
             </Link>
           </div>
           <p className="mt-6 max-w-xl text-sm leading-relaxed text-muted-foreground/80">

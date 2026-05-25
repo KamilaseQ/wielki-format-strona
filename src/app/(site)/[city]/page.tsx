@@ -330,10 +330,10 @@ export default async function CityPage({
           </div>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
-              href="/nosniki"
+              href="/kontakt"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-border text-foreground font-semibold text-sm hover:bg-surface-elevated transition-colors"
             >
-              Zobacz mapę wszystkich nośników <ArrowRight className="w-4 h-4" />
+              Zapytaj o lokalizacje i wycenę <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               href="/cennik"

@@ -203,10 +203,10 @@ export default function CennikPage() {
               ))}
             </ul>
             <Link
-              href="/nosniki"
+              href="/kontakt"
               className="inline-flex items-center gap-2 text-primary font-semibold hover:underline"
             >
-              Zobacz mapę nośników <ArrowRight className="w-4 h-4" />
+              Poproś o wycenę kampanii <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
           <div>

@@ -141,22 +141,13 @@ function HeroSection() {
           <Reveal delay={0.24}>
             <div className="flex flex-col sm:flex-row gap-4">
               <MagneticButton>
-                {/* Point 41: CTA leads to /nosniki (map) - matches "Sprawdź dostępność" */}
-                <Link href="/nosniki">
+                <Link href="/kontakt">
                   <Button variant="hero" size="xl" className="group glow-red relative overflow-hidden">
                     <span className="relative z-10 flex items-center gap-2">
-                      Sprawdź dostępność nośników
+                      Otrzymaj wycenę kampanii
                       <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                     </span>
                     <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/8 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                  </Button>
-                </Link>
-              </MagneticButton>
-              <MagneticButton>
-                <Link href="/kontakt">
-                  <Button variant="heroOutline" size="xl" className="group">
-                    <Phone className="w-5 h-5" />
-                    Wyślij zapytanie
                   </Button>
                 </Link>
               </MagneticButton>
@@ -934,7 +925,7 @@ function CTASection() {
         </Reveal>
         <Reveal delay={0.2}>
           <p className="text-lg text-muted-foreground mb-10 max-w-xl mx-auto">
-            Sprawdź dostępność nośników i rozpocznijmy wycenę kampanii. Bez zobowiązań.
+            Opisz kampanię, a przygotujemy propozycję lokalizacji i wycenę. Bez zobowiązań.
           </p>
         </Reveal>
 

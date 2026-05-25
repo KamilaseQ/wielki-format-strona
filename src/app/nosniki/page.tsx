@@ -122,7 +122,7 @@ export default async function Page() {
           eyebrow="Mapa nośników"
           title="Aktualizujemy bazę lokalizacji."
           description="Porządkujemy dane o nośnikach, zdjęcia i dostępność kampanii, żeby mapa była użyteczna zamiast pokazywać wersję roboczą. W tym czasie dobierzemy lokalizacje bezpośrednio po krótkim briefie."
-          note="To jest tymczasowy widok. Realna mapa i katalog nośników nadal są w kodzie i wrócą po ustawieniu flagi SHOW_REAL_CARRIERS_PAGE=true."
+          note="Do czasu zakończenia aktualizacji najpewniejszą ścieżką jest krótka rozmowa z naszym zespołem. Dobierzemy lokalizacje pod zasięg, budżet i termin kampanii."
           links={[
             {
               href: "/wynajem",

@@ -128,18 +128,13 @@ export default function GaleriaPage({ items }: GaleriaPageProps) {
           <Reveal>
             <div className="text-center">
               <p className="text-muted-foreground mb-6">
-                Chcesz zobaczyć nośnik z bliska albo sprawdzić dostępność?
+                Chcesz zobaczyć podobne realizacje dla swojej kampanii?
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/nosniki">
-                  <Button variant="hero" size="lg" className="group glow-red min-h-[44px]">
-                    Mapa nośników
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
+              <div className="flex justify-center">
                 <Link href="/kontakt">
-                  <Button variant="heroOutline" size="lg" className="min-h-[44px]">
+                  <Button variant="hero" size="lg" className="group glow-red min-h-[44px]">
                     Zapytaj o wycenę
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
               </div>

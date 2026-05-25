@@ -43,7 +43,7 @@ export default function RentalPage() {
               </Reveal>
               <Reveal delay={0.16}>
                 <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                  Sprawdź dostępność nośników w interesującym Cię regionie. Wystarczy jedno zapytanie - resztą zajmiemy się my.
+                  Napisz, w jakim regionie chcesz prowadzić kampanię. Dobierzemy nośniki, termin i budżet w jednej konkretnej ofercie.
                 </p>
               </Reveal>
 
@@ -65,9 +65,9 @@ export default function RentalPage() {
               </div>
 
               <Reveal delay={0.3}>
-                <Link href="/nosniki">
-                  <Button variant="outline" size="lg" className="border-glow-hover group min-h-[44px]">
-                    <MapPin className="w-4 h-4" /> Sprawdź nośniki na mapie
+                <Link href="/kontakt">
+                  <Button variant="hero" size="lg" className="group glow-red min-h-[44px]">
+                    Otrzymaj wycenę billboardów
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>

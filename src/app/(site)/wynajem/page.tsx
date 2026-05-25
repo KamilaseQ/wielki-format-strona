@@ -5,7 +5,7 @@ import { cities } from "@/lib/cities";
 export const metadata: Metadata = {
   title: "Wynajem billboardów",
   description:
-    "Wynajmij billboard w województwie mazowieckim. Sprawdź dostępność spośród 1400+ nośników i zarezerwuj termin kampanii.",
+    "Wynajmij billboard w województwie mazowieckim. Dobierzemy lokalizacje spośród 1400+ nośników i przygotujemy wycenę kampanii.",
   alternates: {
     canonical: "https://wielkiformat.pl/wynajem",
   },
