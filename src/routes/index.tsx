@@ -7,7 +7,7 @@ import { MagneticButton } from "@/components/MagneticButton";
 import { TiltCard } from "@/components/TiltCard";
 import { Reveal } from "@/components/Reveal";
 import { motion, useScroll, useTransform, useInView, animate } from "motion/react";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, type MouseEvent } from "react";
 import {
   COMPANY_PHONE_ARIA,
   COMPANY_PHONE_DISPLAY,
@@ -17,7 +17,7 @@ import {
   ArrowRight, Zap, MapPin,
   Clock, Maximize2, BarChart3, Target, Phone, Layers,
   Camera, Truck,
-  Star, Quote, Shield,
+  Star, Quote, Shield, ChevronDown,
 } from "lucide-react";
 
 /* â•â•â•â•â•â•â• CORE UTILS â•â•â•â•â•â•â• */
@@ -38,6 +38,72 @@ function useCountUp(target: number, dur = 2) {
 
 function LightDivider() {
   return <div className="light-leak-divider" />;
+}
+
+type HeroTheme = "dark" | "light";
+
+const heroVideos: Record<HeroTheme, {
+  poster: string;
+  webmMobile: string;
+  webmDesktop: string;
+  mp4Mobile: string;
+  mp4Desktop: string;
+}> = {
+  dark: {
+    poster: "/videos/hero-dark-poster.webp",
+    webmMobile: "/videos/hero-dark-960.webm",
+    webmDesktop: "/videos/hero-dark-1600.webm",
+    mp4Mobile: "/videos/hero-dark-960.mp4",
+    mp4Desktop: "/videos/hero-dark-1600.mp4",
+  },
+  light: {
+    poster: "/videos/hero-light-poster.webp",
+    webmMobile: "/videos/hero-light-960.webm",
+    webmDesktop: "/videos/hero-light-1600.webm",
+    mp4Mobile: "/videos/hero-light-960.mp4",
+    mp4Desktop: "/videos/hero-light-1600.mp4",
+  },
+};
+
+function HeroVideo() {
+  const [theme, setTheme] = useState<HeroTheme | null>(null);
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setTheme(document.documentElement.classList.contains("light") ? "light" : "dark");
+    };
+
+    syncTheme();
+    const observer = new MutationObserver(syncTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+
+    return () => observer.disconnect();
+  }, []);
+
+  if (!theme) {
+    return <div className="hero-bg-image hero-bg-video" aria-hidden="true" />;
+  }
+
+  const video = heroVideos[theme];
+
+  return (
+    <video
+      key={theme}
+      className="hero-bg-image hero-bg-video"
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      poster={video.poster}
+      aria-hidden="true"
+    >
+      <source src={video.webmMobile} type="video/webm" media="(max-width: 767px)" />
+      <source src={video.webmDesktop} type="video/webm" media="(min-width: 768px)" />
+      <source src={video.mp4Mobile} type="video/mp4" media="(max-width: 767px)" />
+      <source src={video.mp4Desktop} type="video/mp4" />
+    </video>
+  );
 }
 
 /** Floating ambient glow orbs - hidden on mobile to save GPU */
@@ -94,28 +160,22 @@ function HeroSection() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const bgY = useTransform(scrollYProgress, [0, 1], [0, 120]);
-  const bgOp = useTransform(scrollYProgress, [0, 0.6], [0.46, 0.14]);
+  const bgOp = useTransform(scrollYProgress, [0, 0.6], [1, 0.7]);
+  const scrollToNextSection = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    document.getElementById("zaufali-nam")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <section ref={ref} className="relative min-h-[92vh] flex items-center overflow-hidden -mt-16 lg:-mt-20">
-      <motion.div className="absolute inset-0" style={{ y: bgY }}>
-        <motion.img
-          src="/images/generated/hero-city-billboards.png"
-          alt="Panorama miasta nocą z oświetlonymi billboardami reklamowymi"
-          className="hero-bg-image w-full h-full object-cover object-[64%_center] md:object-center"
-          style={{ opacity: bgOp }}
-          loading="eager"
-          fetchPriority="high"
-          width={1920}
-          height={1080}
-        />
+      <motion.div className="absolute inset-0" style={{ y: bgY, opacity: bgOp }}>
+        <HeroVideo />
       </motion.div>
       <div className="hero-tone-overlay absolute inset-0" />
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[520px] h-[260px] bg-primary/4 rounded-full blur-[130px] animate-glow-pulse animate-gradient-morph" />
-      <div className="absolute inset-0 bg-noise" />
 
       <div className="relative z-10 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 pt-32 pb-24">
-        <div className="max-w-3xl">
+        <div className="relative isolate max-w-3xl">
+          <div className="hero-copy-underlight absolute -left-6 -right-2 -top-10 bottom-0 -z-10" aria-hidden="true" />
           <Reveal>
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-primary text-[11px] font-semibold tracking-[0.2em] uppercase mb-8">
               <span className="relative w-2 h-2">
@@ -129,11 +189,11 @@ function HeroSection() {
             <h1 className="font-heading font-black text-5xl sm:text-6xl lg:text-7xl xl:text-[5.5rem] text-foreground leading-[1.15] mb-8 tracking-tight">
               Reklama,<br />która{" "}
               <span className="text-gradient-brand-bright text-glow-red inline pr-3 pb-3" style={{ fontFamily: "var(--font-accent)", fontStyle: "italic" }}>zostaje</span>
-              <br /><span className="text-muted-foreground/40">w pamięci.</span>
+              <br /><span className="hero-memory-line text-muted-foreground/40">w pamięci.</span>
             </h1>
           </Reveal>
           <Reveal delay={0.16}>
-            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-10 max-w-xl">
+            <p className="hero-support-copy text-lg md:text-xl text-muted-foreground leading-relaxed mb-10 max-w-xl">
               Billboardy i kampanie outdoorowe w&nbsp;województwie mazowieckim.
               Jeden partner od A do Z - projekt, druk, montaż, raportowanie.
             </p>
@@ -156,14 +216,22 @@ function HeroSection() {
         </div>
       </div>
 
-      <motion.div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}>
-        <span className="text-[11px] text-muted-foreground/70 tracking-[0.2em] uppercase font-heading">Poznaj nas</span>
-        <div className="w-px h-8 bg-gradient-to-b from-primary/30 to-transparent overflow-hidden">
-          <motion.div className="w-full h-2 bg-primary/50" animate={{ y: ["-100%", "400%"] }}
-            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }} />
-        </div>
-      </motion.div>
+      <motion.a
+        href="#zaufali-nam"
+        onClick={scrollToNextSection}
+        className="hero-scroll-cue absolute left-1/2 -translate-x-1/2 z-10"
+        aria-label="Przewiń do kolejnej sekcji"
+      >
+        <span className="hero-scroll-button relative grid place-items-center">
+          <motion.span
+            className="hero-scroll-icon relative z-10"
+            animate={{ y: [0, 7, 0], opacity: [0.66, 1, 0.66] }}
+            transition={{ repeat: Infinity, duration: 1.45, ease: "easeInOut" }}
+          >
+            <ChevronDown aria-hidden="true" />
+          </motion.span>
+        </span>
+      </motion.a>
     </section>
   );
 }
@@ -195,7 +263,7 @@ const brands = [
 ];
 function BrandTicker() {
   return (
-    <section className="py-6 relative overflow-hidden" aria-label="Zaufali nam">
+    <section id="zaufali-nam" className="py-6 relative overflow-hidden" aria-label="Zaufali nam">
       <div className="absolute inset-0 bg-noise" />
       <div className="flex items-center gap-3 mb-3 justify-center relative">
         <div className="h-px w-10 bg-gradient-to-r from-transparent to-primary/20" />
