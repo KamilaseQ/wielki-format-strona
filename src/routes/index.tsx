@@ -67,6 +67,40 @@ const heroVideos: Record<HeroTheme, {
 
 function HeroVideo() {
   const [theme, setTheme] = useState<HeroTheme | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // iOS/Safari will only autoplay a video it considers *muted*. React does not
+  // reliably reflect the `muted` JSX prop onto the DOM element as a property,
+  // so we force it here and kick off playback explicitly. We also retry on the
+  // first user interaction in case the browser (e.g. Low Power Mode) blocked
+  // the initial attempt.
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el) return;
+
+    el.muted = true;
+    el.defaultMuted = true;
+
+    const tryPlay = () => {
+      const p = el.play();
+      if (p && typeof p.catch === "function") p.catch(() => {});
+    };
+
+    tryPlay();
+
+    const resume = () => tryPlay();
+    el.addEventListener("loadeddata", resume);
+    el.addEventListener("canplay", resume);
+    document.addEventListener("touchstart", resume, { once: true, passive: true });
+    document.addEventListener("click", resume, { once: true });
+
+    return () => {
+      el.removeEventListener("loadeddata", resume);
+      el.removeEventListener("canplay", resume);
+      document.removeEventListener("touchstart", resume);
+      document.removeEventListener("click", resume);
+    };
+  }, [theme]);
 
   useEffect(() => {
     const syncTheme = () => {
@@ -89,6 +123,7 @@ function HeroVideo() {
   return (
     <video
       key={theme}
+      ref={videoRef}
       className="hero-bg-image hero-bg-video"
       autoPlay
       muted
@@ -97,6 +132,7 @@ function HeroVideo() {
       preload="metadata"
       poster={video.poster}
       aria-hidden="true"
+      disablePictureInPicture
     >
       <source src={video.webmMobile} type="video/webm" media="(max-width: 767px)" />
       <source src={video.webmDesktop} type="video/webm" media="(min-width: 768px)" />

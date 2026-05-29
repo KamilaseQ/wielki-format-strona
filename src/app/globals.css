@@ -292,15 +292,17 @@
   }
 
   .hero-scroll-cue {
-    top: calc(100svh - 6.5rem);
-    bottom: auto !important;
+    /* Anchor to the bottom of the hero, respecting the iOS safe area so the
+       cue never overlaps the CTA button on iPhone. */
+    top: auto !important;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 0.9rem) !important;
     text-decoration: none;
     cursor: pointer;
   }
 
   .hero-scroll-button {
-    width: 3.5rem;
-    height: 3.5rem;
+    width: 2.75rem;
+    height: 2.75rem;
     color: oklch(0.64 0.006 90 / 88%);
     transition: transform 0.25s ease;
   }
@@ -315,8 +317,8 @@
   }
 
   .hero-scroll-icon svg {
-    width: 2.55rem;
-    height: 2.55rem;
+    width: 2rem;
+    height: 2rem;
     stroke-width: 2.35;
   }
 
@@ -397,7 +399,15 @@
       object-position: center;
     }
     .hero-scroll-cue {
-      top: calc(100vh - 5rem);
+      bottom: 1.75rem !important;
+    }
+    .hero-scroll-button {
+      width: 3.5rem;
+      height: 3.5rem;
+    }
+    .hero-scroll-icon svg {
+      width: 2.55rem;
+      height: 2.55rem;
     }
   }
 

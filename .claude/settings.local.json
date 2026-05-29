@@ -6,7 +6,11 @@
       "Bash(export PATH=\"/c/Users/212ka/AppData/Roaming/fnm/node-versions/v24.14.0/installation:$PATH\")",
       "Bash(npx --version)",
       "PowerShell(fnm env --use-on-cd | Out-String | Invoke-Expression; npx tsc --noEmit 2>&1 | Select-Object -First 30)",
-      "PowerShell(where.exe node; where.exe npm; \\(Get-Command npm -ErrorAction SilentlyContinue\\).Source)"
+      "PowerShell(where.exe node; where.exe npm; \\(Get-Command npm -ErrorAction SilentlyContinue\\).Source)",
+      "WebSearch",
+      "PowerShell(npx tsc --noEmit 2>&1)",
+      "PowerShell($p = @\\(\"$env:ProgramFiles\\\\nodejs\\\\node.exe\",\"$env:LOCALAPPDATA\\\\Programs\\\\nodejs\\\\node.exe\",\"$env:APPDATA\\\\nvm\",\"$env:ProgramFiles\\\\nodejs\"\\); foreach\\($x in $p\\){ if\\(Test-Path $x\\){ $x } }; \\(Get-Command node -ErrorAction SilentlyContinue\\).Source)",
+      "PowerShell(Get-ChildItem -Path \"$env:APPDATA\\\\nvm\",\"$env:ProgramFiles\\\\nodejs\",\"C:\\\\nvm4w\",\"$env:LOCALAPPDATA\\\\fnm_multishells\" -Filter node.exe -Recurse -ErrorAction SilentlyContinue | Select-Object -First 5 -ExpandProperty FullName; where.exe node 2>$null)"
     ]
   }
 }
