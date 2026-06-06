@@ -6,7 +6,6 @@ import { motion } from "motion/react";
 import {
   ArrowRight,
   Car,
-  CheckCircle2,
   ChevronLeft,
   ExternalLink,
   Info,
@@ -21,7 +20,7 @@ import type { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CarrierImage } from "@/features/carriers/CarrierImage";
 import type { Carrier, CarrierTrafficEstimate } from "@/features/carriers/data";
-import { AVAILABILITY_CFG, TYPE_CFG } from "@/features/carriers/data";
+import { TYPE_CFG } from "@/features/carriers/data";
 import {
   COMPANY_PHONE_ARIA,
   COMPANY_PHONE_DISPLAY,
@@ -36,9 +35,8 @@ interface DetailPanelProps {
 
 export function DetailPanel({ carrier, onBack, flow = false }: DetailPanelProps) {
   const cfg = TYPE_CFG[carrier.type];
-  const availability = AVAILABILITY_CFG[carrier.availability];
   const streetViewUrl = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${carrier.lat},${carrier.lng}`;
-  const trafficValue = carrier.trafficEstimate?.dailyVehicles ?? carrier.traffic;
+  const trafficValue = carrier.trafficEstimate?.dailyVehicles ?? null;
 
   return (
     <motion.div
@@ -64,10 +62,6 @@ export function DetailPanel({ carrier, onBack, flow = false }: DetailPanelProps)
               <h3 className="truncate font-heading text-base font-bold text-foreground">
                 {carrier.code}
               </h3>
-              <span className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ring-1 ${availability.pill}`}>
-                <span className={`h-1.5 w-1.5 rounded-full ${availability.dot}`} />
-                {availability.label}
-              </span>
             </div>
             <p className="mt-0.5 truncate text-xs text-muted-foreground">
               {carrier.city}, woj. {carrier.region.toLowerCase()}
@@ -92,10 +86,6 @@ export function DetailPanel({ carrier, onBack, flow = false }: DetailPanelProps)
             <span className="inline-flex items-center gap-1 rounded-full bg-secondary/70 px-2.5 py-1 text-[11px] font-medium text-muted-foreground ring-1 ring-border">
               <Ruler className="h-3 w-3" />
               {carrier.format}
-            </span>
-            <span className="inline-flex items-center gap-1 rounded-full bg-secondary/70 px-2.5 py-1 text-[11px] font-medium text-muted-foreground ring-1 ring-border">
-              <CheckCircle2 className="h-3 w-3 text-emerald-500" />
-              Import XML
             </span>
           </div>
 
@@ -130,7 +120,7 @@ export function DetailPanel({ carrier, onBack, flow = false }: DetailPanelProps)
             <SpecBox icon={Layers} value={cfg.label} label="Klasa" />
             <SpecBox
               icon={LocateFixed}
-              value={`${((trafficValue * 30) / 1000).toFixed(0)}k`}
+              value={trafficValue ? `${((trafficValue * 30) / 1000).toFixed(0)}k` : "-"}
               label="Kontakty/mies."
             />
             <SpecBox icon={MapPin} value={carrier.zip || "-"} label="Kod poczt." />
@@ -272,9 +262,15 @@ function TrafficInfoButton({
             : ""}
         </span>
         <span className="mt-2 block text-muted-foreground">
+          Co wpływa na szacunek: klasa i natężenie drogi, widoczność z trasy
+          szybkiego ruchu, skala nośnika oraz kalibracja na publicznych
+          pomiarach ZDM i GPR.
+        </span>
+        <span className="mt-2 block text-muted-foreground">
           Typ danych: {getTrafficEvidence(estimate).label}. Pewność:{" "}
-          {getConfidenceLabel(estimate.confidence)}. Liczba opisuje ruch
-          pojazdów w korytarzu, nie gwarantowaną liczbę kontaktów z reklamą.
+          {getConfidenceLabel(estimate.confidence)}. Wartość orientacyjna —
+          opisuje ruch pojazdów w korytarzu, nie gwarantowaną liczbę kontaktów
+          z reklamą.
         </span>
       </span>
     </span>

@@ -10,6 +10,8 @@ export type PublishedCarrier = Carrier & {
 
 type SourceKind = "zdm-apr" | "zdm-arcgis" | "gpr" | "model";
 
+type SizeGrade = "mega" | "large" | "standard" | "small" | "unknown";
+
 interface TrafficReference {
   keywords: string[];
   cityKeywords?: string[];
@@ -79,11 +81,13 @@ const ROAD_REFERENCES: TrafficReference[] = [
   },
   reference(["aleje jerozolimskie", "jerozolimskie"], 68000, "warszawa"),
   reference(["prymasa tysiaclecia", "prymasa"], 76000, "warszawa"),
-  reference(["trasa torunska", "s8"], 90000, "warszawa", "gpr"),
+  reference(["trasa torunska", "s8"], 95000, "warszawa", "gpr"),
+  reference(["s2", "poludniowa obwodnica", "trasa s2"], 88000, "warszawa", "gpr"),
   reference(["s7", "trasa s7"], 90000, "warszawa", "gpr"),
   reference(["s7", "trasa s7"], 52000, undefined, "gpr"),
+  reference(["s8", "trasa s8"], 60000, undefined, "gpr"),
   reference(["s17", "trasa lubelska"], 42000, undefined, "gpr"),
-  reference(["a2", "autostrada"], 32000, undefined, "gpr"),
+  reference(["a2", "autostrada a2"], 33000, undefined, "gpr"),
   reference(["pulawska"], 52000),
   reference(["modlinska"], 52000),
   reference(["czerniakowska"], 47000, "warszawa"),
@@ -98,7 +102,7 @@ const ROAD_REFERENCES: TrafficReference[] = [
   reference(["bronislawa czecha", "czecha"], 37000, "warszawa"),
   reference(["patriotow"], 23000, "warszawa"),
   reference(["trakt brzeski"], 27000),
-  reference(["puĺkowa", "pulkowa"], 52000),
+  reference(["puĺkowa", "pulkowa"], 52000),
   reference(["al krakowska", "krakowska"], 48000),
   reference(["okulickiego"], 33000),
   reference(["armii krajowej"], 30000),
@@ -113,40 +117,85 @@ const ROAD_REFERENCES: TrafficReference[] = [
   reference(["kolejowa"], 15000),
 ];
 
-const EXPRESSWAY_KEYWORDS = [
-  "a2",
-  "autostrada",
-  "droga ekspresowa",
-  "s7",
-  "s8",
-  "s17",
-  "trasa torunska",
-  "trasa lubelska",
-];
-
+// Stems (not full words) so Polish inflection is matched: "rond" covers
+// rondo / rondzie / ronda / rondem, "skrzyzowan" covers skrzyżowanie/-u/-a, etc.
 const STRONG_ROAD_KEYWORDS = [
-  "aleja",
+  "alej",
   "al ",
-  "dw",
+  "dw ",
   "dk",
   "droga krajowa",
   "droga wojewodzka",
-  "obwodnica",
-  "rondo",
-  "skrzyzowanie",
+  "obwodnic",
+  "rond",
+  "skrzyzowan",
+  "wiadukt",
+  "estakad",
 ];
 
 const TRAFFIC_SIGNAL_KEYWORDS = [
   "bardzo duzy ruch",
   "duzy ruch",
-  "korki",
-  "swiatla",
+  "kork",
+  "swiatl",
   "trzy pasy",
   "3 pasy",
+  "cztery pasy",
+  "4 pasy",
+  "dwa pasy",
   "dlugi najazd",
-  "przystanki",
+  "przystank",
   "centrum handlowe",
   "stacja paliw",
+];
+
+// Phrases that mean the carrier FACES / is read from the road (use the road's
+// own volume). Combined with a detected highway token below.
+const HIGHWAY_FRONTING_MARKERS = [
+  "przy autostrad",
+  "na autostrad",
+  "wzdluz autostrad",
+  "przy drodze ekspresow",
+  "na drodze ekspresow",
+  "przy trasie",
+  "na trasie",
+  "wzdluz trasy",
+  "przy ekspresow",
+  "widoczny z",
+  "widoczna z",
+  "widoczny od strony",
+  "usytuowany przy drodze",
+  "umieszczony przy drodze",
+  "zlokalizowany przy drodze ekspresow",
+  "bezposrednio przy",
+];
+
+// Strong "this is only an access/exit road" words. When present, the carrier
+// does NOT face the trunk route (so a fronting phrase like "przy drodze" must
+// not win) — it gets the highway volume only if the board is big enough to be
+// read from the trunk route itself.
+const HIGHWAY_ACCESS_MARKERS = [
+  "dojazd",
+  "zjazd",
+  "wjazd",
+  "najazdow",
+  "prowadzi do",
+  "droga dojazdowa",
+  "do wezla",
+  "do trasy",
+  "do autostrad",
+  "do drogi ekspresow",
+];
+
+// Softer "the highway is somewhere near" markers — proximity without access.
+const HIGHWAY_PROXIMITY_MARKERS = [
+  "w kierunku",
+  "wezel",
+  "w poblizu",
+  "w pobliu",
+  "nieopodal",
+  "obok",
+  "m do ",
 ];
 
 export function publishCarriersWithTrafficEstimates(
@@ -178,55 +227,165 @@ function estimateCarrierTraffic(carrier: Carrier): CarrierTrafficEstimate | null
   }
 
   const profile = buildCarrierTrafficProfile(carrier);
-  const bestReference = selectBestReference(profile);
+  const highway = detectHighway(profile);
 
-  if (bestReference) {
-    const referenceMultiplier = bestReference.reference.directMeasurement
-      ? 1
-      : Math.max(0.92, Math.min(1.08, profile.multiplier));
-    const dailyVehicles = roundTraffic(
-      bestReference.reference.dailyVehicles * referenceMultiplier
-    );
-    return buildEstimate(
-      {
-        dailyVehicles,
-        confidence: bestReference.confidence,
-        basis: bestReference.reference.directMeasurement
-          ? "direct-measurement"
-          : "measured-corridor",
-        methodLabel: bestReference.reference.methodLabel,
-        methodDescription: describeReferenceMethod(
-          bestReference.reference,
-          bestReference.distanceMeters,
-          profile
-        ),
-        sourceLabel: bestReference.reference.sourceLabel,
-        sourceYear: bestReference.reference.sourceYear,
-        sourceUrl: bestReference.reference.sourceUrl,
-        matchedDistanceMeters: bestReference.distanceMeters,
-      },
-      profile,
-      bestReference.reference
-    );
+  // Independent candidates. The final value is the MAX so a richer signal can
+  // never be dragged down by a weaker one — no underestimation by design.
+  const candidates: CarrierTrafficEstimate[] = [];
+  let bestReference: ReturnType<typeof selectBestReference> = null;
+
+  const referenceMatch = selectBestReference(profile);
+  if (referenceMatch) {
+    bestReference = referenceMatch;
+    candidates.push(buildReferenceEstimate(profile, referenceMatch));
   }
 
-  const model = estimateFromLocalModel(profile);
-  if (model.confidence === "low") return null;
+  const highwayEstimate = buildHighwayEstimate(profile, highway);
+  if (highwayEstimate) candidates.push(highwayEstimate);
 
-  return buildEstimate(model, profile);
+  const model = estimateFromLocalModel(profile);
+  if (model.confidence !== "low") candidates.push(model);
+
+  const sizeFloor = buildSizeFloorEstimate(profile);
+  if (sizeFloor) candidates.push(sizeFloor);
+
+  if (candidates.length === 0) return null;
+
+  const chosen = pickStrongestCandidate(candidates);
+  return finalizeEstimate(chosen, profile, highway, bestReference?.reference);
 }
 
-function buildEstimate(
+function pickStrongestCandidate(
+  candidates: CarrierTrafficEstimate[]
+): CarrierTrafficEstimate {
+  return [...candidates].sort((left, right) => {
+    if (right.dailyVehicles !== left.dailyVehicles) {
+      return right.dailyVehicles - left.dailyVehicles;
+    }
+    return confidenceRank(right.confidence) - confidenceRank(left.confidence);
+  })[0];
+}
+
+function confidenceRank(confidence: TrafficEstimateConfidence): number {
+  if (confidence === "high") return 2;
+  if (confidence === "medium") return 1;
+  return 0;
+}
+
+function finalizeEstimate(
   estimate: CarrierTrafficEstimate,
   profile: CarrierTrafficProfile,
+  highway: HighwayMatch | null,
   reference?: TrafficReference
 ): CarrierTrafficEstimate {
   return {
     ...estimate,
     dailyVehicles: Math.max(
       3000,
-      Math.min(estimateTrafficCeiling(profile, reference), estimate.dailyVehicles)
+      Math.min(
+        estimateTrafficCeiling(profile, highway, reference),
+        estimate.dailyVehicles
+      )
     ),
+  };
+}
+
+function buildReferenceEstimate(
+  profile: CarrierTrafficProfile,
+  match: NonNullable<ReturnType<typeof selectBestReference>>
+): CarrierTrafficEstimate {
+  const referenceMultiplier = match.reference.directMeasurement
+    ? 1
+    : Math.max(0.92, Math.min(1.1, profile.multiplier));
+  const dailyVehicles = roundTraffic(match.comboVehicles * referenceMultiplier);
+
+  return {
+    dailyVehicles,
+    confidence: match.confidence,
+    basis: match.reference.directMeasurement
+      ? "direct-measurement"
+      : "measured-corridor",
+    methodLabel: match.reference.methodLabel,
+    methodDescription: describeReferenceMethod(
+      match.reference,
+      match.distanceMeters,
+      profile,
+      match.crossRoadVehicles > 0
+    ),
+    sourceLabel: match.reference.sourceLabel,
+    sourceYear: match.reference.sourceYear,
+    sourceUrl: match.reference.sourceUrl,
+    matchedDistanceMeters: match.distanceMeters,
+  };
+}
+
+function buildHighwayEstimate(
+  profile: CarrierTrafficProfile,
+  highway: HighwayMatch | null
+): CarrierTrafficEstimate | null {
+  if (!highway) return null;
+
+  const seenFromHighway = highway.fronting || isBigBoard(profile.sizeGrade);
+  const multiplier = Math.max(0.95, Math.min(1.12, profile.multiplier));
+
+  if (seenFromHighway) {
+    const dailyVehicles = roundTraffic(highway.dailyVehicles * multiplier);
+    // A corridor model is never a counter at this exact spot, so cap at medium;
+    // "high" is reserved for direct ZDM measurements near the carrier.
+    return {
+      dailyVehicles,
+      confidence: "medium",
+      basis: "measured-corridor",
+      methodLabel: "Korytarz trasy szybkiego ruchu",
+      methodDescription: highwayMethodDescription(profile, highway, true),
+      sourceLabel: "GDDKiA GPR 2025 (SDRR) / model korytarza",
+      sourceYear: 2025,
+      sourceUrl: GPR_2025_RESULTS_URL,
+      matchedDistanceMeters: null,
+    };
+  }
+
+  if (highway.proximity) {
+    // Access / exit road: not the highway itself (board too small to read from
+    // it), but a road that demonstrably feeds a trunk route — keep it healthy
+    // yet proportional to the route it serves.
+    const accessVehicles = roundTraffic(
+      Math.max(22000, highway.dailyVehicles * 0.4) * multiplier
+    );
+    return {
+      dailyVehicles: accessVehicles,
+      confidence: "medium",
+      basis: "local-model",
+      methodLabel: "Model szacunkowy",
+      methodDescription: highwayMethodDescription(profile, highway, false),
+      sourceLabel: "GDDKiA GPR 2025 / model lokalny",
+      sourceYear: 2025,
+      sourceUrl: GPR_2025_URL,
+      matchedDistanceMeters: null,
+    };
+  }
+
+  return null;
+}
+
+function buildSizeFloorEstimate(
+  profile: CarrierTrafficProfile
+): CarrierTrafficEstimate | null {
+  const floor = sizeFloorVehicles(profile.areaSqm);
+  if (floor === null) return null;
+
+  const multiplier = Math.max(0.9, Math.min(1.12, profile.multiplier));
+  return {
+    dailyVehicles: roundTraffic(floor * multiplier),
+    confidence: "medium",
+    basis: "local-model",
+    methodLabel: "Model + skala nośnika",
+    methodDescription:
+      "Szacunek wsparty skalą nośnika: wielkoformatowe tablice stawia się przy ruchliwych, szybkich drogach, więc dolny pułap ruchu wyznaczono na podstawie powierzchni nośnika i kalibracji ZDM/GPR. Liczba oznacza potencjalny ruch dobowy w obu kierunkach, nie gwarantowaną widownię reklamy.",
+    sourceLabel: PUBLIC_MODEL_SOURCE.sourceLabel,
+    sourceYear: PUBLIC_MODEL_SOURCE.sourceYear,
+    sourceUrl: PUBLIC_MODEL_SOURCE.sourceUrl,
+    matchedDistanceMeters: null,
   };
 }
 
@@ -258,7 +417,7 @@ function estimateFromLocalModel(profile: CarrierTrafficProfile): CarrierTrafficE
     basis: "local-model",
     methodLabel: source.methodLabel,
     methodDescription:
-      "Model szacunkowy: lokalizacja nie ma bezpośrednio przypisanego publicznego licznika, więc wynik wyliczono z typu miasta, znaczenia drogi, opisu lokalizacji i kalibracji na bezpłatnych pomiarach ZDM oraz GPR. Liczba oznacza potencjalny ruch dobowy w obu kierunkach, nie gwarantowaną widownię reklamy.",
+      "Model szacunkowy: lokalizacja nie ma bezpośrednio przypisanego publicznego licznika, więc wynik wyliczono z typu miasta, znaczenia drogi, opisu lokalizacji, skali nośnika i kalibracji na bezpłatnych pomiarach ZDM oraz GPR. Liczba oznacza potencjalny ruch dobowy w obu kierunkach, nie gwarantowaną widownię reklamy.",
     sourceLabel: source.sourceLabel,
     sourceYear: source.sourceYear,
     sourceUrl: source.sourceUrl,
@@ -270,7 +429,10 @@ interface CarrierTrafficProfile {
   carrier: Carrier;
   haystack: string;
   addressText: string;
+  descText: string;
   cityText: string;
+  areaSqm: number;
+  sizeGrade: SizeGrade;
   multiplier: number;
 }
 
@@ -279,15 +441,125 @@ function buildCarrierTrafficProfile(carrier: Carrier): CarrierTrafficProfile {
     `${carrier.city} ${carrier.address} ${carrier.description}`
   );
   const addressText = normalizeTrafficText(`${carrier.city} ${carrier.address}`);
+  const descText = normalizeTrafficText(carrier.description);
   const cityText = normalizeTrafficText(carrier.city);
+  const areaSqm = carrierAreaSqm(carrier);
 
   return {
     carrier,
     haystack,
     addressText,
+    descText,
     cityText,
+    areaSqm,
+    sizeGrade: gradeForArea(areaSqm),
     multiplier: estimateContextMultiplier(haystack),
   };
+}
+
+function carrierAreaSqm(carrier: Carrier): number {
+  const width = carrier.widthMeters;
+  const height = carrier.heightMeters;
+  if (!width || !height || width <= 0 || height <= 0) return 0;
+  return width * height;
+}
+
+function gradeForArea(areaSqm: number): SizeGrade {
+  if (areaSqm <= 0) return "unknown";
+  if (areaSqm >= 48) return "mega";
+  if (areaSqm >= 18) return "large";
+  if (areaSqm >= 8) return "standard";
+  return "small";
+}
+
+function isBigBoard(grade: SizeGrade): boolean {
+  return grade === "large" || grade === "mega";
+}
+
+function sizeFloorVehicles(areaSqm: number): number | null {
+  if (areaSqm >= 48) return 40000;
+  if (areaSqm >= 30) return 32000;
+  if (areaSqm >= 18) return 26000;
+  return null;
+}
+
+interface HighwayMatch {
+  dailyVehicles: number;
+  label: string;
+  specific: boolean;
+  inAddress: boolean;
+  fronting: boolean;
+  proximity: boolean;
+}
+
+function detectHighway(profile: CarrierTrafficProfile): HighwayMatch | null {
+  const { addressText, descText, cityText } = profile;
+  const combined = `${addressText} ${descText}`;
+  const corridor = highwayCorridor(combined, cityText);
+  if (!corridor) return null;
+
+  const inAddress = highwayCorridor(addressText, cityText) !== null;
+  const hasAccessWord = HIGHWAY_ACCESS_MARKERS.some((marker) =>
+    combined.includes(marker)
+  );
+  // The highway in the street name means the carrier stands on it. Otherwise a
+  // fronting phrase counts only if it is NOT contradicted by an access word
+  // ("przy drodze DOJAZDOWEJ do S8" is an access road, not a frontage).
+  const fronting =
+    inAddress ||
+    (!hasAccessWord &&
+      HIGHWAY_FRONTING_MARKERS.some((marker) => descText.includes(marker)));
+  const proximity =
+    !fronting &&
+    (hasAccessWord ||
+      HIGHWAY_PROXIMITY_MARKERS.some((marker) => combined.includes(marker)));
+
+  return { ...corridor, inAddress, fronting, proximity };
+}
+
+function highwayCorridor(
+  text: string,
+  cityText: string
+): { dailyVehicles: number; label: string; specific: boolean } | null {
+  const isWarsaw = cityText.includes("warszawa");
+
+  if (/\bs8\b/.test(text) || text.includes("trasa torunska")) {
+    return { dailyVehicles: isWarsaw ? 95000 : 60000, label: "S8", specific: true };
+  }
+  if (
+    /\bs2\b/.test(text) ||
+    text.includes("poludniowa obwodnica") ||
+    text.includes("obwodnica warszawy")
+  ) {
+    return { dailyVehicles: 88000, label: "S2 / POW", specific: true };
+  }
+  if (/\bs7\b/.test(text) || text.includes("trasa s7")) {
+    return { dailyVehicles: isWarsaw ? 90000 : 52000, label: "S7", specific: true };
+  }
+  if (/\bs17\b/.test(text) || text.includes("trasa lubelska")) {
+    return { dailyVehicles: 42000, label: "S17", specific: true };
+  }
+  if (/\ba2\b/.test(text) || text.includes("autostrada a2")) {
+    return { dailyVehicles: 33000, label: "A2", specific: true };
+  }
+  if (/\ba[14]\b/.test(text)) {
+    return { dailyVehicles: 35000, label: "autostrada", specific: true };
+  }
+  // Generic expressway: numbered S-road, "droga ekspresowa", or "trasa S".
+  if (/\bs\d{1,3}\b/.test(text) || /\btrasa s\b/.test(text)) {
+    return { dailyVehicles: 55000, label: "droga ekspresowa", specific: false };
+  }
+  if (
+    text.includes("droga ekspresowa") ||
+    text.includes("ekspresow") ||
+    text.includes("expresow")
+  ) {
+    return { dailyVehicles: 55000, label: "droga ekspresowa", specific: false };
+  }
+  if (text.includes("autostrad")) {
+    return { dailyVehicles: 35000, label: "autostrada", specific: false };
+  }
+  return null;
 }
 
 function selectBestReference(profile: CarrierTrafficProfile):
@@ -295,6 +567,8 @@ function selectBestReference(profile: CarrierTrafficProfile):
       reference: TrafficReference;
       distanceMeters: number | null;
       confidence: TrafficEstimateConfidence;
+      comboVehicles: number;
+      crossRoadVehicles: number;
     }
   | null {
   const candidates = ROAD_REFERENCES.flatMap((reference) => {
@@ -341,8 +615,30 @@ function selectBestReference(profile: CarrierTrafficProfile):
     ];
   });
 
-  const best = candidates.sort((left, right) => left.score - right.score)[0];
+  const best = candidates.slice().sort((left, right) => left.score - right.score)[0];
   if (!best) return null;
+
+  // Intersection ("ul. A / ul. B"): add a fraction of the strongest *other*
+  // crossing road so a busy junction is not reduced to a single street. A
+  // crossing road must be a genuinely different road — references that share a
+  // keyword (e.g. two S8 corridor entries) describe the same road, not a
+  // junction, so they must not stack.
+  const crossRoadVehicles = candidates
+    .filter(
+      (candidate) =>
+        candidate.reference !== best.reference &&
+        !candidate.reference.keywords.some((keyword) =>
+          best.reference.keywords.includes(keyword)
+        )
+    )
+    .reduce((max, candidate) => Math.max(max, candidate.reference.dailyVehicles), 0);
+
+  const comboVehicles = best.reference.directMeasurement
+    ? best.reference.dailyVehicles
+    : Math.min(
+        best.reference.dailyVehicles * 1.35,
+        best.reference.dailyVehicles + crossRoadVehicles * 0.25
+      );
 
   return {
     reference: best.reference,
@@ -351,13 +647,16 @@ function selectBestReference(profile: CarrierTrafficProfile):
       best.reference.directMeasurement && best.distanceMeters !== null
         ? "high"
         : best.reference.confidence,
+    comboVehicles,
+    crossRoadVehicles,
   };
 }
 
 function describeReferenceMethod(
   reference: TrafficReference,
   distanceMeters: number | null,
-  profile: CarrierTrafficProfile
+  profile: CarrierTrafficProfile,
+  hasCrossRoad: boolean
 ): string {
   const distanceText =
     distanceMeters === null
@@ -366,12 +665,29 @@ function describeReferenceMethod(
   const locationText = reference.directMeasurement
     ? "Szacunek oparty o publiczny pomiar dla tej samej ulicy lub najbliższego skrzyżowania."
     : "Szacunek oparty o kalibrowany korytarz drogowy z publicznych pomiarów ZDM/GPR.";
+  const crossText = hasCrossRoad
+    ? " Uwzględniono dodatkowy ruch z drogi poprzecznej na skrzyżowaniu."
+    : "";
   const contextText =
     profile.multiplier === 1
       ? ""
       : " Wynik skorygowano o lokalny opis widoczności, korków i układu drogi.";
 
-  return `${locationText}${distanceText}${contextText} Liczba oznacza potencjalny ruch dobowy w obu kierunkach, nie gwarantowaną widownię reklamy.`;
+  return `${locationText}${distanceText}${crossText}${contextText} Liczba oznacza potencjalny ruch dobowy w obu kierunkach, nie gwarantowaną widownię reklamy.`;
+}
+
+function highwayMethodDescription(
+  profile: CarrierTrafficProfile,
+  highway: HighwayMatch,
+  seenFromHighway: boolean
+): string {
+  if (seenFromHighway) {
+    const sizeText = isBigBoard(profile.sizeGrade)
+      ? "Wielkoformatowy nośnik czytany jest z trasy szybkiego ruchu, dlatego przyjęto natężenie samej trasy"
+      : "Nośnik usytuowany jest bezpośrednio przy trasie szybkiego ruchu, dlatego przyjęto jej natężenie";
+    return `${sizeText} (${highway.label}). Wartość wynika z korytarza GDDKiA GPR i kalibracji lokalnej. Liczba oznacza potencjalny ruch dobowy w obu kierunkach, nie gwarantowaną widownię reklamy.`;
+  }
+  return `Nośnik znajduje się przy drodze prowadzącej do trasy ${highway.label}. Przyjęto ruch drogi dojazdowej (część natężenia trasy), bo z tej odległości i przy tej wielkości nośnika kierowcy na samej trasie nie odczytują reklamy. Liczba oznacza potencjalny ruch dobowy w obu kierunkach, nie gwarantowaną widownię reklamy.`;
 }
 
 function estimateCityBase(cityText: string): number {
@@ -393,14 +709,26 @@ function estimateCityBase(cityText: string): number {
 function estimateRoadBase(profile: CarrierTrafficProfile, cityBase: number): number {
   const { addressText, haystack } = profile;
 
-  if (hasExpresswayAddress(addressText)) {
-    return Math.max(cityBase, 62000);
+  const corridor = highwayCorridor(addressText, profile.cityText);
+  if (corridor) {
+    // Use the specific route's volume (A2 ≈ 33k, S8 ≈ 95k) instead of a flat
+    // expressway figure, so motorways are not over- or under-shot uniformly.
+    return Math.max(cityBase, corridor.dailyVehicles);
   }
   if (
     STRONG_ROAD_KEYWORDS.some((keyword) => addressText.includes(keyword)) ||
     STRONG_ROAD_KEYWORDS.some((keyword) => haystack.includes(keyword))
   ) {
     return Math.max(cityBase, 26000);
+  }
+  // Inter-city through roads ("na trasie X-Y", "długi najazd") carry more than
+  // a generic local street even without a named-road match.
+  if (
+    haystack.includes("na trasie") ||
+    haystack.includes("dlugi najazd") ||
+    /\btrasa \w/.test(haystack)
+  ) {
+    return Math.max(cityBase, 24000);
   }
   if (haystack.includes("centrum") || haystack.includes("scisla zabudowa")) {
     return Math.max(cityBase, 21000);
@@ -410,9 +738,23 @@ function estimateRoadBase(profile: CarrierTrafficProfile, cityBase: number): num
 
 function estimateTrafficCeiling(
   profile: CarrierTrafficProfile,
+  highway: HighwayMatch | null,
   reference?: TrafficReference
 ): number {
   if (reference?.directMeasurement) return 98000;
+
+  let base = categoryCeiling(profile);
+
+  // A genuine trunk-route signal must never be capped below the route itself.
+  if (highway && (highway.fronting || isBigBoard(profile.sizeGrade))) {
+    base = Math.max(base, Math.round(highway.dailyVehicles * 1.15));
+  }
+
+  base = Math.round(base * sizeCeilingMultiplier(profile.sizeGrade));
+  return Math.min(base, 140000);
+}
+
+function categoryCeiling(profile: CarrierTrafficProfile): number {
   if (hasExpresswayAddress(profile.addressText)) return 90000;
 
   const isWarsaw = profile.cityText.includes("warszawa");
@@ -444,8 +786,14 @@ function estimateTrafficCeiling(
   return 36000;
 }
 
+function sizeCeilingMultiplier(grade: SizeGrade): number {
+  if (grade === "mega") return 1.4;
+  if (grade === "large") return 1.15;
+  return 1;
+}
+
 function hasExpresswayAddress(addressText: string): boolean {
-  return EXPRESSWAY_KEYWORDS.some((keyword) => addressText.includes(keyword));
+  return highwayCorridor(addressText, addressText) !== null;
 }
 
 function estimateContextMultiplier(haystack: string): number {
@@ -453,19 +801,24 @@ function estimateContextMultiplier(haystack: string): number {
 
   if (haystack.includes("bardzo duzy ruch")) multiplier += 0.14;
   else if (haystack.includes("duzy ruch")) multiplier += 0.07;
-  if (haystack.includes("stale korki") || haystack.includes("korki")) {
-    multiplier += 0.08;
-  }
+  if (haystack.includes("kork")) multiplier += 0.08;
   if (haystack.includes("trzy pasy") || haystack.includes("3 pasy")) {
     multiplier += 0.08;
   }
-  if (haystack.includes("skrzyzowanie") || haystack.includes("rondo")) {
+  if (haystack.includes("cztery pasy") || haystack.includes("4 pasy")) {
+    multiplier += 0.1;
+  }
+  if (haystack.includes("skrzyzowan") || haystack.includes("rond")) {
     multiplier += 0.06;
   }
   if (haystack.includes("scisle centrum") || haystack.includes("centrum miasta")) {
     multiplier += 0.06;
   }
-  if (haystack.includes("parking") || haystack.includes("wewnetrzna")) {
+  if (
+    haystack.includes("parking") ||
+    haystack.includes("wewnetrzna") ||
+    haystack.includes("osiedlow")
+  ) {
     multiplier -= 0.08;
   }
 
@@ -535,7 +888,7 @@ function normalizeTrafficText(value: string): string {
   return value
     .toLocaleLowerCase("pl-PL")
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[̀-ͯ]/g, "")
     .replace(/ł/g, "l")
     .replace(/Ł/g, "l")
     .replace(/[^a-z0-9]+/g, " ")

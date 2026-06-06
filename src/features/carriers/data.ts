@@ -1,7 +1,6 @@
 import type { MapViewport } from "@/components/LeafletMap";
 
 export type CarrierType = "SUPER PREMIUM" | "PREMIUM" | "STANDARD";
-export type CarrierAvailability = "available" | "reserved" | "unavailable";
 export type SortKey = "relevance" | "city" | "type" | "traffic";
 export type TrafficEstimateConfidence = "high" | "medium" | "low";
 export type TrafficEstimateBasis =
@@ -34,12 +33,9 @@ export interface Carrier {
   description: string;
   lat: number;
   lng: number;
-  traffic: number;
-  visibility: number;
   trafficEstimate: CarrierTrafficEstimate | null;
   image: string | null;
   zip: string;
-  availability: CarrierAvailability;
 }
 
 export const LIST_PAGE_SIZE = 12;
@@ -49,30 +45,6 @@ export const TYPE_CFG: Record<CarrierType, { dot: string; pill: string; label: s
   "SUPER PREMIUM": { dot: "bg-rose-500", pill: "bg-rose-500/10 text-rose-700 dark:text-rose-200 ring-rose-500/25", label: "Super Premium", color: "#e11d48" },
   "PREMIUM": { dot: "bg-amber-500", pill: "bg-amber-500/12 text-amber-800 dark:text-amber-200 ring-amber-500/25", label: "Premium", color: "#d97706" },
   "STANDARD": { dot: "bg-sky-500", pill: "bg-sky-500/12 text-sky-800 dark:text-sky-200 ring-sky-500/25", label: "Standard", color: "#0284c7" },
-};
-
-export const AVAILABILITY_CFG: Record<CarrierAvailability, { label: string; dot: string; pill: string }> = {
-  available: {
-    label: "Dostępny",
-    dot: "bg-emerald-500",
-    pill: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-200 ring-emerald-500/25",
-  },
-  reserved: {
-    label: "Rezerwacja",
-    dot: "bg-amber-500",
-    pill: "bg-amber-500/12 text-amber-800 dark:text-amber-200 ring-amber-500/25",
-  },
-  unavailable: {
-    label: "Niedostępny",
-    dot: "bg-muted-foreground",
-    pill: "bg-secondary text-muted-foreground ring-border",
-  },
-};
-
-const SEGMENT_DEFAULTS: Record<CarrierType, { traffic: number; visibility: number }> = {
-  "SUPER PREMIUM": { traffic: 55000, visibility: 95 },
-  "PREMIUM": { traffic: 38000, visibility: 88 },
-  "STANDARD": { traffic: 22000, visibility: 80 },
 };
 
 // Rough voivodeship mapping by ZIP prefix (first two digits). Accurate enough
@@ -217,15 +189,6 @@ function normalizeSegment(raw: string): CarrierType {
   return "STANDARD";
 }
 
-function normalizeAvailability(raw?: string): CarrierAvailability {
-  const value = (raw ?? "").trim().toLowerCase();
-  if (["reserved", "rezerwacja", "zarezerwowany", "booked"].includes(value)) return "reserved";
-  if (["unavailable", "niedostepny", "niedostępny", "inactive", "wylaczony", "wyłączony"].includes(value)) {
-    return "unavailable";
-  }
-  return "available";
-}
-
 export function normalizeSearchValue(value: string): string {
   return value
     .toLocaleLowerCase("pl-PL")
@@ -264,7 +227,6 @@ export function parseBillboardsXml(xml: string): Carrier[] {
     if (!Number.isFinite(lat) || !Number.isFinite(lng)) continue;
 
     const type = normalizeSegment(attrs.SegmentName ?? "");
-    const defaults = SEGMENT_DEFAULTS[type];
     const townRaw = (attrs.TownName ?? "").trim();
     const city = townRaw ? titleCase(townRaw) : "—";
     const addressRaw = (attrs.StreetName ?? "").trim();
@@ -287,12 +249,9 @@ export function parseBillboardsXml(xml: string): Carrier[] {
       description: (attrs.Description ?? "").trim(),
       lat,
       lng,
-      traffic: defaults.traffic,
-      visibility: defaults.visibility,
       trafficEstimate: null,
       image: normalizeImage(attrs.Image),
       zip,
-      availability: normalizeAvailability(attrs.Availability ?? attrs.Status ?? attrs.Available),
     });
   }
 
@@ -303,9 +262,7 @@ export function deriveFilterOptions(carriers: Carrier[]) {
   const cities = [...new Set(carriers.map((carrier) => carrier.city))].sort((a, b) => a.localeCompare(b, "pl"));
   const typeSet = new Set(carriers.map((carrier) => carrier.type));
   const types = (["SUPER PREMIUM", "PREMIUM", "STANDARD"] as CarrierType[]).filter((type) => typeSet.has(type));
-  const availabilitySet = new Set(carriers.map((carrier) => carrier.availability));
-  const availability = (["available", "reserved", "unavailable"] as CarrierAvailability[]).filter((status) => availabilitySet.has(status));
-  return { cities, types, availability };
+  return { cities, types };
 }
 
 export function getMarkerBudget(zoom: number) {

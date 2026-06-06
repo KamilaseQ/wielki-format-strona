@@ -10,7 +10,10 @@
       "WebSearch",
       "PowerShell(npx tsc --noEmit 2>&1)",
       "PowerShell($p = @\\(\"$env:ProgramFiles\\\\nodejs\\\\node.exe\",\"$env:LOCALAPPDATA\\\\Programs\\\\nodejs\\\\node.exe\",\"$env:APPDATA\\\\nvm\",\"$env:ProgramFiles\\\\nodejs\"\\); foreach\\($x in $p\\){ if\\(Test-Path $x\\){ $x } }; \\(Get-Command node -ErrorAction SilentlyContinue\\).Source)",
-      "PowerShell(Get-ChildItem -Path \"$env:APPDATA\\\\nvm\",\"$env:ProgramFiles\\\\nodejs\",\"C:\\\\nvm4w\",\"$env:LOCALAPPDATA\\\\fnm_multishells\" -Filter node.exe -Recurse -ErrorAction SilentlyContinue | Select-Object -First 5 -ExpandProperty FullName; where.exe node 2>$null)"
+      "PowerShell(Get-ChildItem -Path \"$env:APPDATA\\\\nvm\",\"$env:ProgramFiles\\\\nodejs\",\"C:\\\\nvm4w\",\"$env:LOCALAPPDATA\\\\fnm_multishells\" -Filter node.exe -Recurse -ErrorAction SilentlyContinue | Select-Object -First 5 -ExpandProperty FullName; where.exe node 2>$null)",
+      "Bash(python3 -)",
+      "PowerShell(npx tsc --noEmit -p tsconfig.json 2>&1 | Select-Object -First 40; \"exit=$LASTEXITCODE\")",
+      "PowerShell(if \\(Test-Path node_modules/.bin/tsc.cmd\\) { & node_modules/.bin/tsc.cmd --noEmit -p tsconfig.json 2>&1 | Select-Object -First 40; \"exit=$LASTEXITCODE\" } else { \"no local tsc\"; if \\(Test-Path node_modules/typescript/bin/tsc\\) { node node_modules/typescript/bin/tsc --noEmit -p tsconfig.json 2>&1 | Select-Object -First 40; \"exit=$LASTEXITCODE\" } })"
     ]
   }
 }

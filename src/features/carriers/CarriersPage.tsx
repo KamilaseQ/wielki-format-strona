@@ -18,7 +18,6 @@ import type { MapMarker, MapViewport } from "@/components/LeafletMap";
 import { DetailPanel } from "@/features/carriers/DetailPanel";
 import { ListPanel } from "@/features/carriers/ListPanel";
 import {
-  AVAILABILITY_CFG,
   LIST_PAGE_SIZE,
   MAP_PANEL_PAGE_SIZE,
   TYPE_CFG,
@@ -29,7 +28,6 @@ import {
   isCarrierInsideBounds,
   normalizeSearchValue,
   type Carrier,
-  type CarrierAvailability,
   type CarrierType,
   type SortKey,
 } from "@/features/carriers/data";
@@ -60,7 +58,7 @@ interface CarriersPageProps {
 }
 
 export default function CarriersPage({ carriers }: CarriersPageProps) {
-  const { cities, types, availability } = useMemo(
+  const { cities, types } = useMemo(
     () => deriveFilterOptions(carriers),
     [carriers]
   );
@@ -74,7 +72,6 @@ export default function CarriersPage({ carriers }: CarriersPageProps) {
   const [city, setCity] = useState("");
   const [format, setFormat] = useState("");
   const [type, setType] = useState<CarrierType | "">("");
-  const [availabilityFilter, setAvailabilityFilter] = useState<CarrierAvailability | "">("");
   const [sortBy, setSortBy] = useState<SortKey>("relevance");
   const [selected, setSelected] = useState<Carrier | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -115,7 +112,6 @@ export default function CarriersPage({ carriers }: CarriersPageProps) {
       if (city && carrier.city !== city) return false;
       if (format && carrier.format !== format) return false;
       if (type && carrier.type !== type) return false;
-      if (availabilityFilter && carrier.availability !== availabilityFilter) return false;
       if (!hasNeedle) return true;
       return searchIndex.get(carrier.id)?.includes(needle) ?? false;
     });
@@ -134,9 +130,9 @@ export default function CarriersPage({ carriers }: CarriersPageProps) {
       const cityDiff = left.city.localeCompare(right.city, "pl");
       return cityDiff || getCarrierTrafficValue(right) - getCarrierTrafficValue(left);
     });
-  }, [availabilityFilter, carriers, city, debouncedQuery, format, searchIndex, sortBy, type]);
+  }, [carriers, city, debouncedQuery, format, searchIndex, sortBy, type]);
 
-  const autoFitKey = `${city}|${format}|${type}|${availabilityFilter}|${debouncedQuery}|${sortBy}|${filtered.length}`;
+  const autoFitKey = `${city}|${format}|${type}|${debouncedQuery}|${sortBy}|${filtered.length}`;
 
   useEffect(() => {
     setViewportReadyForFiltering(false);
@@ -150,11 +146,11 @@ export default function CarriersPage({ carriers }: CarriersPageProps) {
 
   useEffect(() => {
     setVisibleCount(mobileView === "map" ? MAP_PANEL_PAGE_SIZE : LIST_PAGE_SIZE);
-  }, [availabilityFilter, city, debouncedQuery, format, mobileView, sortBy, type]);
+  }, [city, debouncedQuery, format, mobileView, sortBy, type]);
 
   const cityCount = new Set(filtered.map((carrier) => carrier.city)).size;
   const typeCount = new Set(filtered.map((carrier) => carrier.type)).size;
-  const activeFilterCount = [city, format, type, availabilityFilter, debouncedQuery].filter(Boolean).length;
+  const activeFilterCount = [city, format, type, debouncedQuery].filter(Boolean).length;
   const markerBudget = getMarkerBudget(mapViewport?.zoom ?? 6);
   const shouldRenderMap = isDesktopLayout || mobileView === "map";
 
@@ -214,7 +210,6 @@ export default function CarriersPage({ carriers }: CarriersPageProps) {
     setCity("");
     setFormat("");
     setType("");
-    setAvailabilityFilter("");
     setQuery("");
     setDebouncedQuery("");
     setSelected(null);
@@ -316,7 +311,7 @@ export default function CarriersPage({ carriers }: CarriersPageProps) {
             transition={{ duration: 0.2 }}
             className="shrink-0 overflow-hidden border-b border-border bg-card"
           >
-            <div className="grid grid-cols-2 gap-3 px-3 py-3 lg:grid-cols-[1.2fr_1fr_1fr_1fr_1fr_auto] lg:items-end lg:px-5">
+            <div className="grid grid-cols-2 gap-3 px-3 py-3 lg:grid-cols-[1.2fr_1fr_1fr_1fr_auto] lg:items-end lg:px-5">
               <div className="col-span-2 lg:hidden">
                 <SearchBox id="carrier-search-mobile" value={query} onChange={setQuery} />
               </div>
@@ -335,14 +330,6 @@ export default function CarriersPage({ carriers }: CarriersPageProps) {
                 onChange={(value) => setType(value as CarrierType | "")}
                 options={types}
                 labels={types.map((item) => TYPE_CFG[item].label)}
-              />
-              <FilterSelect
-                id="carrier-availability"
-                label="Dostępność"
-                value={availabilityFilter}
-                onChange={(value) => setAvailabilityFilter(value as CarrierAvailability | "")}
-                options={availability}
-                labels={availability.map((item) => AVAILABILITY_CFG[item].label)}
               />
               <FilterSelect
                 id="carrier-sort"
@@ -603,7 +590,7 @@ function relevanceScore(carrier: Carrier, needle: string): number {
 }
 
 function getCarrierTrafficValue(carrier: Carrier): number {
-  return carrier.trafficEstimate?.dailyVehicles ?? carrier.traffic;
+  return carrier.trafficEstimate?.dailyVehicles ?? 0;
 }
 
 function buildMapMarkers(

@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import { Car, ChevronRight, MapPin, Ruler, Search } from "lucide-react";
 import { CarrierImage } from "@/features/carriers/CarrierImage";
 import type { Carrier } from "@/features/carriers/data";
-import { AVAILABILITY_CFG, TYPE_CFG } from "@/features/carriers/data";
+import { TYPE_CFG } from "@/features/carriers/data";
 
 interface ListPanelProps {
   carriers: Carrier[];
@@ -50,7 +50,6 @@ export function ListPanel({
       <div className={`${flow ? "space-y-2 p-3 pb-[calc(1rem+env(safe-area-inset-bottom))]" : "min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-contain p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]"}`}>
         {carriers.map((carrier, index) => {
           const cfg = TYPE_CFG[carrier.type];
-          const availability = AVAILABILITY_CFG[carrier.availability];
           const selected = selectedId === carrier.id;
 
           return (
@@ -80,10 +79,6 @@ export function ListPanel({
                 <div className="mb-1 flex min-w-0 items-center gap-2">
                   <span className="truncate font-heading text-sm font-bold text-foreground">
                     {carrier.code}
-                  </span>
-                  <span className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ring-1 ${availability.pill}`}>
-                    <span className={`h-1.5 w-1.5 rounded-full ${availability.dot}`} />
-                    {availability.label}
                   </span>
                 </div>
 
