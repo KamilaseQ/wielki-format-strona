@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { promises as fs } from "node:fs";
-import path from "node:path";
+import { parseBillboardsXml, type Carrier } from "@/features/carriers/data";
+import { readCarriersXml } from "@/features/carriers/xml-loader";
 import GaleriaPage, { type GalleryItem } from "@/routes/galeria";
 
 const realMetadata: Metadata = {
@@ -19,45 +19,113 @@ const realMetadata: Metadata = {
 
 export const metadata: Metadata = realMetadata;
 
-const EXCLUDED = new Set(["billboardy.jpg", "montaz.jpg", "z nosnikiem.jpg"]);
-const GALLERY_PUBLIC_DIR = "Z";
+const GALLERY_ITEM_LIMIT = 120;
 
-function titleFromFilename(name: string): { title: string; location?: string } {
-  const base = name.replace(/\.[^.]+$/, "").trim();
-  const cleaned = base
-    .replace(/_/g, " ")
-    .replace(/\s+\(\d+\)\s*$/, "")
-    .replace(/\.+$/, "")
-    .trim();
-
-  const match = cleaned.match(/^([0-9A-Za-z]+)\.?\s+(.+)$/);
-  if (match && /\d/.test(match[1])) {
-    return { title: match[2].trim(), location: `Nośnik ${match[1]}` };
-  }
-  return { title: cleaned };
+interface GalleryCandidate {
+  carrier: Carrier;
+  src: string;
 }
 
 async function loadGallery(): Promise<GalleryItem[]> {
-  const dir = path.join(process.cwd(), "public", GALLERY_PUBLIC_DIR);
-  let entries: string[] = [];
-  try {
-    entries = await fs.readdir(dir);
-  } catch {
-    return [];
-  }
+  const seenLocations = new Set<string>();
+  const seenImages = new Set<string>();
+  const carriers = parseBillboardsXml(await readCarriersXml());
 
-  return entries
-    .filter((name) => /\.(jpe?g|png|webp)$/i.test(name))
-    .filter((name) => !EXCLUDED.has(name.toLowerCase()))
-    .sort((a, b) => a.localeCompare(b, "pl"))
-    .map((name) => {
-      const { title, location } = titleFromFilename(name);
-      return {
-        src: `/${GALLERY_PUBLIC_DIR}/${encodeURIComponent(name)}`,
-        title,
-        location,
-      };
-    });
+  return carriers
+    .filter(isGalleryCarrier)
+    .sort(compareGalleryCarriers)
+    .flatMap<GalleryCandidate>((carrier) => {
+      const src = resolveGalleryImageSrc(carrier.image);
+      if (!src) return [];
+
+      const locationKey = normalizeGalleryKey(
+        `${carrier.city} ${carrier.address}`
+      );
+      if (seenLocations.has(locationKey) || seenImages.has(src)) return [];
+
+      seenLocations.add(locationKey);
+      seenImages.add(src);
+      return [{ carrier, src }];
+    })
+    .slice(0, GALLERY_ITEM_LIMIT)
+    .map(({ carrier, src }) => ({
+      src,
+      title: `${carrier.city} - ${carrier.address}`,
+      location: `Nośnik ${carrier.code} • ${carrier.format}`,
+    }));
+}
+
+function isGalleryCarrier(carrier: Carrier): boolean {
+  return Boolean(
+    carrier.image &&
+      carrier.city &&
+      carrier.city !== "—" &&
+      carrier.address &&
+      carrier.address !== "—" &&
+      /[a-ząćęłńóśźż]/i.test(carrier.address)
+  );
+}
+
+function compareGalleryCarriers(left: Carrier, right: Carrier): number {
+  const areaDiff = carrierArea(right) - carrierArea(left);
+  if (Math.abs(areaDiff) > 0.25) return areaDiff;
+
+  const typePriority =
+    carrierTypePriority(left.type) - carrierTypePriority(right.type);
+  if (typePriority !== 0) return typePriority;
+
+  const longEdgeDiff = carrierLongEdge(right) - carrierLongEdge(left);
+  if (Math.abs(longEdgeDiff) > 0.25) return longEdgeDiff;
+
+  return (
+    left.address.localeCompare(right.address, "pl") ||
+    left.city.localeCompare(right.city, "pl") ||
+    left.code.localeCompare(right.code, "pl")
+  );
+}
+
+function carrierTypePriority(type: Carrier["type"]): number {
+  if (type === "SUPER PREMIUM") return 0;
+  if (type === "PREMIUM") return 1;
+  return 2;
+}
+
+function carrierArea(carrier: Carrier): number {
+  return (carrier.widthMeters ?? 0) * (carrier.heightMeters ?? 0);
+}
+
+function carrierLongEdge(carrier: Carrier): number {
+  return Math.max(carrier.widthMeters ?? 0, carrier.heightMeters ?? 0);
+}
+
+function resolveGalleryImageSrc(image: string | null): string | null {
+  if (!image) return null;
+  if (/^https?:/i.test(image)) {
+    try {
+      const url = new URL(image);
+      if (
+        url.hostname.toLowerCase() === "billboard.wielkiformat.pl" &&
+        url.pathname.startsWith("/billboards/")
+      ) {
+        return `/api/carrier-image?path=${encodeURIComponent(`${url.pathname}${url.search}`)}`;
+      }
+      return image;
+    } catch {
+      return null;
+    }
+  }
+  if (/^(data:|blob:)/i.test(image)) return image;
+  return `/${image.replace(/^\/+/, "").replace(/^public[\\/]/, "")}`;
+}
+
+function normalizeGalleryKey(value: string): string {
+  return value
+    .toLocaleLowerCase("pl-PL")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/ł/g, "l")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
 }
 
 const breadcrumbJsonLd = {

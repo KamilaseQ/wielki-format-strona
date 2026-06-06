@@ -151,13 +151,11 @@ const TRAFFIC_SIGNAL_KEYWORDS = [
 
 export function publishCarriersWithTrafficEstimates(
   carriers: Carrier[]
-): PublishedCarrier[] {
-  return carriers
-    .map((carrier) => ({
-      ...carrier,
-      trafficEstimate: estimateCarrierTraffic(carrier),
-    }))
-    .filter(hasPublishedTrafficEstimate);
+): Carrier[] {
+  return carriers.map((carrier) => ({
+    ...carrier,
+    trafficEstimate: estimateCarrierTraffic(carrier),
+  }));
 }
 
 export function hasPublishedTrafficEstimate(

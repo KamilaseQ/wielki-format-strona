@@ -130,7 +130,7 @@ W lokalnym buildzie 2026-05-13:
 
 ### Dane nośników i mapa
 
-- [ ] Uzupełnić produkcyjny dataset nośników. `public/data/billboards.xml` ma teraz 10 rekordów.
+- [x] Uzupełnić produkcyjny dataset nośników. Produkcyjny import jest w `data/billboard_data_full.xml`.
 - [ ] Usunąć albo poprawić rekord `Piotrków Trybunalski`, jeśli komunikujemy wyłącznie woj. mazowieckie.
 - [ ] Ujednolicić zapis nazw miejscowości i ulic, np. `Patriotów` vs `Patriotow`.
 - [ ] Zweryfikować formaty i wymiary.

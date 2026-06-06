@@ -29,6 +29,8 @@ export interface Carrier {
   region: string;
   type: CarrierType;
   format: string;
+  widthMeters: number | null;
+  heightMeters: number | null;
   description: string;
   lat: number;
   lng: number;
@@ -157,9 +159,35 @@ function parseAttributes(raw: string): Record<string, string> {
   const re = /([\w:]+)\s*=\s*"([^"]*)"/g;
   let match: RegExpExecArray | null;
   while ((match = re.exec(raw)) !== null) {
-    attrs[match[1]] = match[2];
+    attrs[match[1]] = decodeXmlEntities(match[2]);
   }
   return attrs;
+}
+
+function decodeXmlEntities(value: string): string {
+  return value.replace(
+    /&(?:amp|quot|apos|lt|gt|#\d+|#x[\da-f]+);/gi,
+    (entity) => {
+      const named: Record<string, string> = {
+        "&amp;": "&",
+        "&quot;": '"',
+        "&apos;": "'",
+        "&lt;": "<",
+        "&gt;": ">",
+      };
+      const normalized = entity.toLowerCase();
+      if (named[normalized]) return named[normalized];
+
+      const isHex = normalized.startsWith("&#x");
+      const codePoint = Number.parseInt(
+        normalized.slice(isHex ? 3 : 2, -1),
+        isHex ? 16 : 10
+      );
+      return Number.isFinite(codePoint) && codePoint >= 0 && codePoint <= 0x10ffff
+        ? String.fromCodePoint(codePoint)
+        : entity;
+    }
+  );
 }
 
 function formatFromDimensions(attrs: Record<string, string>): string {
@@ -168,6 +196,18 @@ function formatFromDimensions(attrs: Record<string, string>): string {
   if (!w || !h) return "—";
   const fmt = (value: string) => value.replace(",", ".");
   return `${fmt(w)} × ${fmt(h)} m`;
+}
+
+function parseDimension(value?: string): number | null {
+  const parsed = Number((value ?? "").trim().replace(",", "."));
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+}
+
+function normalizeImage(raw?: string): string | null {
+  const image = (raw ?? "").trim();
+  if (!image) return null;
+  if (/^https?:\/\/billboard\.wielkiformat\.pl\/?$/i.test(image)) return null;
+  return image;
 }
 
 function normalizeSegment(raw: string): CarrierType {
@@ -231,6 +271,8 @@ export function parseBillboardsXml(xml: string): Carrier[] {
     const streetNum = (attrs.StreetNum ?? "").trim();
     const address = [addressRaw, streetNum].filter(Boolean).join(" ").trim() || "—";
     const zip = (attrs.ZIP ?? "").trim();
+    const widthMeters = parseDimension(attrs.Width || attrs.BannerWidth);
+    const heightMeters = parseDimension(attrs.Height || attrs.BannerHeight);
 
     carriers.push({
       id: attrs.BillboardID,
@@ -240,13 +282,15 @@ export function parseBillboardsXml(xml: string): Carrier[] {
       region: regionFromTownAndZip(townRaw, zip),
       type,
       format: formatFromDimensions(attrs),
+      widthMeters,
+      heightMeters,
       description: (attrs.Description ?? "").trim(),
       lat,
       lng,
       traffic: defaults.traffic,
       visibility: defaults.visibility,
       trafficEstimate: null,
-      image: attrs.Image ? attrs.Image.trim() : null,
+      image: normalizeImage(attrs.Image),
       zip,
       availability: normalizeAvailability(attrs.Availability ?? attrs.Status ?? attrs.Available),
     });

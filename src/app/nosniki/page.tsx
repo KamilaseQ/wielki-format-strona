@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import CarriersPage from "@/features/carriers/CarriersPage";
 import { parseBillboardsXml, type Carrier } from "@/features/carriers/data";
 import { publishCarriersWithTrafficEstimates } from "@/features/carriers/traffic-estimates";
+import { readCarriersXml } from "@/features/carriers/xml-loader";
 import { cities } from "@/lib/cities";
 
 const realMetadata: Metadata = {
@@ -34,26 +35,9 @@ const realMetadata: Metadata = {
 export const metadata: Metadata = realMetadata;
 
 async function loadCarriers(): Promise<Carrier[]> {
-  const dataFile =
-    process.env.CARRIERS_DATA_FILE ?? "billboards-loadtest-1400.xml";
-  const xmlPath = path.isAbsolute(dataFile)
-    ? dataFile
-    : path.join(process.cwd(), "public", "data", dataFile);
-
-  let xml: string;
-  try {
-    xml = await fs.readFile(xmlPath, "utf8");
-  } catch {
-    const fallbackPath = path.join(
-      process.cwd(),
-      "public",
-      "data",
-      "billboards-sample-200.xml"
-    );
-    xml = await fs.readFile(fallbackPath, "utf8");
-  }
-
-  const carriers = publishCarriersWithTrafficEstimates(parseBillboardsXml(xml));
+  const carriers = publishCarriersWithTrafficEstimates(
+    parseBillboardsXml(await readCarriersXml())
+  );
 
   return Promise.all(
     carriers.map(async (carrier) => {
