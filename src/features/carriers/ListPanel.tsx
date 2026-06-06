@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { ChevronRight, MapPin, Ruler, Search, TrendingUp } from "lucide-react";
+import { Car, ChevronRight, MapPin, Ruler, Search } from "lucide-react";
 import { CarrierImage } from "@/features/carriers/CarrierImage";
 import type { Carrier } from "@/features/carriers/data";
 import { AVAILABILITY_CFG, TYPE_CFG } from "@/features/carriers/data";
@@ -105,10 +105,10 @@ export function ListPanel({
                     <Ruler className="h-3 w-3" />
                     {carrier.format}
                   </span>
-                  {!compact && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-secondary/70 px-2 py-0.5 text-[10px] font-medium text-muted-foreground ring-1 ring-border">
-                      <TrendingUp className="h-3 w-3" />
-                      ~{(carrier.traffic / 1000).toFixed(0)}k/dzień
+                  {carrier.trafficEstimate && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-foreground ring-1 ring-primary/20">
+                      <Car className="h-3 w-3 text-primary" />
+                      ~{formatTrafficValue(carrier.trafficEstimate.dailyVehicles)}
                     </span>
                   )}
                   </div>
@@ -151,4 +151,8 @@ export function ListPanel({
       </div>
     </motion.div>
   );
+}
+
+function formatTrafficValue(value: number): string {
+  return `${value.toLocaleString("pl-PL")} poj./dobę`;
 }

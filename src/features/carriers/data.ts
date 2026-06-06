@@ -3,6 +3,23 @@ import type { MapViewport } from "@/components/LeafletMap";
 export type CarrierType = "SUPER PREMIUM" | "PREMIUM" | "STANDARD";
 export type CarrierAvailability = "available" | "reserved" | "unavailable";
 export type SortKey = "relevance" | "city" | "type" | "traffic";
+export type TrafficEstimateConfidence = "high" | "medium" | "low";
+export type TrafficEstimateBasis =
+  | "direct-measurement"
+  | "measured-corridor"
+  | "local-model";
+
+export interface CarrierTrafficEstimate {
+  dailyVehicles: number;
+  confidence: TrafficEstimateConfidence;
+  basis: TrafficEstimateBasis;
+  methodLabel: string;
+  methodDescription: string;
+  sourceLabel: string;
+  sourceYear?: number;
+  sourceUrl?: string;
+  matchedDistanceMeters: number | null;
+}
 
 export interface Carrier {
   id: string;
@@ -17,6 +34,7 @@ export interface Carrier {
   lng: number;
   traffic: number;
   visibility: number;
+  trafficEstimate: CarrierTrafficEstimate | null;
   image: string | null;
   zip: string;
   availability: CarrierAvailability;
@@ -227,6 +245,7 @@ export function parseBillboardsXml(xml: string): Carrier[] {
       lng,
       traffic: defaults.traffic,
       visibility: defaults.visibility,
+      trafficEstimate: null,
       image: attrs.Image ? attrs.Image.trim() : null,
       zip,
       availability: normalizeAvailability(attrs.Availability ?? attrs.Status ?? attrs.Available),

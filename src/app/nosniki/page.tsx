@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { SiteShell } from "@/components/SiteShell";
-import { TemporarySectionNotice } from "@/components/TemporarySectionNotice";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import CarriersPage from "@/features/carriers/CarriersPage";
 import { parseBillboardsXml, type Carrier } from "@/features/carriers/data";
+import { publishCarriersWithTrafficEstimates } from "@/features/carriers/traffic-estimates";
 import { cities } from "@/lib/cities";
-import { SHOW_REAL_CARRIERS_PAGE } from "@/lib/publication-flags";
 
 const realMetadata: Metadata = {
   title: "Mapa nośników reklamowych",
@@ -33,31 +31,11 @@ const realMetadata: Metadata = {
   },
 };
 
-const temporaryMetadata: Metadata = {
-  title: "Mapa nośników w aktualizacji",
-  description:
-    "Aktualizujemy mapę nośników reklamowych Wielkiformat.pl. W sprawie dostępności lokalizacji skontaktuj się z naszym zespołem.",
-  alternates: {
-    canonical: "https://wielkiformat.pl/nosniki",
-  },
-  robots: {
-    index: false,
-    follow: true,
-  },
-  openGraph: {
-    title: "Mapa nośników w aktualizacji - Wielkiformat.pl",
-    description:
-      "Aktualizujemy mapę nośników reklamowych. W sprawie dostępności lokalizacji skontaktuj się z naszym zespołem.",
-    url: "https://wielkiformat.pl/nosniki",
-  },
-};
-
-export const metadata: Metadata = SHOW_REAL_CARRIERS_PAGE
-  ? realMetadata
-  : temporaryMetadata;
+export const metadata: Metadata = realMetadata;
 
 async function loadCarriers(): Promise<Carrier[]> {
-  const dataFile = process.env.CARRIERS_DATA_FILE ?? "billboards-sample-200.xml";
+  const dataFile =
+    process.env.CARRIERS_DATA_FILE ?? "billboards-loadtest-1400.xml";
   const xmlPath = path.isAbsolute(dataFile)
     ? dataFile
     : path.join(process.cwd(), "public", "data", dataFile);
@@ -66,11 +44,16 @@ async function loadCarriers(): Promise<Carrier[]> {
   try {
     xml = await fs.readFile(xmlPath, "utf8");
   } catch {
-    const fallbackPath = path.join(process.cwd(), "public", "data", "billboards.xml");
+    const fallbackPath = path.join(
+      process.cwd(),
+      "public",
+      "data",
+      "billboards-sample-200.xml"
+    );
     xml = await fs.readFile(fallbackPath, "utf8");
   }
 
-  const carriers = parseBillboardsXml(xml);
+  const carriers = publishCarriersWithTrafficEstimates(parseBillboardsXml(xml));
 
   return Promise.all(
     carriers.map(async (carrier) => {
@@ -115,39 +98,6 @@ const cityListJsonLd = {
 };
 
 export default async function Page() {
-  if (!SHOW_REAL_CARRIERS_PAGE) {
-    return (
-      <SiteShell>
-        <TemporarySectionNotice
-          eyebrow="Mapa nośników"
-          title="Aktualizujemy bazę lokalizacji."
-          description="Porządkujemy dane o nośnikach, zdjęcia i dostępność kampanii, żeby mapa była użyteczna zamiast pokazywać wersję roboczą. W tym czasie dobierzemy lokalizacje bezpośrednio po krótkim briefie."
-          note="Do czasu zakończenia aktualizacji najpewniejszą ścieżką jest krótka rozmowa z naszym zespołem. Dobierzemy lokalizacje pod zasięg, budżet i termin kampanii."
-          links={[
-            {
-              href: "/wynajem",
-              title: "Wynajem billboardów",
-              description:
-                "Najważniejsze informacje o formatach, zasięgu i rezerwacji kampanii.",
-            },
-            {
-              href: "/cennik",
-              title: "Cennik",
-              description:
-                "Orientacyjne koszty ekspozycji oraz czynniki wpływające na wycenę.",
-            },
-            {
-              href: "/kontakt",
-              title: "Kontakt",
-              description:
-                "Napisz, gdzie chcesz prowadzić kampanię, a wrócimy z propozycją lokalizacji.",
-            },
-          ]}
-        />
-      </SiteShell>
-    );
-  }
-
   const carriers = await loadCarriers();
   return (
     <ThemeProvider>

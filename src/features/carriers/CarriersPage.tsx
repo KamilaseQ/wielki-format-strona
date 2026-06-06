@@ -121,7 +121,9 @@ export default function CarriersPage({ carriers }: CarriersPageProps) {
     });
 
     return [...result].sort((left, right) => {
-      if (sortBy === "traffic") return right.traffic - left.traffic;
+      if (sortBy === "traffic") {
+        return getCarrierTrafficValue(right) - getCarrierTrafficValue(left);
+      }
       if (sortBy === "type") return left.type.localeCompare(right.type, "pl");
       if (sortBy === "city") return left.city.localeCompare(right.city, "pl");
       if (hasNeedle) {
@@ -130,7 +132,7 @@ export default function CarriersPage({ carriers }: CarriersPageProps) {
         if (rightScore !== leftScore) return rightScore - leftScore;
       }
       const cityDiff = left.city.localeCompare(right.city, "pl");
-      return cityDiff || right.traffic - left.traffic;
+      return cityDiff || getCarrierTrafficValue(right) - getCarrierTrafficValue(left);
     });
   }, [availabilityFilter, carriers, city, debouncedQuery, format, searchIndex, sortBy, type]);
 
@@ -600,6 +602,10 @@ function relevanceScore(carrier: Carrier, needle: string): number {
   return score;
 }
 
+function getCarrierTrafficValue(carrier: Carrier): number {
+  return carrier.trafficEstimate?.dailyVehicles ?? carrier.traffic;
+}
+
 function buildMapMarkers(
   carriers: Carrier[],
   zoom: number,
@@ -611,7 +617,7 @@ function buildMapMarkers(
   const ranked = [...carriers].sort((left, right) => {
     const distanceDiff = distanceFromCenter(left, center) - distanceFromCenter(right, center);
     if (Math.abs(distanceDiff) > 0.005) return distanceDiff;
-    return right.traffic - left.traffic;
+    return getCarrierTrafficValue(right) - getCarrierTrafficValue(left);
   });
 
   if (zoom >= 11.25) {
@@ -639,7 +645,7 @@ function buildMapMarkers(
     bucket.carriers.push(carrier);
     bucket.latSum += carrier.lat;
     bucket.lngSum += carrier.lng;
-    bucket.trafficSum += carrier.traffic;
+    bucket.trafficSum += getCarrierTrafficValue(carrier);
     bucket.count += 1;
     bucket.cityCounts.set(carrier.city, (bucket.cityCounts.get(carrier.city) ?? 0) + 1);
     bucket.typeCounts.set(carrier.type, (bucket.typeCounts.get(carrier.type) ?? 0) + 1);
@@ -740,11 +746,15 @@ function clusterLabel(bucket: ClusterBucket, dominantType: CarrierType): string 
 
 function markerLabel(carrier: Carrier): string {
   const cfg = TYPE_CFG[carrier.type];
+  const trafficLine = carrier.trafficEstimate
+    ? `<span>~${escapeHtml(formatTrafficValue(carrier.trafficEstimate.dailyVehicles))}</span>`
+    : "";
   return [
     `<strong>${escapeHtml(carrier.code)}</strong>`,
     `${escapeHtml(carrier.city)}, ${escapeHtml(carrier.address)}`,
+    trafficLine,
     `<em>${escapeHtml(cfg.label)} / ${escapeHtml(carrier.format)}</em>`,
-  ].join("<br/>");
+  ].filter(Boolean).join("<br/>");
 }
 
 function escapeHtml(value: string): string {
@@ -754,4 +764,8 @@ function escapeHtml(value: string): string {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+}
+
+function formatTrafficValue(value: number): string {
+  return `${value.toLocaleString("pl-PL")} poj./dobę`;
 }

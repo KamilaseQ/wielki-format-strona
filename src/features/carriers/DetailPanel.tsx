@@ -1,5 +1,6 @@
 "use client";
 
+import { useId, useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
 import {
@@ -7,8 +8,8 @@ import {
   Car,
   CheckCircle2,
   ChevronLeft,
-  Eye,
   ExternalLink,
+  Info,
   Layers,
   LocateFixed,
   MapPin,
@@ -19,7 +20,7 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CarrierImage } from "@/features/carriers/CarrierImage";
-import type { Carrier } from "@/features/carriers/data";
+import type { Carrier, CarrierTrafficEstimate } from "@/features/carriers/data";
 import { AVAILABILITY_CFG, TYPE_CFG } from "@/features/carriers/data";
 import {
   COMPANY_PHONE_ARIA,
@@ -37,6 +38,7 @@ export function DetailPanel({ carrier, onBack, flow = false }: DetailPanelProps)
   const cfg = TYPE_CFG[carrier.type];
   const availability = AVAILABILITY_CFG[carrier.availability];
   const streetViewUrl = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${carrier.lat},${carrier.lng}`;
+  const trafficValue = carrier.trafficEstimate?.dailyVehicles ?? carrier.traffic;
 
   return (
     <motion.div
@@ -113,26 +115,11 @@ export function DetailPanel({ carrier, onBack, flow = false }: DetailPanelProps)
           </div>
         </div>
 
-        <div className="border-b border-border px-4 py-4">
-          <div className="mb-3 font-heading text-[11px] uppercase tracking-label text-muted-foreground">
-            Parametry robocze
+        {carrier.trafficEstimate && (
+          <div className="border-b border-border px-4 py-4">
+            <TrafficEstimatePanel estimate={carrier.trafficEstimate} />
           </div>
-          <div className="space-y-3">
-            <ProgressRow
-              icon={Car}
-              label="Ruch dzienny (szac.)"
-              value={`~${carrier.traffic.toLocaleString("pl-PL")} poj.`}
-              pct={Math.min((carrier.traffic / 80000) * 100, 100)}
-            />
-            <ProgressRow
-              icon={Eye}
-              label="Widoczność"
-              value={`${carrier.visibility}%`}
-              pct={carrier.visibility}
-              tone="emerald"
-            />
-          </div>
-        </div>
+        )}
 
         <div className="border-b border-border px-4 py-4">
           <div className="mb-3 font-heading text-[11px] uppercase tracking-label text-muted-foreground">
@@ -143,7 +130,7 @@ export function DetailPanel({ carrier, onBack, flow = false }: DetailPanelProps)
             <SpecBox icon={Layers} value={cfg.label} label="Klasa" />
             <SpecBox
               icon={LocateFixed}
-              value={`${((carrier.traffic * 30) / 1000).toFixed(0)}k`}
+              value={`${((trafficValue * 30) / 1000).toFixed(0)}k`}
               label="Kontakty/mies."
             />
             <SpecBox icon={MapPin} value={carrier.zip || "-"} label="Kod poczt." />
@@ -195,45 +182,131 @@ export function DetailPanel({ carrier, onBack, flow = false }: DetailPanelProps)
   );
 }
 
-function ProgressRow({
-  icon: Icon,
-  label,
-  value,
-  pct,
-  tone = "primary",
+function TrafficEstimatePanel({
+  estimate,
 }: {
-  icon: LucideIcon;
-  label: string;
-  value: string;
-  pct: number;
-  tone?: "primary" | "emerald";
+  estimate: CarrierTrafficEstimate;
 }) {
-  const barClass =
-    tone === "emerald"
-      ? "bg-gradient-to-r from-emerald-500/70 to-emerald-400"
-      : "bg-gradient-to-r from-primary/65 to-primary";
-
   return (
-    <div>
-      <div className="mb-1 flex items-center justify-between gap-3">
-        <span className="flex min-w-0 items-center gap-1.5 text-xs text-muted-foreground">
-          <Icon className="h-3.5 w-3.5 shrink-0 text-primary" />
-          <span className="truncate">{label}</span>
-        </span>
-        <span className="shrink-0 font-heading text-sm font-bold text-foreground">
-          {value}
-        </span>
-      </div>
-      <div className="h-2 overflow-hidden rounded-full bg-secondary">
-        <motion.div
-          className={`h-full rounded-full ${barClass}`}
-          initial={{ width: 0 }}
-          animate={{ width: `${pct}%` }}
-          transition={{ duration: 0.75, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-        />
+    <div className="rounded-lg border border-primary/25 bg-card p-3 shadow-sm">
+      <div className="flex items-start gap-2.5">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-primary/20 bg-primary/10">
+          <Car className="h-4 w-4 text-primary" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex min-w-0 items-center gap-1.5 text-xs font-medium text-muted-foreground">
+            <span className="truncate">Potencjał ruchu</span>
+            <TrafficInfoButton estimate={estimate} />
+          </div>
+          <div className="mt-0.5 flex min-w-0 items-end gap-1.5">
+            <span className="font-heading text-xl font-black leading-none text-foreground">
+              ~{estimate.dailyVehicles.toLocaleString("pl-PL")}
+            </span>
+            <span className="pb-0.5 text-xs font-semibold text-muted-foreground">
+              poj./dobę
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   );
+}
+
+function TrafficInfoButton({
+  estimate,
+}: {
+  estimate: CarrierTrafficEstimate;
+}) {
+  const tooltipId = useId();
+  const [open, setOpen] = useState(false);
+
+  return (
+    <span className="group/info relative inline-flex shrink-0">
+      <button
+        type="button"
+        aria-label="Jak policzono szacowany ruch"
+        aria-describedby={tooltipId}
+        aria-expanded={open}
+        onClick={(event) => {
+          event.preventDefault();
+          setOpen((current) => !current);
+        }}
+        onBlur={() => {
+          window.setTimeout(() => setOpen(false), 120);
+        }}
+        className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-colors hover:border-primary/45 hover:text-primary focus-visible:text-primary"
+      >
+        <Info className="h-3.5 w-3.5" />
+      </button>
+      <span
+        id={tooltipId}
+        role="tooltip"
+        className={`pointer-events-none fixed left-4 top-20 z-[1500] max-h-[min(70dvh,24rem)] w-[min(24rem,calc(100vw-2rem))] overflow-y-auto rounded-lg border border-border bg-card px-3 py-2 text-left font-body text-[11px] font-medium leading-relaxed text-foreground shadow-xl transition-all duration-150 group-hover/info:pointer-events-auto group-hover/info:translate-y-0 group-hover/info:opacity-100 group-focus-within/info:pointer-events-auto group-focus-within/info:translate-y-0 group-focus-within/info:opacity-100 lg:left-6 lg:top-24 ${
+          open ? "pointer-events-auto translate-y-0 opacity-100" : "translate-y-1 opacity-0"
+        }`}
+      >
+        <span className="block font-heading text-[10px] font-bold uppercase tracking-label text-muted-foreground">
+          Metoda i źródło
+        </span>
+        <span className="mt-1 block">{estimate.methodDescription}</span>
+        <span className="mt-2 block border-t border-border pt-2 text-muted-foreground">
+          <span className="font-semibold text-foreground">Źródło:</span>{" "}
+          {estimate.sourceUrl ? (
+            <a
+              href={estimate.sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-foreground underline-offset-4 hover:text-primary hover:underline"
+            >
+              {estimate.sourceLabel}
+            </a>
+          ) : (
+            <span className="font-semibold text-foreground">
+              {estimate.sourceLabel}
+            </span>
+          )}
+          {estimate.sourceYear ? `, ${estimate.sourceYear}` : ""}.{" "}
+          {estimate.methodLabel}
+          {estimate.matchedDistanceMeters
+            ? ` Punkt referencyjny: ok. ${estimate.matchedDistanceMeters.toLocaleString("pl-PL")} m od nośnika.`
+            : ""}
+        </span>
+        <span className="mt-2 block text-muted-foreground">
+          Typ danych: {getTrafficEvidence(estimate).label}. Pewność:{" "}
+          {getConfidenceLabel(estimate.confidence)}. Liczba opisuje ruch
+          pojazdów w korytarzu, nie gwarantowaną liczbę kontaktów z reklamą.
+        </span>
+      </span>
+    </span>
+  );
+}
+
+function getTrafficEvidence(estimate: CarrierTrafficEstimate): {
+  label: string;
+  note: string;
+} {
+  if (estimate.basis === "direct-measurement") {
+    return {
+      label: "Pomiar publiczny",
+      note: "najwyższa pewność",
+    };
+  }
+  if (estimate.basis === "measured-corridor") {
+    return {
+      label: "Korytarz z raportu",
+      note: "GPR/ZDM + korekta",
+    };
+  }
+  return {
+    label: "Model lokalny",
+    note: "kalibracja ZDM/GPR",
+  };
+}
+
+function getConfidenceLabel(confidence: CarrierTrafficEstimate["confidence"]): string {
+  if (confidence === "high") return "wysoka";
+  if (confidence === "medium") return "średnia";
+  return "niska";
 }
 
 function SpecBox({
