@@ -110,13 +110,13 @@ export function LeafletMap({
         renderer: rendererRef.current,
       });
 
-      // CartoDB Voyager tiles - light, clear, multilingual
+      // OpenStreetMap tiles do not require an API key.
       L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+        "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
         {
           maxZoom: 19,
           attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         }
       ).addTo(map);
 
@@ -126,9 +126,6 @@ export function LeafletMap({
       // Attribution bottom-left (minimal)
       L.control
         .attribution({ position: "bottomleft", prefix: false })
-        .addAttribution(
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
-        )
         .addTo(map);
 
       const emitViewport = () => {
